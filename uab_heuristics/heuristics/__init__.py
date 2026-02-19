@@ -1,3 +1,3 @@
-from .base import Heuristic
+from .reused_address_change import ReusedAddressChange
 
-__all__ = ["Heuristic"]
+__all__ = ["ReusedAddressChange"]

@@ -19,7 +19,7 @@ def make_request(txid):
         except Exception as e:
             # Save last error, continue to next template
             last_error = e
-            print(f"Warning: failed to fetch from {url}")
+            print(f"Warning: failed to fetch from {url}.")
 
     # If we get here, all templates failed
     raise RuntimeError(f"All requests failed for txid {txid}.")
