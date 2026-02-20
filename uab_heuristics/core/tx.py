@@ -1,6 +1,7 @@
 from bitcoinlib.transactions import Transaction as BaseTransaction
 from io import BytesIO
 from ..api import rpc_call, make_request
+from ..utils import get_address_type
 
 
 class Tx:
@@ -74,3 +75,10 @@ class Tx:
     def output_count(self):
         return len(self._tx.outputs)
 
+    @property
+    def inputs_types(self):
+        return [(i.address, get_address_type(i.address)) for i in self._tx.inputs] 
+
+    @property
+    def outputs_types(self):
+        return [(o.address, get_address_type(o.address)) for o in self._tx.outputs]
