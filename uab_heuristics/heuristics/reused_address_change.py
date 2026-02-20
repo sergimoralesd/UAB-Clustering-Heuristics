@@ -4,7 +4,6 @@ class ReusedAddressChange(Heuristic):
     """
     Heurisitic that detects change address by reusing input address in outputs
     """
-
     __complexity__ = "none" #to be determined
     __accuracy__ = 0 #to be determined
 
