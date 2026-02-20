@@ -6,11 +6,14 @@ if __name__ == "__main__":
     print(tx.output_addresses)
     print(tx.txid)
     print(tx.input_count)
+    print(tx.inputs_types)
+    print(tx.outputs_types)
 
 
     tx = Tx.from_txid("6662bcc9aee93d57aaa0fd734596b2f3dbca629956623a78786105106ac46ac4")
-    print(tx.inputs)
     print(tx.input_addresses)
-    print(tx.outputs)
     print(tx.output_addresses)
     print(tx.txid)
+    print(tx.input_count)
+    print(tx.inputs_types)
+    print(tx.outputs_types)
