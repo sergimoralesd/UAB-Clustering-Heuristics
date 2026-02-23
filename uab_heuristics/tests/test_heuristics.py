@@ -42,5 +42,6 @@ if __name__ == "__main__":
         rounded_change = RoundedChange(n)
         test_heuristic(txs, rounded_change)
 
+    test_heuristic(txs, SmallerChange)
     
     
