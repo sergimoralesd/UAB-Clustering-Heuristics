@@ -7,7 +7,7 @@ from uab_heuristics.utils import get_collection_tx
 BASE_DIR = Path(__file__).resolve().parent
 
 
-def test_heuristic(txs, heuristic_cls):
+def test_heuristic(txs, heuristic_cls, prev_tx=False):
     print("#" * 50)
     if isinstance(heuristic_cls, type):
         heuristic = heuristic_cls()
@@ -19,6 +19,8 @@ def test_heuristic(txs, heuristic_cls):
         try:
             print(f"Applying heuristic to tx: \n{tx_id}")
             tx = Tx.from_raw(tx_raw)
+            if prev_tx:
+                tx.import_previous_txs()
             print(f"Input addrecess: \n{tx.input_addresses}")
             print(f"Output addrecess: \n{tx.output_addresses}")
             result_reused_addr_change = heuristic.apply(tx)
@@ -43,5 +45,7 @@ if __name__ == "__main__":
         test_heuristic(txs, rounded_change)
 
     test_heuristic(txs, SmallerChange)
+
+    test_heuristic(txs, OptimalChange, prev_tx=True)
     
     

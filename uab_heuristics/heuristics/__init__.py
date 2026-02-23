@@ -2,6 +2,7 @@ from .reused_address_change import ReusedAddressChange
 from .address_type_change import AddressTypeChange
 from .rounded_change import RoundedChange
 from .smaller_change import SmallerChange
+from .optimal_change import OptimalChange
 
 
-__all__ = ["ReusedAddressChange", "AddressTypeChange", "RoundedChange", "SmallerChange"] 
+__all__ = ["ReusedAddressChange", "AddressTypeChange", "RoundedChange", "SmallerChange", "OptimalChange"] 

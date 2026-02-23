@@ -7,6 +7,7 @@ from ..utils import get_address_type
 class Tx:
     def __init__(self, base_tx: BaseTransaction = None):
         self._tx = base_tx
+        self._previous_txs = None
     
     # ----------------------
     # Constructor methods
@@ -43,9 +44,24 @@ class Tx:
     def from_psbt(self, psbt, network='bitcoin', strict=True):
         raise NotImplementedError
     
+    def import_previous_txs(self, network='bitcoin', strict=True):
+        """
+        Include the txs where the inputs comes from.
+        """
+        previous_txs = []
+        for tx_input in self._tx.inputs:
+            prev_txid = tx_input.prev_txid.hex()
+            previous_txs.append(self.__class__.from_txid(prev_txid, network=network, strict=strict))
+        self._previous_txs = previous_txs
+    
     @property
     def inputs_values(self):
-        return [(i.address, i.value) for i in self._tx.inputs]
+        assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
+        data =  []
+        for tx_input, prev_tx in zip(self._tx.inputs, self._previous_txs):
+            prev_vout = int.from_bytes(tx_input.output_n, byteorder="big")
+            data.append(prev_tx.outputs_values[prev_vout])
+        return data
 
     @property
     def outputs_values(self):
@@ -82,3 +98,7 @@ class Tx:
     @property
     def outputs_types(self):
         return [(o.address, get_address_type(o.address)) for o in self._tx.outputs]
+    
+    @property
+    def previous_txid(self):
+        return [(i.prev_txid, i.output_n) for i in self._tx.inputs]

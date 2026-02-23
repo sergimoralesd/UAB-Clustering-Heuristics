@@ -8,6 +8,9 @@ if __name__ == "__main__":
     print(tx.input_count)
     print(tx.inputs_types)
     print(tx.outputs_types)
+    tx.import_previous_txs()
+    print(tx.inputs_values)
+    print(tx.outputs_values)
 
 
     tx = Tx.from_txid("6662bcc9aee93d57aaa0fd734596b2f3dbca629956623a78786105106ac46ac4")
