@@ -76,7 +76,7 @@ class Tx:
 
     @property
     def outputs_values(self):
-        return [(o.address, o.value) for o in self._tx.outputs]
+        return [o.value for o in self._tx.outputs]
 
     @property
     def input_addresses(self):
