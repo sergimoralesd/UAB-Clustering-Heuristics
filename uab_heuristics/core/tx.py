@@ -104,11 +104,11 @@ class Tx:
 
     @property
     def inputs_types(self):
-        return [(i.address, get_address_type(i.address)) for i in self._tx.inputs] 
+        return [get_address_type(i.address) for i in self._tx.inputs] 
 
     @property
     def outputs_types(self):
-        return [(o.address, get_address_type(o.address)) for o in self._tx.outputs]
+        return [get_address_type(o.address) for o in self._tx.outputs]
     
     @property
     def previous_txid(self):

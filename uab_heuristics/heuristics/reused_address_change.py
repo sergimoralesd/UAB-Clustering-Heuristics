@@ -10,7 +10,6 @@ class ReusedAddressChange(Heuristic):
     @classmethod
     def apply(cls, tx=None):
         assert tx != None
-        assert tx.input_count == 1, f"The tx {tx.txid} must contain at max 1 input"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain at max 2 outputs"
 
         reused = [input for input in tx.input_addresses if input in tx.output_addresses]

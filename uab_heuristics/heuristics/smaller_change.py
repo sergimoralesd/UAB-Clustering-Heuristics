@@ -10,7 +10,6 @@ class SmallerChange(Heuristic):
 
     def apply(self, tx=None):
         assert tx != None
-        assert tx.input_count == 1, f"The tx {tx.txid} must contain at max 1 input"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain at max 2 outputs"
 
         min_value = min(v for _, v in tx.outputs_values)

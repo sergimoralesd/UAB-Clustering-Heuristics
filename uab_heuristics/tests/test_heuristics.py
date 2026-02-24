@@ -35,9 +35,9 @@ if __name__ == "__main__":
     filename = BASE_DIR / "data" / "tx_collection.json"
     txs = get_collection_tx(filename, ["change_address"])
 
-    #test_heuristic(txs, ReusedAddressChange)
+    test_heuristic(txs, ReusedAddressChange)
     
-    #test_heuristic(txs, AddressTypeChange)
+    test_heuristic(txs, AddressTypeChange)
 
     for n in range(2, 8):
         print(f"-- N:{n} --")
