@@ -1,14 +1,14 @@
 from bitcoinlib.transactions import Transaction as BaseTransaction
 from io import BytesIO
-from ..api import rpc_call, make_request
-from ..utils import get_address_type
+from ..utils import get_address_type, get_raw_tx_from_id
 
 
 class Tx:
     def __init__(self, base_tx: BaseTransaction = None):
         self._tx = base_tx
         self._previous_txs = None
-    
+        self._future_txs = None
+
     # ----------------------
     # Constructor methods
     # ----------------------
@@ -27,12 +27,7 @@ class Tx:
         """
         Build Tx from txid by accessing the blockchain
         """
-        try:
-            raw_tx = bytes.fromhex(rpc_call("getrawtransaction", [txid, False]))
-        except Exception as e:
-            print(f"RPC failed, trying external APIs...")
-            raw_tx = bytes.fromhex(make_request(txid))
-
+        raw_tx = get_raw_tx_from_id(txid=txid)
         base_tx = BaseTransaction.parse_bytesio(BytesIO(raw_tx), strict=strict, network=network)
         return cls(base_tx)
 
@@ -53,7 +48,23 @@ class Tx:
             prev_txid = tx_input.prev_txid.hex()
             previous_txs.append(self.__class__.from_txid(prev_txid, network=network, strict=strict))
         self._previous_txs = previous_txs
-    
+
+    def import_future_txs(self, txs, network='bitcoin', strict=True):
+        """
+        Include the txs spending the outputs. If no tx is provided for an output, it will be considered unspent
+        """
+
+        future_txs = [None for _ in range(self.output_count)]
+        for future_txid in txs:  
+            future_tx = self.__class__.from_txid(future_txid, network=network, strict=strict)
+
+            for future_tx_input in future_tx._tx.inputs:
+                if future_tx_input.prev_txid.hex() == self.txid:
+                    output_n = int.from_bytes(future_tx_input.output_n, byteorder="big")
+                    future_txs[output_n] = future_tx
+
+        self._future_txs = future_txs
+
     @property
     def inputs_values(self):
         assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
@@ -101,4 +112,16 @@ class Tx:
     
     @property
     def previous_txid(self):
-        return [(i.prev_txid, i.output_n) for i in self._tx.inputs]
+        return [i.prev_txid for i in self._tx.inputs]
+    
+    @property
+    def future_txid(self):
+        return [o.txid if o is not None else None for o in self._future_txs]
+    
+    @property
+    def previous_txs(self):
+        return self._previous_txs
+
+    @property
+    def future_txs(self):
+        return self._future_txs
