@@ -119,6 +119,10 @@ class Tx:
         return [o.txid if o is not None else None for o in self._future_txs]
     
     @property
+    def prevouts(self):
+        return [f"{i.prev_txid}:{i.output_n}" for i in self._tx.inputs]
+    
+    @property
     def previous_txs(self):
         return self._previous_txs
 

@@ -1,20 +1,17 @@
 import requests
 
-templates = ["https://mempool.space/api/tx/{0}/hex", "https://blockchain.info/rawtx/{0}?format=hex"]
-
-
-def make_request(txid):
+def make_request(txid, templates):
     for template in templates:
         url = template.format(txid)
         try:
             r = requests.get(url, timeout=5)
             r.raise_for_status()
 
-            hex_tx = r.text.strip()
-            if not hex_tx:
+            tx = r.text.strip()
+            if not tx:
                 raise ValueError(f"Empty response from {url}")
 
-            return hex_tx  # success, return immediately
+            return tx  # success, return immediately
 
         except Exception as e:
             # Save last error, continue to next template
