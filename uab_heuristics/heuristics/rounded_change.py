@@ -13,7 +13,7 @@ class RoundedChange(Heuristic):
 
     def apply(self, tx=None):
         assert tx != None
-        assert tx.output_count == 2, f"The tx {tx.txid} must contain at max 2 outputs"
+        assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
         #transform satoshis to btcs
         change = [addr for addr, amount in zip(tx.output_addresses, tx.outputs_values) if amount*10**-8 % 10**-self.n != 0]

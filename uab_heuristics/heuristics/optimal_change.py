@@ -11,7 +11,10 @@ class OptimalChange(Heuristic):
     def apply(self, tx=None):
         assert tx != None
         assert tx.input_count > 1, f"The tx {tx.txid} must contain at min 2 inputs"
-        assert tx.output_count == 2, f"The tx {tx.txid} must contain at max 2 outputs"
+        assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
+
+        tx.import_previous_txs()
+
         for values in tx.inputs_values:
             assert values != 0, f"All inputs from {tx.txid} must containg amount associated"
 
