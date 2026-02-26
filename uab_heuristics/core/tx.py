@@ -112,7 +112,7 @@ class Tx:
     
     @property
     def previous_txid(self):
-        return [i.prev_txid for i in self._tx.inputs]
+        return [i.prev_txid.hex() for i in self._tx.inputs]
     
     @property
     def future_txid(self):
@@ -120,7 +120,7 @@ class Tx:
     
     @property
     def prevouts(self):
-        return [f"{i.prev_txid}:{i.output_n}" for i in self._tx.inputs]
+        return [f"{i.prev_txid.hex()}:{i.output_n}" for i in self._tx.inputs]
     
     @property
     def previous_txs(self):
