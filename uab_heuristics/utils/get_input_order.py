@@ -1,7 +1,6 @@
-from ..core import Tx
-from ..utils import get_block_height_from_txid 
+from .get_block_height_from_txid import get_block_height_from_txid 
 
-def get_input_order(tx: Tx):
+def get_input_order(tx):
     """
     Return ordering type of inputs of a transaction
 
