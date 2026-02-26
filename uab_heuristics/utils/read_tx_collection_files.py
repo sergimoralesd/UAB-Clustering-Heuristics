@@ -9,5 +9,5 @@ def get_collection_tx(filename, heuristics):
     txs_selected = []
     for heuristic in heuristics:
         for txs in data[heuristic]:
-            txs_selected.append((txs["tx_id"], txs["tx_raw"]))
+            txs_selected.append(txs)
     return txs_selected

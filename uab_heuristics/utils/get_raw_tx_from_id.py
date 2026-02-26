@@ -6,4 +6,4 @@ def get_raw_tx_from_id(txid):
         return(bytes.fromhex(rpc_call("getrawtransaction", [txid, False])))
     except Exception as e:
         print(f"RPC failed, trying external APIs...")
-        return(bytes.fromhex(make_request(txid)))
+        return(bytes.fromhex(make_request(txid, templates)))
