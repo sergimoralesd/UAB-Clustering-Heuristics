@@ -133,3 +133,7 @@ class Tx:
     @property
     def outputs_scriptPubKey(self):
         return [o.lock_script.hex() for o in self._tx.outputs]
+    
+    @property
+    def locktime(self):
+        return self._tx.locktime
