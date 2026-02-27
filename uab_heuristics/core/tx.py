@@ -129,3 +129,7 @@ class Tx:
     @property
     def future_txs(self):
         return self._future_txs
+    
+    @property
+    def outputs_scriptPubKey(self):
+        return [o.lock_script.hex() for o in self._tx.outputs]

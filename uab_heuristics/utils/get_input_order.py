@@ -1,3 +1,4 @@
+from binascii import unhexlify
 from .get_block_height_from_txid import get_block_height_from_txid 
 
 def get_input_order(tx):
@@ -21,7 +22,12 @@ def get_input_order(tx):
     if sorted(tx.inputs_values)[::-1] == tx.inputs_values:
         return 2
     
-    if sorted(tx.prevouts) == tx.prevouts:
+    aux = []
+    for p in tx.prevouts:
+        txid_hex, vout_str = p.split(":")
+        aux.append(unhexlify(txid_hex), int(vout_str))
+
+    if sorted(aux, key=lambda x: (x[0], x[1])) == tx.prevouts:
         return 3
     
     blocks = [get_block_height_from_txid(txid=prev_txid) for prev_txid in tx.previous_txid]

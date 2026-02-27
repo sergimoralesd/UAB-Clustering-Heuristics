@@ -22,6 +22,6 @@ if __name__ == "__main__":
     print(tx.inputs_types)
     print(tx.outputs_types)
     tx.import_future_txs(["ad164b6e7c034243e5488c49d3bf879bdac533bdca07d32cce6b82c1eaf52999", "3d2abf76a0ab0bbaf464b7b58f1593f96539e6f3587b34f80c6ca419797cf9b3"])
-    print(tx.future_txs)
     print(tx.future_txid)
+    print(tx.outputs_scriptPubKey)
 
