@@ -15,7 +15,10 @@ class LocktimeChange(Heuristic):
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
         locktime_configuration = anti_fee_sniping(tx)
-        locktime_spending_configuration = [anti_fee_sniping(future_tx) for future_tx in tx.future_txs if future_tx is not None]
+        locktime_spending_configuration = [
+            anti_fee_sniping(future_tx) if future_tx is not None else None 
+            for future_tx in tx.future_txs
+            ]
 
         indexes = [i for i, order in enumerate(locktime_spending_configuration) if order == locktime_configuration]
         #if we find one coincidence, we can extract the change
@@ -24,7 +27,7 @@ class LocktimeChange(Heuristic):
                 "result" : True,
                 "address" : [tx.output_addresses[indexes[0]]]
             }
-        #ee find either none or more than one coincidence, so we can not extract the change
+        #we find either none or more than one coincidence, so we can not extract the change
         return  {
             "result" : False,
             "address" : []

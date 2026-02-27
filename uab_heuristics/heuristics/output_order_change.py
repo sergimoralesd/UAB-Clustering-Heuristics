@@ -29,7 +29,7 @@ class OutputOrderChange(Heuristic):
                 "result" : True,
                 "address" : [tx.output_addresses[indexes[0]]]
             }
-        #ee find either none or more than one coincidence, so we can not extract the change
+        #we find either none or more than one coincidence, so we can not extract the change
         return  {
             "result" : False,
             "address" : []
