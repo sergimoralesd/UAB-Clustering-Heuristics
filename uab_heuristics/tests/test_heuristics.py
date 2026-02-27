@@ -51,6 +51,9 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, OptimalChange)
 
-    test_heuristic(txs, InputOrderChange, future_txs=True)
+    #test_heuristic(txs, InputOrderChange, future_txs=True)
+    
+    test_heuristic(txs, OutputOrderChange, future_txs=True)
+
     
     
