@@ -6,6 +6,8 @@ from .optimal_change import OptimalChange
 from .input_order_change import InputOrderChange
 from .output_order_change import OutputOrderChange
 from .locktime_change import LocktimeChange
+from .fee_absolute_change import FeeAbsoluteChange
+from .fee_relative_change import FeeRelativeChange
 
 
 __all__ = ["ReusedAddressChange", 
@@ -15,4 +17,6 @@ __all__ = ["ReusedAddressChange",
            "OptimalChange", 
            "InputOrderChange", 
            "OutputOrderChange",
-           "LocktimeChange"] 
+           "LocktimeChange", 
+           "FeeAbsoluteChange", 
+           "FeeRelativeChange"] 

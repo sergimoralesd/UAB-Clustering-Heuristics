@@ -11,6 +11,9 @@ if __name__ == "__main__":
     tx.import_previous_txs()
     print(tx.inputs_values)
     print(tx.outputs_values)
+    print(tx.absolute_fee)
+    print(tx.relative_fee)
+    print(tx.size)
 
 
 
@@ -24,4 +27,8 @@ if __name__ == "__main__":
     tx.import_future_txs(["ad164b6e7c034243e5488c49d3bf879bdac533bdca07d32cce6b82c1eaf52999", "3d2abf76a0ab0bbaf464b7b58f1593f96539e6f3587b34f80c6ca419797cf9b3"])
     print(tx.future_txid)
     print(tx.outputs_scriptPubKey)
+    tx.import_previous_txs()
+    print(tx.absolute_fee)
+    print(tx.relative_fee)
+    print(tx.size)
 

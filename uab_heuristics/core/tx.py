@@ -137,3 +137,12 @@ class Tx:
     @property
     def locktime(self):
         return self._tx.locktime
+    
+    @property
+    def absolute_fee(self):
+        assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
+        return sum(self.inputs_values) - sum(self.outputs_values)
+    
+    @property
+    def relative_fee(self):
+        return round(self.absolute_fee/self.size)
