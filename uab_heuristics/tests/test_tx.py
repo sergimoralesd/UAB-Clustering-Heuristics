@@ -32,4 +32,4 @@ if __name__ == "__main__":
     print(tx.relative_fee)
     print(tx.size)
     print(tx.version)
-    print(tx.sequence)
+    print(tx.inputs_sequence)
