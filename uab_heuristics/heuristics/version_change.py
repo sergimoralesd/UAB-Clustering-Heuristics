@@ -9,7 +9,7 @@ class VersionChange(Heuristic):
 
     @classmethod
     def apply(cls, tx=None):
-        assert tx != None
+        assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
@@ -19,7 +19,7 @@ class VersionChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, order in enumerate(version_future_txs) if order == tx.version]
+        indexes = [i for i, version in enumerate(version_future_txs) if version == tx.version]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {

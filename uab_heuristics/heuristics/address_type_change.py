@@ -9,7 +9,7 @@ class AddressTypeChange(Heuristic):
 
     @classmethod
     def apply(cls, tx=None):
-        assert tx != None
+        assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
         reused = [addr for addr, addr_type in zip(tx.output_addresses, tx.outputs_types) if addr_type in tx.inputs_types]

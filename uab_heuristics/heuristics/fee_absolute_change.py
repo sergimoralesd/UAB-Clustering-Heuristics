@@ -9,7 +9,7 @@ class FeeAbsoluteChange(Heuristic):
 
     @classmethod
     def apply(cls, tx=None):
-        assert tx != None
+        assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
@@ -25,7 +25,7 @@ class FeeAbsoluteChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, order in enumerate(absolute_fee_future_txs) if order == tx.absolute_fee]
+        indexes = [i for i, abs_fee in enumerate(absolute_fee_future_txs) if abs_fee == tx.absolute_fee]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {

@@ -12,7 +12,7 @@ class RoundedChange(Heuristic):
 
 
     def apply(self, tx=None):
-        assert tx != None
+        assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
         #transform satoshis to btcs
