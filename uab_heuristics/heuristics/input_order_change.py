@@ -27,7 +27,7 @@ class InputOrderChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, order in enumerate(outputs_order) if order == inputs_order]
+        indexes = [i for i, in_order in enumerate(outputs_order) if in_order == inputs_order]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {

@@ -20,7 +20,7 @@ class LocktimeChange(Heuristic):
             for future_tx in tx.future_txs
             ]
 
-        indexes = [i for i, order in enumerate(locktime_spending_configuration) if order == locktime_configuration]
+        indexes = [i for i, locktime in enumerate(locktime_spending_configuration) if locktime == locktime_configuration]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {

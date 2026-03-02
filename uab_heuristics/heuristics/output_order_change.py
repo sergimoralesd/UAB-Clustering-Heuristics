@@ -14,7 +14,7 @@ class OutputOrderChange(Heuristic):
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
-        inputs_order = get_output_order(tx)
+        outputs_order = get_output_order(tx)
 
         #check the output order of the spending tx, if we find correlation between them, it may imply is the same user
         outputs_order = [
@@ -22,7 +22,7 @@ class OutputOrderChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, order in enumerate(outputs_order) if order == inputs_order]
+        indexes = [i for i, out_order in enumerate(outputs_order) if out_order == outputs_order]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {
