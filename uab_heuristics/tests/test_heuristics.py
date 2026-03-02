@@ -57,9 +57,11 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, LocktimeChange, future_txs=True)
 
-    test_heuristic(txs, FeeAbsoluteChange, future_txs=True)
+    #test_heuristic(txs, FeeAbsoluteChange, future_txs=True)
 
-    test_heuristic(txs, FeeRelativeChange, future_txs=True)
+    #test_heuristic(txs, FeeRelativeChange, future_txs=True)
+
+    test_heuristic(txs, VersionChange, future_txs=True)
 
 
     

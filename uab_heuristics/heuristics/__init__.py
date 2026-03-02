@@ -8,6 +8,7 @@ from .output_order_change import OutputOrderChange
 from .locktime_change import LocktimeChange
 from .fee_absolute_change import FeeAbsoluteChange
 from .fee_relative_change import FeeRelativeChange
+from .version_change import VersionChange
 
 
 __all__ = ["ReusedAddressChange", 
@@ -19,4 +20,5 @@ __all__ = ["ReusedAddressChange",
            "OutputOrderChange",
            "LocktimeChange", 
            "FeeAbsoluteChange", 
-           "FeeRelativeChange"] 
+           "FeeRelativeChange", 
+           "VersionChange"] 

@@ -146,3 +146,7 @@ class Tx:
     @property
     def relative_fee(self):
         return round(self.absolute_fee/self.size)
+    
+    @property 
+    def version(self):
+        return self._tx.version_int
