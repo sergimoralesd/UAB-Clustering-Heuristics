@@ -11,6 +11,7 @@ from .fee_relative_change import FeeRelativeChange
 from .version_change import VersionChange
 from .signal_rbf_change import SignalRBFChange
 from .consistent_address_type_change import ConsistentAddressTypeChange
+from .zero_confirmation_change import ZeroConfirmationChange
 
 
 __all__ = ["ReusedAddressChange", 
@@ -25,4 +26,5 @@ __all__ = ["ReusedAddressChange",
            "FeeRelativeChange", 
            "VersionChange", 
            "SignalRBFChange", 
-           "ConsistentAddressTypeChange"] 
+           "ConsistentAddressTypeChange", 
+           "ZeroConfirmationChange"] 
