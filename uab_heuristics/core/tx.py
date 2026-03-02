@@ -150,3 +150,7 @@ class Tx:
     @property 
     def version(self):
         return self._tx.version_int
+    
+    @property 
+    def inputs_sequence(self):
+        return [i.sequence for i in self._tx.inputs]

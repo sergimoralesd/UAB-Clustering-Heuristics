@@ -61,7 +61,10 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, FeeRelativeChange, future_txs=True)
 
-    test_heuristic(txs, VersionChange, future_txs=True)
+    #test_heuristic(txs, VersionChange, future_txs=True)
+
+    test_heuristic(txs, SignalRBFChange, future_txs=True)
+
 
 
     

@@ -9,6 +9,7 @@ from .locktime_change import LocktimeChange
 from .fee_absolute_change import FeeAbsoluteChange
 from .fee_relative_change import FeeRelativeChange
 from .version_change import VersionChange
+from .signal_rbf_change import SignalRBFChange
 
 
 __all__ = ["ReusedAddressChange", 
@@ -21,4 +22,5 @@ __all__ = ["ReusedAddressChange",
            "LocktimeChange", 
            "FeeAbsoluteChange", 
            "FeeRelativeChange", 
-           "VersionChange"] 
+           "VersionChange", 
+           "SignalRBFChange"] 
