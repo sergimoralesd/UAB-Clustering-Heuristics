@@ -22,12 +22,12 @@ class InputOrderChange(Heuristic):
                 future_tx.import_previous_txs()
 
         #check the order of the inputs of the spending tx, if we find correlation between them, it may imply is the same user
-        outputs_order = [
+        inputs_order = [
             get_input_order(future_tx) if future_tx is not None else None
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, in_order in enumerate(outputs_order) if in_order == inputs_order]
+        indexes = [i for i, in_order in enumerate(inputs_order) if in_order == inputs_order]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {
