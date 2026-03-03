@@ -33,3 +33,13 @@ if __name__ == "__main__":
     print(tx.size)
     print(tx.version)
     print(tx.inputs_sequence)
+    print(tx.inputs_witness)
+    print(tx.inputs_scriptSig)
+    
+    tx = Tx.from_txid("6662bcc9aee93d57aaa0fd734596b2f3dbca629956623a78786105106ac46ac4")
+    print(tx.inputs_witness)
+    print(tx.inputs_scriptSig)
+    tx = Tx.from_txid("e832a048ff7330d3e23c766a5d725997f96789d38923654f5533ff3f314de4bd")
+    print(tx.inputs_witness)
+    print(tx.inputs_scriptSig)
+

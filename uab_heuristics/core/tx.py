@@ -154,3 +154,17 @@ class Tx:
     @property 
     def inputs_sequence(self):
         return [i.sequence for i in self._tx.inputs]
+    
+    @property 
+    def inputs_witness(self):
+        total_witness_data = []
+        for i in self._tx.inputs:
+            witness_data = []
+            for witness in i.witnesses:
+                witness_data.append(witness.hex())
+            total_witness_data.append(witness_data)
+        return total_witness_data
+    
+    @property 
+    def inputs_scriptSig(self):
+        return [i.unlocking_script.hex() for i in self._tx.inputs]

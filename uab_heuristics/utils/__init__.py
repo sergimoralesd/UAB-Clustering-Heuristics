@@ -6,5 +6,6 @@ from .get_output_order import get_output_order
 from .anti_fee_sniping import anti_fee_sniping
 from .signal_rbf import signals_rbf
 from .get_block_height_from_txid import get_block_height_from_txid
+from .low_r_only import low_r_only
 
-__all__ = ["get_address_type", "get_collection_tx", "get_raw_tx_from_id", "get_input_order", "get_output_order", "anti_fee_sniping", "signals_rbf", "get_block_height_from_txid"]
+__all__ = ["get_address_type", "get_collection_tx", "get_raw_tx_from_id", "get_input_order", "get_output_order", "anti_fee_sniping", "signals_rbf", "get_block_height_from_txid", "low_r_only"]
