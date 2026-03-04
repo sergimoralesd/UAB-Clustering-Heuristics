@@ -20,7 +20,7 @@ class ConsistentAddressTypeChange(Heuristic):
                 "address" : []
             }
 
-        change = [addr for addr, addr_type in zip(tx.output_addresses, tx.outputs_types) if addr_type in tx.inputs_types]
+        change = [addr for addr, addr_type in zip(tx.outputs_addresses, tx.outputs_types) if addr_type in tx.inputs_types]
 
         if len(change) == 1:
             return {

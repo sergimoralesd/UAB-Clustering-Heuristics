@@ -31,12 +31,12 @@ class EqualOutputCoinjoinChange(Heuristic):
         tx_fee = tx.absolute_fee
         addr_change = []
         payment_amount = posible_payment_amount[0]
-        for in_addr, in_value in zip(tx.input_addresses, tx.inputs_values):
+        for in_addr, in_value in zip(tx.inputs_addresses, tx.inputs_values):
             addrs_posible_change = []
             posible_change = in_value - payment_amount
             
             #check for every output the amount to see if it matches the change
-            for out_addr, out_amount in zip(tx.output_addresses, tx.outputs_values):
+            for out_addr, out_amount in zip(tx.outputs_addresses, tx.outputs_values):
 
                 #see if it falls inside the posible change amount taking into account the fees
                 if posible_change - tx_fee <= out_amount <= posible_change:

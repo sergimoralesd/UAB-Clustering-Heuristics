@@ -13,7 +13,7 @@ class SmallerChange(Heuristic):
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
         min_value = min(tx.outputs_values)
-        candidates = [addr for addr, v in zip(tx.output_addresses, tx.outputs_values) if v == min_value]
+        candidates = [addr for addr, v in zip(tx.outputs_addresses, tx.outputs_values) if v == min_value]
         
         if len(candidates) == 1:
             return {

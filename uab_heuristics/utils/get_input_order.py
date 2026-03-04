@@ -25,9 +25,11 @@ def get_input_order(tx):
     aux = []
     for p in tx.prevouts:
         txid_hex, vout_str = p.split(":")
-        aux.append(unhexlify(txid_hex), int(vout_str))
+        aux.append((unhexlify(txid_hex), int(vout_str)))
 
-    if sorted(aux, key=lambda x: (x[0], x[1])) == tx.prevouts:
+    sorted_prevouts_bin = sorted(aux, key=lambda x: (x[0], x[1]))
+    sorted_prevouts_hex = [f"{txid.hex()}:{vout}" for txid, vout in sorted_prevouts_bin]
+    if sorted_prevouts_hex == tx.prevouts:
         return 3
     
     blocks = [get_block_height_from_txid(txid=prev_txid) for prev_txid in tx.previous_txid]

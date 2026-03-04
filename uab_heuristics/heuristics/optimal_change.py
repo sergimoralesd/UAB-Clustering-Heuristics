@@ -20,7 +20,7 @@ class OptimalChange(Heuristic):
 
         #we start extracting the potential change address, following the min output rule
         potential_change_value = min(tx.outputs_values)
-        potential_change_addr = tx.output_addresses[tx.outputs_values.index(potential_change_value)]
+        potential_change_addr = tx.outputs_addresses[tx.outputs_values.index(potential_change_value)]
 
         #if we find any input smaller than the min output, we can not extract the change
         for input_value in tx.inputs_values:

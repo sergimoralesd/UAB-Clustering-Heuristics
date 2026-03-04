@@ -12,7 +12,7 @@ class AddressTypeChange(Heuristic):
         assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
-        change = [addr for addr, addr_type in zip(tx.output_addresses, tx.outputs_types) if addr_type in tx.inputs_types]
+        change = [addr for addr, addr_type in zip(tx.outputs_addresses, tx.outputs_types) if addr_type in tx.inputs_types]
 
         if len(change) == 1:
             return {

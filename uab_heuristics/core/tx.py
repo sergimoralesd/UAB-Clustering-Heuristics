@@ -79,11 +79,11 @@ class Tx:
         return [o.value for o in self._tx.outputs]
 
     @property
-    def input_addresses(self):
+    def inputs_addresses(self):
         return [i.address for i in self._tx.inputs]
 
     @property
-    def output_addresses(self):
+    def outputs_addresses(self):
         return [o.address for o in self._tx.outputs]
 
     @property
@@ -120,7 +120,7 @@ class Tx:
     
     @property
     def prevouts(self):
-        return [f"{i.prev_txid.hex()}:{i.output_n}" for i in self._tx.inputs]
+        return [f"{i.prev_txid.hex()}:{int.from_bytes(i.output_n)}" for i in self._tx.inputs]
     
     @property
     def previous_txs(self):

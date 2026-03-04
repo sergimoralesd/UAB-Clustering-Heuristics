@@ -24,7 +24,7 @@ class VersionChange(Heuristic):
         if len(indexes) == 1:
             return {
                 "result" : True,
-                "address" : [tx.output_addresses[indexes[0]]]
+                "address" : [tx.outputs_addresses[indexes[0]]]
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {

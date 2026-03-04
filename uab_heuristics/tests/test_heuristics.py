@@ -24,8 +24,8 @@ def test_heuristic(txs, heuristic_cls, prev_tx=False, future_txs=False):
             if future_txs:
                 tx_object.import_future_txs(tx["future_txs"])
                 
-            print(f"Input addrecess: \n{tx_object.input_addresses}")
-            print(f"Output addrecess: \n{tx_object.output_addresses}")
+            print(f"Input addrecess: \n{tx_object.inputs_addresses}")
+            print(f"Output addrecess: \n{tx_object.outputs_addresses}")
             result_reused_addr_change = heuristic.apply(tx_object)
             print(f"Result from heurisitc: \n{result_reused_addr_change}")
         except Exception as e:
@@ -71,6 +71,6 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, LowRChange, future_txs=True) 
 
-    txs = get_collection_tx(filename, ["coinjoin"])
-    test_heuristic(txs, EqualOutputCoinjoinChange) 
+    #txs = get_collection_tx(filename, ["coinjoin"])
+    #test_heuristic(txs, EqualOutputCoinjoinChange) 
 

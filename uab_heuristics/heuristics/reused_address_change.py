@@ -12,7 +12,7 @@ class ReusedAddressChange(Heuristic):
         assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
-        reused = [input for input in tx.input_addresses if input in tx.output_addresses]
+        reused = [input for input in tx.inputs_addresses if input in tx.outputs_addresses]
         return {
             "result" : len(reused) != 0,
             "address" : reused

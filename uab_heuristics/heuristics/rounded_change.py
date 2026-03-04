@@ -16,7 +16,7 @@ class RoundedChange(Heuristic):
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
         #transform satoshis to btcs
-        change = [addr for addr, amount in zip(tx.output_addresses, tx.outputs_values) if amount*10**-8 % 10**-self.n != 0]
+        change = [addr for addr, amount in zip(tx.outputs_addresses, tx.outputs_values) if amount*10**-8 % 10**-self.n != 0]
 
         if len(change) == 1:
             return {

@@ -15,24 +15,24 @@ class InputOrderChange(Heuristic):
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
         tx.import_previous_txs()
-        inputs_order = get_input_order(tx)
+        input_order = get_input_order(tx)
 
         for future_tx in tx.future_txs:
             if future_tx is not None:
                 future_tx.import_previous_txs()
 
         #check the order of the inputs of the spending tx, if we find correlation between them, it may imply is the same user
-        inputs_order = [
+        future_tx_inputs_order = [
             get_input_order(future_tx) if future_tx is not None else None
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, in_order in enumerate(inputs_order) if in_order == inputs_order]
+        indexes = [i for i, in_order in enumerate(future_tx_inputs_order) if in_order == input_order]
         #if we find one coincidence, we can extract the change
         if len(indexes) == 1:
             return {
                 "result" : True,
-                "address" : [tx.output_addresses[indexes[0]]]
+                "address" : [tx.outputs_addresses[indexes[0]]]
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {
