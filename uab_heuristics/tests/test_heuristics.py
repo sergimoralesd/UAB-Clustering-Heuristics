@@ -69,4 +69,8 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
-    test_heuristic(txs, LowRChange, future_txs=True) 
+    #test_heuristic(txs, LowRChange, future_txs=True) 
+
+    txs = get_collection_tx(filename, ["coinjoin"])
+    test_heuristic(txs, EqualOutputCoinjoinChange) 
+
