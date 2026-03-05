@@ -74,3 +74,5 @@ if __name__ == "__main__":
     #txs = get_collection_tx(filename, ["coinjoin"])
     #test_heuristic(txs, EqualOutputCoinjoinChange) 
 
+    test_heuristic(txs, MultiSignatureChange, future_txs=True)
+

@@ -22,12 +22,12 @@ class ZeroConfirmationChange(Heuristic):
             for future_tx in tx.future_txs
         ]
         
-        indexes = [i for i, future_block_height in enumerate(block_heights_future_txs) if future_block_height != None and future_block_height - actual_block_height < 6]
+        change = [addr for addr, future_block_height in zip(tx.outputs_addresses, block_heights_future_txs) if future_block_height != None and future_block_height - actual_block_height < 6]
         #if we find one coincidence, we can extract the change
-        if len(indexes) == 1:
+        if len(change) == 1:
             return {
                 "result" : True,
-                "address" : [tx.outputs_addresses[indexes[0]]]
+                "address" : change
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {

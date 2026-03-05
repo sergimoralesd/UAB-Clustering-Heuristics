@@ -20,12 +20,12 @@ class LocktimeChange(Heuristic):
             for future_tx in tx.future_txs
             ]
 
-        indexes = [i for i, locktime in enumerate(locktime_spending_configuration) if locktime == locktime_configuration]
+        change = [addr for addr, locktime in zip(tx.outputs_addresses, locktime_spending_configuration) if locktime == locktime_configuration]
         #if we find one coincidence, we can extract the change
-        if len(indexes) == 1:
+        if len(change) == 1:
             return {
                 "result" : True,
-                "address" : [tx.outputs_addresses[indexes[0]]]
+                "address" : change
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {

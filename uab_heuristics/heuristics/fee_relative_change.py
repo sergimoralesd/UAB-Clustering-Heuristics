@@ -25,12 +25,12 @@ class FeeRelativeChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, rel_fee in enumerate(relative_fee_future_txs) if rel_fee == tx.relative_fee]
+        change = [addr for addr, rel_fee in zip(tx.outputs_addresses, relative_fee_future_txs) if rel_fee == tx.relative_fee]
         #if we find one coincidence, we can extract the change
-        if len(indexes) == 1:
+        if len(change) == 1:
             return {
                 "result" : True,
-                "address" : [tx.outputs_addresses[indexes[0]]]
+                "address" : change
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {

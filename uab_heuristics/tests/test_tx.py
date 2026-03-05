@@ -36,10 +36,21 @@ if __name__ == "__main__":
     print(tx.inputs_witness)
     print(tx.inputs_scriptSig)
     
-    tx = Tx.from_txid("6662bcc9aee93d57aaa0fd734596b2f3dbca629956623a78786105106ac46ac4")
-    print(tx.inputs_witness)
+    #tx = Tx.from_txid("6662bcc9aee93d57aaa0fd734596b2f3dbca629956623a78786105106ac46ac4")
+    #print(tx.inputs_witness)
+    #print(tx.inputs_scriptSig)
+    #tx = Tx.from_txid("e832a048ff7330d3e23c766a5d725997f96789d38923654f5533ff3f314de4bd")
+    #print(tx.inputs_witness)
+    #print(tx.inputs_scriptSig)
+
+    print("##MULTISIG##")
+    tx = Tx.from_txid("1085ee6d2b65eb2cbd322e4afd0a43342bb943dd27a4ad6eddfdc6a7102b6b3c")
     print(tx.inputs_scriptSig)
-    tx = Tx.from_txid("e832a048ff7330d3e23c766a5d725997f96789d38923654f5533ff3f314de4bd")
     print(tx.inputs_witness)
+
+    tx = Tx.from_txid("4d8eabfc8e6c266fb0ccd815d37dd69246da634df0effd5a5c922e4ec37880f6")
     print(tx.inputs_scriptSig)
+    print(tx.inputs_witness)
+    
+    
 

@@ -22,12 +22,12 @@ class SignalRBFChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, rbf in enumerate(rbf_future_txs) if rbf == signal_rbf]
+        change = [addr for addr, rbf in zip(tx.outputs_addresses, rbf_future_txs) if rbf == signal_rbf]
         #if we find one coincidence, we can extract the change
-        if len(indexes) == 1:
+        if len(change) == 1:
             return {
                 "result" : True,
-                "address" : [tx.outputs_addresses[indexes[0]]]
+                "address" : change
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {

@@ -27,12 +27,12 @@ class InputOrderChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, in_order in enumerate(future_tx_inputs_order) if in_order == input_order]
+        change = [addr for addr, in_order in zip(tx.outputs_addresses, future_tx_inputs_order) if in_order == input_order]
         #if we find one coincidence, we can extract the change
-        if len(indexes) == 1:
+        if len(change) == 1:
             return {
                 "result" : True,
-                "address" : [tx.outputs_addresses[indexes[0]]]
+                "address" : change
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {

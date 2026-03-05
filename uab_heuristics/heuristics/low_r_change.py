@@ -21,12 +21,12 @@ class LowRChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        indexes = [i for i, low_r_future in enumerate(low_r_future_txs) if low_r == low_r_future]
+        change = [addr for addr, low_r_future in zip(tx.outputs_addresses, low_r_future_txs) if low_r == low_r_future]
         #if we find one coincidence, we can extract the change
-        if len(indexes) == 1:
+        if len(change) == 1:
             return {
                 "result" : True,
-                "address" : [tx.outputs_addresses[indexes[0]]]
+                "address" : change
             }
         #we find either none or more than one coincidence, so we can not extract the change
         return  {
