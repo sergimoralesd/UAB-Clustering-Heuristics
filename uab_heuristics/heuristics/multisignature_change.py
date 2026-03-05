@@ -14,6 +14,8 @@ class MultiSignatureChange(Heuristic):
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
+        tx.import_previous_txs()
+
         multisignature_type = get_multisignature_script_type(tx)
         if len(multisignature_type) != 1:
             return  {
