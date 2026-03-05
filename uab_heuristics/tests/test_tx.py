@@ -51,6 +51,9 @@ if __name__ == "__main__":
     tx = Tx.from_txid("4d8eabfc8e6c266fb0ccd815d37dd69246da634df0effd5a5c922e4ec37880f6")
     print(tx.inputs_scriptSig)
     print(tx.inputs_witness)
+
+    #taproot tx
+    tx = Tx.from_txid("3179b878515d5ac2918e0bc1e7efdf58f04515691c3b5a96c6f734d5162556e7")
     
     
 
