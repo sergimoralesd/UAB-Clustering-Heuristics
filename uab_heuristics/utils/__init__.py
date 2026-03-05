@@ -8,6 +8,7 @@ from .signal_rbf import signals_rbf
 from .get_block_height_from_txid import get_block_height_from_txid
 from .low_r_only import low_r_only
 from .multisignature_script_type import get_multisignature_script_type
+from .varint_size import varint_size
 
 __all__ = ["get_address_type", 
            "get_collection_tx", 
@@ -18,4 +19,5 @@ __all__ = ["get_address_type",
            "signals_rbf", 
            "get_block_height_from_txid", 
            "low_r_only", 
-           "get_multisignature_script_type"]
+           "get_multisignature_script_type", 
+           "varint_size"]
