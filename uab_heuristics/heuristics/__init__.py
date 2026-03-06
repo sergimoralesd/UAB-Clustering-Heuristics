@@ -17,6 +17,7 @@ from .equal_output_coinjoin_change import EqualOutputCoinjoinChange
 from .multisignature_change import MultiSignatureChange
 from .one_time_change import OneTimeChange
 from .future_address_reuse_change import FutureAddressReuse
+from .segwit_conform_change import SegwitConformChange
 
 
 __all__ = ["ReusedAddressChange", 
@@ -37,4 +38,5 @@ __all__ = ["ReusedAddressChange",
            "EqualOutputCoinjoinChange", 
            "MultiSignatureChange", 
            "OneTimeChange", 
-           "FutureAddressReuse"] 
+           "FutureAddressReuse", 
+           "SegwitConformChange"] 

@@ -78,5 +78,7 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, OneTimeChange)
     
-    test_heuristic(txs, FutureAddressReuse)
+    #test_heuristic(txs, FutureAddressReuse)
+
+    test_heuristic(txs, SegwitConformChange, future_txs=True)
 

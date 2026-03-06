@@ -257,3 +257,8 @@ class Tx:
     @property
     def inputs_scriptSig(self):
         return [vin.scriptSig.hex() for vin in self._tx.vin]
+    
+    @property
+    def is_segwit(self):
+        raw = self._tx.serialize()
+        return raw[4] == b'0x00' and raw[5] == b'0x01'

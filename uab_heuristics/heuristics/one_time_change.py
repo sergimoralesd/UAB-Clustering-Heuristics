@@ -25,7 +25,6 @@ class OneTimeChange(Heuristic):
 
         actual_block_height = get_block_height_from_txid(tx.txid)
 
-        occurences = 0
         change = []
         #we look if there is any previous tx where this address appeared, if not we will consider it the change address
         for out_addr, blocks_heights in zip(tx.outputs_addresses, total_blocks_heights):
