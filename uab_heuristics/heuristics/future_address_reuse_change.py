@@ -24,16 +24,9 @@ class FutureAddressReuse(Heuristic):
                     blocks_heights.append(tx_from_addr["status"]["block_height"])
             total_blocks_heights.append(sorted(blocks_heights))
 
-        actual_block_height = get_block_height_from_txid(tx.txid)
-
-        occurences = 0
-        change = []
-        #we look if there is any previous tx where this address appeared, if not we will consider it the change address
-        for out_addr, blocks_heights in zip(tx.outputs_addresses, total_blocks_heights):
-                #if we dont find any tx, means it is never used before and after.
-                if len(blocks_heights) == 0:
-                    change.append(out_addr)
-
+        #if we dont find any tx, means it is never used before and after.
+        change = [out_addr for out_addr, blocks_heights in zip(tx.outputs_addresses, total_blocks_heights) if len(blocks_heights) == 0]
+            
         if len(change) == 1:
             return {
                 "result" : True,
