@@ -15,6 +15,7 @@ from .zero_confirmation_change import ZeroConfirmationChange
 from .low_r_change import LowRChange
 from .equal_output_coinjoin_change import EqualOutputCoinjoinChange
 from .multisignature_change import MultiSignatureChange
+from .one_time_change import OneTimeChange
 
 
 __all__ = ["ReusedAddressChange", 
@@ -33,4 +34,5 @@ __all__ = ["ReusedAddressChange",
            "ZeroConfirmationChange", 
            "LowRChange", 
            "EqualOutputCoinjoinChange", 
-           "MultiSignatureChange"] 
+           "MultiSignatureChange", 
+           "OneTimeChange"] 

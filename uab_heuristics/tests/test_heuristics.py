@@ -43,35 +43,38 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, AddressTypeChange)
 
-    for n in range(2, 8):
-        print(f"-- N:{n} --")
-        rounded_change = RoundedChange(n)
-        test_heuristic(txs, rounded_change)
+    #for n in range(2, 8):
+    #    print(f"-- N:{n} --")
+    #    rounded_change = RoundedChange(n)
+    #    test_heuristic(txs, rounded_change)
 
-    test_heuristic(txs, SmallerChange)
+    #test_heuristic(txs, SmallerChange)
 
-    test_heuristic(txs, OptimalChange)
+    #test_heuristic(txs, OptimalChange)
 
-    test_heuristic(txs, InputOrderChange, future_txs=True)
+    #test_heuristic(txs, InputOrderChange, future_txs=True)
     
-    test_heuristic(txs, OutputOrderChange, future_txs=True)
+    #test_heuristic(txs, OutputOrderChange, future_txs=True)
 
-    test_heuristic(txs, LocktimeChange, future_txs=True)
+    #test_heuristic(txs, LocktimeChange, future_txs=True)
 
-    test_heuristic(txs, FeeAbsoluteChange, future_txs=True)
+    #test_heuristic(txs, FeeAbsoluteChange, future_txs=True)
 
-    test_heuristic(txs, FeeRelativeChange, future_txs=True)
+    #test_heuristic(txs, FeeRelativeChange, future_txs=True)
 
-    test_heuristic(txs, VersionChange, future_txs=True)
+    #test_heuristic(txs, VersionChange, future_txs=True)
 
-    test_heuristic(txs, SignalRBFChange, future_txs=True)
+    #test_heuristic(txs, SignalRBFChange, future_txs=True)
 
-    test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
+    #test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
 
-    test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
+    #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
-    test_heuristic(txs, LowRChange, future_txs=True)  
+    #test_heuristic(txs, LowRChange, future_txs=True)  
 
-    test_heuristic(txs, MultiSignatureChange, future_txs=True)
+    #test_heuristic(txs, MultiSignatureChange, future_txs=True)
 
-    test_heuristic(txs_coinjoin, EqualOutputCoinjoinChange)
+    #test_heuristic(txs_coinjoin, EqualOutputCoinjoinChange)
+
+    test_heuristic(txs, OneTimeChange)
+
