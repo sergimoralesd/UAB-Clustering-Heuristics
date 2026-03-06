@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
-    #test_heuristic(txs, LowRChange, future_txs=True)  
+    test_heuristic(txs, LowRChange, future_txs=True)  
 
     #test_heuristic(txs, MultiSignatureChange, future_txs=True)
 
@@ -80,5 +80,5 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, FutureAddressReuse)
 
-    test_heuristic(txs, SegwitConformChange, future_txs=True)
+    #test_heuristic(txs, SegwitConformChange, future_txs=True)
 

@@ -14,6 +14,11 @@ class LowRChange(Heuristic):
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
+        tx.import_previous_txs()
+        for future_tx in tx.future_txs:
+            if future_tx is not None:
+                future_tx.import_previous_txs()
+
         low_r = low_r_only(tx)
 
         low_r_future_txs = [
