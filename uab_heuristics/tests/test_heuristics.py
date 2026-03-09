@@ -7,7 +7,7 @@ from uab_heuristics.utils import get_collection_tx
 BASE_DIR = Path(__file__).resolve().parent
 
 
-def test_heuristic(txs, heuristic_cls, prev_tx=False, future_txs=False):
+def test_heuristic(txs, heuristic_cls, prev_tx=False, future_txs=False, currency=None, n=None):
     print("#" * 50)
     if isinstance(heuristic_cls, type):
         heuristic = heuristic_cls()
@@ -23,10 +23,13 @@ def test_heuristic(txs, heuristic_cls, prev_tx=False, future_txs=False):
             tx_object = Tx.from_raw(tx_raw)
             if future_txs:
                 tx_object.import_future_txs(tx["future_txs"])
-                
-            #print(f"Input addrecess: \n{tx_object.inputs_addresses}")
-            #print(f"Output addrecess: \n{tx_object.outputs_addresses}")
-            result_reused_addr_change = heuristic.apply(tx_object)
+            
+            if n and currency:
+                result_reused_addr_change = heuristic.apply(tx_object, n=n, currency=currency)
+            elif n:
+                result_reused_addr_change = heuristic.apply(tx_object, n=n)
+            else:
+                result_reused_addr_change = heuristic.apply(tx_object)
             print(f"Result from heurisitc: \n{result_reused_addr_change}")
         except Exception as e:
             print(e)
@@ -43,10 +46,9 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, AddressTypeChange)
 
-    #for n in range(2, 8):
-    #    print(f"-- N:{n} --")
-    #    rounded_change = RoundedChange(n)
-    #    test_heuristic(txs, rounded_change)
+    for n in range(2, 8):
+        print(f"-- N:{n} --")
+        test_heuristic(txs, RoundedChange, n=n)
 
     #test_heuristic(txs, SmallerChange)
 
@@ -70,7 +72,7 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
-    test_heuristic(txs, LowRChange, future_txs=True)  
+    #test_heuristic(txs, LowRChange, future_txs=True)  
 
     #test_heuristic(txs, MultiSignatureChange, future_txs=True)
 
@@ -81,4 +83,11 @@ if __name__ == "__main__":
     #test_heuristic(txs, FutureAddressReuse)
 
     #test_heuristic(txs, SegwitConformChange, future_txs=True)
+    currencies = ['USD', 'EUR', 'GBP', 'CAD', 'CHF', 'AUD', 'JPY']
+    
+    for currency in currencies:
+        print(f"-- Currency:{currency} --")
+        for n in range(2, 8):
+            print(f"-- N:{n} --")
+            test_heuristic(txs, RoundedFiatChange, currency=currency, n=n)
 

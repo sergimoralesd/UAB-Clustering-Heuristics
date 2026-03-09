@@ -10,6 +10,7 @@ from .low_r_only import low_r_only
 from .multisignature_script_type import get_multisignature_script_type
 from .varint_size import varint_size
 from .get_txs_by_address import get_txs_by_address
+from .get_historical_price import get_historical_price
 
 __all__ = ["get_address_type", 
            "get_collection_tx", 
@@ -22,4 +23,5 @@ __all__ = ["get_address_type",
            "low_r_only", 
            "get_multisignature_script_type", 
            "varint_size", 
-           "get_txs_by_address"]
+           "get_txs_by_address",
+           "get_historical_price"]

@@ -18,7 +18,7 @@ from .multisignature_change import MultiSignatureChange
 from .one_time_change import OneTimeChange
 from .future_address_reuse_change import FutureAddressReuse
 from .segwit_conform_change import SegwitConformChange
-
+from .rounded_fiat_change import RoundedFiatChange
 
 __all__ = ["ReusedAddressChange", 
            "AddressTypeChange", 
@@ -39,4 +39,5 @@ __all__ = ["ReusedAddressChange",
            "MultiSignatureChange", 
            "OneTimeChange", 
            "FutureAddressReuse", 
-           "SegwitConformChange"] 
+           "SegwitConformChange", 
+           "RoundedFiatChange"] 
