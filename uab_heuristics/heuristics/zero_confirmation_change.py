@@ -1,5 +1,5 @@
 from .base import Heuristic
-from ..utils import get_block_height_from_txid
+from ..utils import get_block_from_txid
 
 class ZeroConfirmationChange(Heuristic):
     """
@@ -14,11 +14,11 @@ class ZeroConfirmationChange(Heuristic):
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
         
-        actual_block_height = get_block_height_from_txid(tx.txid)
+        actual_block_height = get_block_from_txid(tx.txid)["block_height"]
 
         #check the block height of the spending txs, if we find any in less than 6 blocks, it may imply is the same user spending the change
         block_heights_future_txs = [
-            get_block_height_from_txid(future_tx.txid) if future_tx is not None else None
+            get_block_from_txid(future_tx.txid)["block_height"] if future_tx is not None else None
             for future_tx in tx.future_txs
         ]
         

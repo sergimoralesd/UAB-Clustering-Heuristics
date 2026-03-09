@@ -1,5 +1,5 @@
 from binascii import unhexlify
-from .get_block_height_from_txid import get_block_height_from_txid 
+from .get_block_from_txid import get_block_from_txid 
 
 def get_input_order(tx):
     """
@@ -32,7 +32,7 @@ def get_input_order(tx):
     if sorted_prevouts_hex == tx.prevouts:
         return 3
     
-    blocks = [get_block_height_from_txid(txid=prev_txid) for prev_txid in tx.previous_txid]
+    blocks = [get_block_from_txid(txid=prev_txid)["block_height"] for prev_txid in tx.previous_txid]
     if sorted(blocks) == blocks:
         return 4
     return 5

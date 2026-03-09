@@ -1,5 +1,5 @@
 from .base import Heuristic
-from ..utils import get_txs_by_address, get_block_height_from_txid 
+from ..utils import get_txs_by_address, get_block_from_txid 
 
 class OneTimeChange(Heuristic):
     """
@@ -23,7 +23,7 @@ class OneTimeChange(Heuristic):
                     blocks_heights.append(tx_from_addr["status"]["block_height"])
             total_blocks_heights.append(sorted(blocks_heights))
 
-        actual_block_height = get_block_height_from_txid(tx.txid)
+        actual_block_height = get_block_from_txid(tx.txid)["block_height"]
 
         change = []
         #we look if there is any previous tx where this address appeared, if not we will consider it the change address
