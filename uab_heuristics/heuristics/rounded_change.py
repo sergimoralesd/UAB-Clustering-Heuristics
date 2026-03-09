@@ -7,16 +7,14 @@ class RoundedChange(Heuristic):
     __complexity__ = "none" #to be determined
     __accuracy__ = 0 #to be determined
 
-    def __init__(self, n):
-        self.n = n
-
-
-    def apply(self, tx=None):
+    @classmethod
+    def apply(self, tx=None, n=None):
         assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
+        assert n != None, f"The precision parameter can not be empty"
 
         #transform satoshis to btcs
-        precision = 10 ** (8 - self.n)
+        precision = 10 ** (8 - n)
         change = [addr for addr, amount in zip(tx.outputs_addresses, tx.outputs_values) if amount % precision == 0]
 
         if len(change) == 1:
