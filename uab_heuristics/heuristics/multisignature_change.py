@@ -1,4 +1,4 @@
-from .base import Heuristic
+from ..core.base_heuristic import Heuristic
 from ..utils import get_multisignature_script_type
 
 class MultiSignatureChange(Heuristic):

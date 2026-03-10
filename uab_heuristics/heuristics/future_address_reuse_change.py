@@ -1,5 +1,5 @@
 # Source: Heuristic-Based_Address_Clustering_in_Bitcoin
-from .base import Heuristic
+from ..core.base_heuristic import Heuristic
 from ..utils import get_txs_by_address
 
 class FutureAddressReuse(Heuristic):

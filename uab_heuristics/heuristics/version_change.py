@@ -1,4 +1,4 @@
-from .base import Heuristic
+from ..core.base_heuristic import Heuristic
 
 class VersionChange(Heuristic):
     """

@@ -1,4 +1,4 @@
-from .base import Heuristic
+from ..core.base_heuristic import Heuristic
 from ..utils import anti_fee_sniping
 
 class LocktimeChange(Heuristic):

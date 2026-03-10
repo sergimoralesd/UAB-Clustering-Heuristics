@@ -1,4 +1,4 @@
-from .base import Heuristic
+from ..core.base_heuristic import Heuristic
 from ..utils import get_block_from_txid, get_historical_price
 
 class RoundedFiatChange(Heuristic):
