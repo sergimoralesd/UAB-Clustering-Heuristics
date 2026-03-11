@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 from base64 import b64encode
-from ..core import NotFoundError, FetchError
-from ..core import BaseAdapter
+from ..core.exceptions import NotFoundError, FetchError, ConfigurationError
+from ..core.base_adapter import BaseAdapter
 
 
 class _RPCAdapter(BaseAdapter):
@@ -18,9 +18,9 @@ class _RPCAdapter(BaseAdapter):
         url = os.getenv("BTC_RPC_URL")
 
         if not user or not passwd or not url:
-            raise RuntimeError("Missing RPC config in .env file")
+            raise ConfigurationError("Missing RPC config in .env file")
 
-        self.url = url
+        self._url = url
         credentials = b64encode(f"{user}:{passwd}".encode()).decode()
         self._auth_header = f"Basic {credentials}"
         self._id = 0
@@ -66,7 +66,7 @@ class _RPCAdapter(BaseAdapter):
     def get_raw_from_txid(self, txid: str) -> str:
         return bytes.fromhex(self._call("getrawtransaction", [txid, False]))
     
-    def get_block_from_txid(self, txid) -> dict:
+    def get_block_from_txid(self, txid: str) -> dict:
         block_hash = self._call("getrawtransaction", [txid, True])["blockhash"]
         block = self._call("getblock", [block_hash, 0])
         return {
