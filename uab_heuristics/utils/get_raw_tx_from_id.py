@@ -1,9 +1,7 @@
-from ..api import make_request, rpc_call
-
 def get_raw_tx_from_id(txid):
-    templates = ["https://mempool.space/api/tx/{0}/hex", "https://blockchain.info/rawtx/{0}?format=hex"]
+    from ..core import BitcoinDataFetcher
+    data_fetcher = BitcoinDataFetcher()
     try:
-        return(bytes.fromhex(rpc_call("getrawtransaction", [txid, False])))
+        return (bytes.fromhex(data_fetcher.get_raw_from_txid(txid=txid)))
     except Exception as e:
-        print(f"RPC failed, trying external APIs...")
-        return(bytes.fromhex(make_request(txid, templates)))
+        print(f"Get_raw_tx_from_iD failed")
