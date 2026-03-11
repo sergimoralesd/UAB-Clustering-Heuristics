@@ -1,14 +1,11 @@
-from ..api.bitcoin_rpc import _RPCAdapter
-from ..api.external_sources import _ExternaSourcesAdapter
-from ..api.blocksci import _BlocksciAdapter
-from ..api.local_sources import _LocalSources
-from .exceptions import NotFoundError, FetchError
+from ..api import _RPCAdapter, _ExternaSourcesAdapter, _BlocksciAdapter, _LocalSources
+from .exceptions import NotFoundError, FetchError, ConfigurationError
 
 SOURCES = {
-    "rpc": _RPCAdapter,
-    "external_sources": _ExternaSourcesAdapter,
+    "local_sources" : _LocalSources,
     "blocksci" : _BlocksciAdapter,
-    "local_sources" : _LocalSources
+    "rpc": _RPCAdapter,
+    "external_sources": _ExternaSourcesAdapter
 }
 
 class BitcoinDataFetcher:
@@ -23,17 +20,23 @@ class BitcoinDataFetcher:
     """
 
     def __init__(self, sources: list[str] = ["all"]):
-        source = source.lower()
-
         self.adapters = []
 
         if "all" in sources:
-            self.adapters = list(SOURCES.values())
+            for cls in SOURCES.values():
+                try:
+                    self.adapters.append(cls())
+                except:
+                    continue
         else:
             unknown = set(sources) - SOURCES.keys()
             if unknown:
                 raise ValueError(f"Unknown sources: {unknown}. Choose from: {list(SOURCES)}")
-            self.adapters = [SOURCES[s] for s in sources]
+            for s in sources:
+                try:
+                    self.adapters.append(SOURCES[s]())
+                except:
+                    continue 
             
     
     def _run(self, method: str, *args):
@@ -47,7 +50,7 @@ class BitcoinDataFetcher:
                     return result
                 except NotFoundError:
                     raise
-                except (FetchError, NotImplementedError):
+                except (FetchError, NotImplementedError, ImportError):
                     #try next one
                     continue
 

@@ -5,8 +5,10 @@ from ..utils import get_address_type, get_raw_tx_from_id, varint_size
 
 
 class Tx:
-    def __init__(self, base_tx: CTransaction = None):
+    def __init__(self, base_tx: CTransaction = None, previous_txids: list[str] = None, futures_txids: list = None):
         self._tx = base_tx
+        self.previous_txids = previous_txids
+        self.futures_txids = futures_txids
         self._previous_txs = None
         self._future_txs = None
 
@@ -44,19 +46,21 @@ class Tx:
         """
         Include the txs where the inputs comes from.
         """
-        previous_txs = []
-        for tx_input in self._tx.vin:
-            prev_txid = b2x(tx_input.prevout.hash[::-1])
-            previous_txs.append(self.__class__.from_txid(prev_txid, network=network))
-        self._previous_txs = previous_txs
+        if not self.previous_txids:
+            self.previous_txids = [b2x(tx_input.prevout.hash[::-1]) for tx_input in self._tx.vin]
+        self._previous_txs = [self.__class__.from_txid(prev_txid, network=network) for prev_txid in self.previous_txids]
 
-    def import_future_txs(self, txs, network='bitcoin', strict=True):
+    def import_future_txs(self, txs = None, network='bitcoin'):
         """
         Include the txs spending the outputs. If no tx is provided for an output, it will be considered unspent
         """
+        if not self.futures_txids:
+            if not txs:
+                raise Exception(f"Include future txs_ids to compute the future_txs")
+            self.futures_txids = txs
 
         future_txs = [None for _ in range(self.output_count)]
-        for future_txid in txs:  
+        for future_txid in self.futures_txids:  
             future_tx = self.__class__.from_txid(future_txid, network=network)
 
             for future_tx_input in future_tx._tx.vin:
