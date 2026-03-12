@@ -46,9 +46,9 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, AddressTypeChange)
 
-    for n in range(2, 8):
-        print(f"-- N:{n} --")
-        test_heuristic(txs, RoundedChange, n=n)
+    #for n in range(2, 8):
+    #    print(f"-- N:{n} --")
+    #    test_heuristic(txs, RoundedChange, n=n)
 
     #test_heuristic(txs, SmallerChange)
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, SignalRBFChange, future_txs=True)
 
-    #test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
+    test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
 
     #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
@@ -85,9 +85,9 @@ if __name__ == "__main__":
     #test_heuristic(txs, SegwitConformChange, future_txs=True)
     currencies = ['USD', 'EUR', 'GBP', 'CAD', 'CHF', 'AUD', 'JPY']
     
-    for currency in currencies:
-        print(f"-- Currency:{currency} --")
-        for n in range(2, 8):
-            print(f"-- N:{n} --")
-            test_heuristic(txs, RoundedFiatChange, currency=currency, n=n)
+    #for currency in currencies:
+    #    print(f"-- Currency:{currency} --")
+    #    for n in range(2, 8):
+    #        print(f"-- N:{n} --")
+    #        test_heuristic(txs, RoundedFiatChange, currency=currency, n=n)
 

@@ -26,7 +26,7 @@ class BitcoinDataFetcher:
             for cls in SOURCES.values():
                 try:
                     self.adapters.append(cls())
-                except:
+                except Exception as e:
                     continue
         else:
             unknown = set(sources) - SOURCES.keys()
@@ -57,7 +57,7 @@ class BitcoinDataFetcher:
         raise FetchError("All sources failed")
     
     def get_raw_from_txid(self, txid: str) -> str:
-        return self._run("get_raw_tx", txid)
+        return self._run("get_raw_from_txid", txid)
 
     def get_historical_price(self, timestamp: int, currency: str) -> int:
         return self._run("get_historical_price", timestamp, currency)
