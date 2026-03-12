@@ -59,13 +59,34 @@ Below we can find the detailed algorithm to try to identify the change outputs:
 | Multiple output values share the same highest frequency | Cannot determine the payment denomination |
 | An input's expected change amount matches multiple outputs | Ambiguous mapping |
 | Two inputs map to the same change output | Conflict in assignment |
-| An input value equals the denomination exactly | No change produced for that input → skipped (not a failure, but no result for that input) |
+| An input value equals the denomination exactly | No change produced for that input -> skipped (not a failure, but no result for that input) |
 | Participants intentionally create change outputs that match the denomination | Change outputs blend in with payment outputs, making them undetectable |
 | Fee estimation is inaccurate | The range `[possible_change - fee, possible_change]` may miss or over-match outputs |
 
 ## Exemple
 
-## Transaction Exemple
+Inputs:
+
+- alice (5btc)
+- bob (3btc)
+
+Outputs
+
+- output_1 (1 btc)
+- output_2 (1 btc)
+- output_3 (4 btc)
+- output_4 (2 btc)
+
+Step-by-step algorithm:
+
+1. Compute the output frequency: {1: 2, 4: 1, 2: 1}
+2. Chose denomination by selecting the most frequent output: denomination = 1
+3. alice_posible_change: 5 - 1 = 4 -> "output_3"
+4. bob_posible_change: 2 - 1 = 3 -> "output_4"
+
+## Real Transaction Exemple
+
+`c38aac9910f327700e0f199972eed8ea7c6b1920e965f9cb48a92973e7325046`
 
 ## References
 

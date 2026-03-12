@@ -26,12 +26,12 @@ Below we can find the detailed algorithm to try to identify the change output:
     input_types = { get_address_type(i) for i in tx.inputs }
     output_types = { get_address_type(o) for o in tx.outputs }
 
-    IF len(input_types) != 1   → RETURN None
-    IF len(output_types) != 2  → RETURN None
-    IF input_type NOT IN output_types → RETURN None
+    IF len(input_types) != 1   -> RETURN None
+    IF len(output_types) != 2  -> RETURN None
+    IF input_type NOT IN output_types -> RETURN None
 
     FOR output IN tx.outputs:
-        IF get_address_type(output) == input_type → change  = output
+        IF get_address_type(output) == input_type -> change  = output
 
     RETURN change
 
@@ -44,14 +44,34 @@ Below we can find the detailed algorithm to try to identify the change output:
 
 | Scenario | Reason |
 | --- | --- |
-| Both outputs share the same type as the inputs | Both match → ambiguous |
+| Both outputs share the same type as the inputs | Both match -> ambiguous |
 | Neither output matches the input type | No match |
 | Inputs have mixed address types | Multiple types could match multiple outputs |
-| Recipient coincidentally uses the same type | Both outputs match → ambiguous |
+| Recipient coincidentally uses the same type | Both outputs match -> ambiguous |
 
 ## Exemple
 
-## Transaction Exemple
+Inputs:
+
+- alice_1 (P2PKH)
+- alice_2 (P2PKH)
+- alice_3 (P2PKH)
+
+Outputs
+
+- output_1 (P2PKH)
+- output_2 (P2SH)
+
+Step-by-step algorithm:
+
+1. Compute the input types: {P2PKH}
+2. If there are more than one type, return false
+3. Compute the output types: {P2PKH, P2SH}
+4. Return true if we find any match between the input and any output
+
+## Real Transaction Exemple
+
+`1085ee6d2b65eb2cbd322e4afd0a43342bb943dd27a4ad6eddfdc6a7102b6b3c`
 
 ## References
 
