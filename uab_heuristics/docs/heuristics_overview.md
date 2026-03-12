@@ -1,0 +1,32 @@
+# Heuristic Overview
+
+This document summarizes basic information of each heuristic implemented in this project.
+
+---
+
+## Categories Overview
+
+| Category | Heuristics |
+|---|---|
+| **Address-based** | [Reused Address](./heuristics/reused_address.md), [Address Type](./heuristics/address_type.md), [Consistent Address Type](./heuristics/consistent_address_type.md), [One Time](./heuristics/one_time.md), [Future Address Reuse](./heuristics/future_address_reuse.md) |
+| **Value-based** | [Smaller Output](./heuristics/smaller_output.md), [Rounded](./heuristics/rounded.md), [Rounded Fiat](./heuristics/rounded_fiat.md), [Optimal](./heuristics/optimal.md) |
+| **CoinJoin** | [Equal Output Coinjoin](./heuristics/equal_output_coinjoin.md) |
+| **Wallet fingerprint** | [Fee Absolute](./heuristics/fee_absolute.md), [Fee Relative](./heuristics/fee_relative.md), [Input Order](./heuristics/input_order.md), [Output Order](./heuristics/output_order.md), [Locktime](./heuristics/locktime.md), [Version](./heuristics/version.md), [Signal RBF](./heuristics/signal_rbf.md), [LowR](./heuristics/low_r.md), [Multi Signature](./heuristics/multisignature.md), [Segwit Conform](./heuristics/segwit_conform.md), [Zero Confirmation](./heuristics/zero_confirmation.md) |
+
+---
+
+## Complexity Overview
+
+In the table belowe we can observe the complexity levels of each heuristic. This distinction is made taking into account the quantity of information needed to execute the heurisitc. The categories are: low, medium-low, medium, medium-high and high. Where "low" complexity heurisitcs require the transaction we are evaluating itself, and "high" complexity needs all the information available in the blockchain.
+
+| Complexity | Low | Medium-Low | Medium | Medium-High | High |
+| :--- | :---: | :---: | :---: | :---: | ---: |
+| Heuristics | - | - | - | - | - |
+
+## Accuracy Overview
+
+In the --- below is shown the accuracy of every heuristic, this is computed from a [ground truth][1]. The values goes from "0" to "1", using up to two decimals.
+
+## Citations
+
+[1]: <https://arxiv.org/abs/2107.05749> "Resurrecting Address Clustering in Bitcoin"
