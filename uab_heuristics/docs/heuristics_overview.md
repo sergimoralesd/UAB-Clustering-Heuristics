@@ -7,7 +7,7 @@ This document summarizes basic information of each heuristic implemented in this
 ## Categories Overview
 
 | Category | Heuristics |
-|---|---|
+| --- | --- |
 | **Address-based** | [Reused Address](./heuristics/reused_address.md), [Address Type](./heuristics/address_type.md), [Consistent Address Type](./heuristics/consistent_address_type.md), [One Time](./heuristics/one_time.md), [Future Address Reuse](./heuristics/future_address_reuse.md) |
 | **Value-based** | [Smaller Output](./heuristics/smaller_output.md), [Rounded](./heuristics/rounded.md), [Rounded Fiat](./heuristics/rounded_fiat.md), [Optimal](./heuristics/optimal.md) |
 | **CoinJoin** | [Equal Output Coinjoin](./heuristics/equal_output_coinjoin.md) |
@@ -19,9 +19,11 @@ This document summarizes basic information of each heuristic implemented in this
 
 In the table belowe we can observe the complexity levels of each heuristic. This distinction is made taking into account the quantity of information needed to execute the heurisitc. The categories are: low, medium-low, medium, medium-high and high. Where "low" complexity heurisitcs require the transaction we are evaluating itself, and "high" complexity needs all the information available in the blockchain.
 
-| Complexity | Low | Medium-Low | Medium | Medium-High | High |
-| :--- | :---: | :---: | :---: | :---: | ---: |
-| Heuristics | - | - | - | - | - |
+Here we are going to use the terminology "actual transaction", "previous transactions" and "future transactions". The first one, refers to the transaction we are currently evaluating, The second one, refers to the transactions where the inputs were created (`prev_txid` field). The third one, refers to the transactions where the outputs are used as inputs.
+
+| Complexity | None | Low | Medium-Low | Medium | Medium-High | High |
+| :--- | :---: | :---: | :---: | :---: | :---: | ---: |
+| Information required | Actual | Actual + Previous | Actual + Future | Actual + Previous + Future | Actual + Previous + Future + Previous' Future | Whole blockchain |
 
 ## Accuracy Overview
 

@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `ConsistentAddressTypeChange` |
 | **Category** | Address-Based |
-| **Complexity** | Medium-Low |
+| **Complexity** | Low |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
 | **Additional Information** | previous transactions (for input address types) |
@@ -17,7 +17,7 @@ Identifies the change output by comparing the address types of the inputs and ou
 
 ## Information Needed
 
-This heurisitic need the inputs and outputs addresses types. Meaning it needs the transaction itself and the ones where the inputs comes from.
+This heurisitic needs the inputs and outputs addresses types. Meaning it needs the transaction itself and the ones where the inputs comes from.
 
 ## Detailed Algorithm
 
@@ -31,13 +31,13 @@ Below we can find the detailed algorithm to try to identify the change output:
     IF input_type NOT IN output_types -> RETURN None
 
     FOR output IN tx.outputs:
-        IF get_address_type(output) == input_type -> change  = output
+        IF get_address_type(output) == input_type -> change = output
 
     RETURN change
 
 ## When It Works
 
-- The sender and recipient use **different** address types (e.g., sender uses P2WPKH, recipient uses P2TR).
+- The sender and recipient use different address types (e.g., sender uses P2WPKH, recipient uses P2TR).
 - All inputs come from the same address type.
 
 ## When It Fails
@@ -51,16 +51,16 @@ Below we can find the detailed algorithm to try to identify the change output:
 
 ## Exemple
 
-Inputs:
+    Inputs:
 
-- alice_1 (P2PKH)
-- alice_2 (P2PKH)
-- alice_3 (P2PKH)
+    - alice_1 (P2PKH)
+    - alice_2 (P2PKH)
+    - alice_3 (P2PKH)
 
-Outputs
+    Outputs
 
-- output_1 (P2PKH)
-- output_2 (P2SH)
+    - output_1 (P2PKH)
+    - output_2 (P2SH)
 
 Step-by-step algorithm:
 

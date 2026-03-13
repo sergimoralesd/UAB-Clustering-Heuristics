@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `EqualOutputCoinjoinChange` |
 | **Category** | Coinjoin |
-| **Complexity** | Medium-Low |
+| **Complexity** | Low |
 | **Accuracy** | TBD |
 | **Requirements** | >1-output transaction |
 | **Additional Information** | previous transactions (for inputs' values) |
@@ -17,7 +17,7 @@ Identifies the change output by exploiting the not-equal-valued outputs in a coi
 
 ## Information Needed
 
-This heurisitic need the inputs' and outputs' values. Meaning it needs the transaction itself and the ones where the inputs comes from.
+This heurisitic needs the inputs' and outputs' values. Meaning it needs the transaction itself and the ones where the inputs comes from.
 
 ## Detailed Algorithm
 
@@ -26,7 +26,7 @@ Below we can find the detailed algorithm to try to identify the change outputs:
     amount_outputs_value = get_frequency(tx.outputs.value)
     denomination = max(amount_outputs_value)
 
-    IF len(denomination) != 1 → RETURN None
+    IF len(denomination) != 1 -> RETURN None
 
     change_addr = []
 
@@ -35,16 +35,16 @@ Below we can find the detailed algorithm to try to identify the change outputs:
         posible_change = value - denomination.value
 
         FOR (output_addr, output_amount) in tx.outputs:
-            IF posible_change - tx.fee <= output_amount <= posible_change: → candidates.append(output_addr)
+            IF posible_change - tx.fee <= output_amount <= posible_change: -> candidates.append(output_addr)
         
-        IF len(candidates) > 1: → RETURN None # multiple outputs could be change for this input
-        IF len(candidates) == 0: → continue # this input has no detectable change
-        IF candidates in change_addr → RETURN None # two inputs claim the same change output
+        IF len(candidates) > 1: -> RETURN None # multiple outputs could be change for this input
+        IF len(candidates) == 0: -> continue # this input has no detectable change
+        IF candidates in change_addr -> RETURN None # two inputs claim the same change output
 
         change_addr.append((input_addr, candidates))
     
-    IF len(change_addr) > 0 → RETURN change_addr
-    ELSE → RETURN None
+    IF len(change_addr) > 0 -> RETURN change_addr
+    ELSE -> RETURN None
 
 ## When It Works
 
@@ -65,17 +65,17 @@ Below we can find the detailed algorithm to try to identify the change outputs:
 
 ## Exemple
 
-Inputs:
+    Inputs:
 
-- alice (5btc)
-- bob (3btc)
+    - alice (5btc)
+    - bob (3btc)
 
-Outputs
+    Outputs
 
-- output_1 (1 btc)
-- output_2 (1 btc)
-- output_3 (4 btc)
-- output_4 (2 btc)
+    - output_1 (1 btc)
+    - output_2 (1 btc)
+    - output_3 (4 btc)
+    - output_4 (2 btc)
 
 Step-by-step algorithm:
 
