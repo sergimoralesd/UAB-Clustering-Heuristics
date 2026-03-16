@@ -21,7 +21,7 @@ class RoundedFiatChange(Heuristic):
 
         precision = 10 ** n
         #transform satoshis to btc, and compute the value in fiat
-        change = [addr for addr, amount in zip(tx.outputs_addresses, tx.outputs_values) if (price * (amount/(10**8))) % precision == 0]
+        change = [addr for addr, amount in zip(tx.outputs_addresses, tx.outputs_values) if (price * (amount/(10**8))) % precision != 0]
 
         if len(change) == 1:
             return {

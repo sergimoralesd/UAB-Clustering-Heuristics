@@ -9,23 +9,19 @@ def get_multisignature_script_type(tx):
     0 -> if it is not a multisignature script
     """
     results = []
-    for i, type in enumerate(tx.inputs_types):
+    for i in range(tx.input_count):
         try:
-            if type == "p2sh":
-                #check first if the data is in witness field
-                if tx.inputs_witness[i] == []:
-                    #transform the hex into a script
-                    scriptSig = list(CScript(bytes.fromhex(tx.inputs_scriptSig[i])))
-                    #obtain the redeemScript in order to see if its a multisignature
-                    multisignature_script = list(CScript(scriptSig[-1]))
-                else:
-                    multisignature_script = list(CScript(bytes.fromhex(tx.inputs_witness[i][-1])))
-            elif type == "p2wsh":
-                multisignature_script = list(CScript(bytes.fromhex(tx.inputs_witness[i][-1])))
+            #non witness
+            if tx.inputs_witness[i] == []:
+                #transform the hex into a script
+                scriptSig = list(CScript(bytes.fromhex(tx.inputs_scriptSig[i])))
+                #obtain the redeemScript in order to see if its a multisignature
+                multisignature_script = list(CScript(scriptSig[-1]))
             else:
-                continue
+                multisignature_script = list(CScript(bytes.fromhex(tx.inputs_witness[i][-1])))
+
         except:
-            #if we find any erro, sure isnt a multisig
+            #if we find any error, sure is not a multisig
             continue
         
         #by this we ensure is a multisig script

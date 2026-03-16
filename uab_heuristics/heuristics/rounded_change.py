@@ -15,7 +15,7 @@ class RoundedChange(Heuristic):
 
         #transform satoshis to btcs
         precision = 10 ** (8 - n)
-        change = [addr for addr, amount in zip(tx.outputs_addresses, tx.outputs_values) if amount % precision == 0]
+        change = [addr for addr, amount in zip(tx.outputs_addresses, tx.outputs_values) if amount % precision != 0]
 
         if len(change) == 1:
             return {
