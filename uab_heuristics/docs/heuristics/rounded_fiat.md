@@ -67,4 +67,4 @@ Step-by-step algorithm:
 
 ## References
 
-- None
+- [Assessing the Efficacy of Heuristic-Based Address Clustering for Bitcoin](https://arxiv.org/pdf/2403.00523) — Schnoering, Porthaux & Vazirgiannis, 2024
