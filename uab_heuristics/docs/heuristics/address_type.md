@@ -24,13 +24,9 @@ This heurisitic needs the inputs and outputs addresses types. Meaning it needs t
 Below we can find the detailed algorithm to try to identify the change output:
 
     input_types = { get_address_type(i) for i in tx.inputs }
-    output_types = { get_address_type(o) for o in tx.outputs }
-
-    IF len(output_types) != 2  -> RETURN None
-    IF input_type NOT IN output_types -> RETURN None
 
     FOR output IN tx.outputs:
-        IF get_address_type(output) == input_type -> change  = output
+        IF get_address_type(output) == input_types -> change  = output
 
     RETURN change
 
