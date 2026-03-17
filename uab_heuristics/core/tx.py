@@ -1,7 +1,7 @@
-from bitcointx.core import CTransaction, lx, b2x
+from bitcointx.core import CTransaction, lx, b2x, Hash160
 from bitcointx.core.script import CScript
-from bitcointx.wallet import CCoinAddress
-from ..utils import get_address_type, get_raw_tx_from_id, varint_size
+from bitcointx.wallet import CCoinAddress, P2PKHBitcoinAddress
+from ..utils import get_address_type, get_raw_tx_from_id, varint_size, compute_addr
 
 
 class Tx:
@@ -148,21 +148,14 @@ class Tx:
             prev_tx = self._previous_txs[i]
             vout_idx = vin.prevout.n
             script_pubkey = prev_tx._tx.vout[vout_idx].scriptPubKey
-            try:
-                address = str(CCoinAddress.from_scriptPubKey(script_pubkey))
-            except Exception:
-                address = None
-            addresses.append(address)
+            addresses.append(compute_addr(script_pubkey))
         return addresses
 
     @property
     def outputs_addresses(self):
         addrs = []
         for vout in self._tx.vout:
-            try:
-                addrs.append(str(CCoinAddress.from_scriptPubKey(vout.scriptPubKey)))
-            except:
-                addrs.append(None)
+            addrs.append(compute_addr(vout.scriptPubKey))
         return addrs
 
     @property

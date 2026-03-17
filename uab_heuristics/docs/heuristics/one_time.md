@@ -8,3 +8,7 @@
  - **Additional required information:**
 
 ## Logic Explanation
+
+
+LIMITATION
+ADDRESS CAN NOT BE P2PK

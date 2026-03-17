@@ -17,6 +17,11 @@ class FutureAddressReuse(Heuristic):
         total_blocks_heights = []
         for out_addr in tx.outputs_addresses:
             all_txs_from_address = get_txs_by_address(out_addr)
+            if all_txs_from_address is None:
+                    return  {
+                        "result" : False,
+                        "address" : []
+                    }
             blocks_heights = []
             for tx_from_addr in all_txs_from_address:
                 #to avoid computing the same tx we are using evaluating

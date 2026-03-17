@@ -39,7 +39,7 @@ def test_heuristics(tx, final_results):
                 currencies = ['USD', 'EUR', 'GBP', 'CAD', 'CHF', 'AUD', 'JPY']
                 for currency in currencies:
                     final_results[heuristic_name].setdefault(currency, {})
-                    for n in range(2, 8):
+                    for n in range(0, 6):
                         final_results[heuristic_name][currency].setdefault(n, {})
                         result = heuristic.apply(tx=tx, n=n, currency=currency)
                         final_results[heuristic_name][currency][n][tx.txid] = result
