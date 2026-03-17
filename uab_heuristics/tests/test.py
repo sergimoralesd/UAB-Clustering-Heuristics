@@ -62,7 +62,7 @@ def main():
     final_results = {}
 
     for main_txid, prev_json, fut_json in cursor:
-        initial_time = time.time()
+        
         print(f"Txid: {main_txid}")
         main_tx = Tx.from_txid(main_txid)
         future_txs = []
@@ -73,12 +73,14 @@ def main():
 
         main_tx.import_previous_txs()
         main_tx.import_future_txs(future_txs=future_txs)
-    
+        
+        initial_time = time.time()
         final_results = test_heuristics(main_tx, final_results)
         print(f"Elapsed time: {time.time() - initial_time}")
     
-        with open(RES_FILE, "w") as f:
-            f.write(json.dumps(final_results, indent=4))
+        for heuristic_name, heuristic_results in final_results.items():
+            with open(f"./uab_heuristics/tests/data/results/{heuristic_name}.json", "w") as f:
+                f.write(json.dumps(heuristic_results, indent=4))
     
 if __name__ == "__main__":
     t0 = time.time()
