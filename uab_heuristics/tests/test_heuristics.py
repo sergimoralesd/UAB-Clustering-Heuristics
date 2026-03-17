@@ -30,7 +30,8 @@ def test_heuristic(txs, heuristic_cls, prev_tx=False, future_txs=False, currency
                 result_reused_addr_change = heuristic.apply(tx_object, n=n)
             else:
                 result_reused_addr_change = heuristic.apply(tx_object)
-            print(f"Result from heurisitc: \n{result_reused_addr_change}")
+            if result_reused_addr_change['result'] == True:
+                print(f"Result from heurisitc: \n{result_reused_addr_change}")
         except Exception as e:
             print(e)
         print("-"*50)
@@ -46,11 +47,11 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, AddressTypeChange)
 
-    #for n in range(2, 8):
-    #    print(f"-- N:{n} --")
-    #    test_heuristic(txs, RoundedChange, n=n)
+    for n in range(2, 8):
+        print(f"-- N:{n} --")
+        test_heuristic(txs, RoundedChange, n=n)
 
-    #test_heuristic(txs, SmallerChange)
+    test_heuristic(txs, SmallerOutputChange)
 
     #test_heuristic(txs, OptimalChange)
 
@@ -68,9 +69,9 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, SignalRBFChange, future_txs=True)
 
-    test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
+    #test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
 
-    #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
+    test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
     #test_heuristic(txs, LowRChange, future_txs=True)  
 
