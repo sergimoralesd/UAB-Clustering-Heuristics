@@ -68,7 +68,7 @@ class _RPCAdapter(BaseAdapter):
     
     def get_block_from_txid(self, txid: str) -> dict:
         block_hash = self._call("getrawtransaction", [txid, True])["blockhash"]
-        block = self._call("getblock", [block_hash, 0])
+        block = self._call("getblockheader", [block_hash])
         return {
             "block_height": block["height"],
             "block_hash": block["hash"],

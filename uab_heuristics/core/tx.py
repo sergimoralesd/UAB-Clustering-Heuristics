@@ -46,35 +46,37 @@ class Tx:
         """
         Include the txs where the inputs comes from.
         """
-        if prev_txs:
-            self._previous_txs = prev_txs
-        else:    
-            if not self.previous_txids:
-                self.previous_txids = [b2x(tx_input.prevout.hash[::-1]) for tx_input in self._tx.vin]
-            self._previous_txs = [self.__class__.from_txid(prev_txid, network=network) for prev_txid in self.previous_txids]
+        if not self._previous_txs:
+            if prev_txs:
+                self._previous_txs = prev_txs
+            else:    
+                if not self.previous_txids:
+                    self.previous_txids = [b2x(tx_input.prevout.hash[::-1]) for tx_input in self._tx.vin]
+                self._previous_txs = [self.__class__.from_txid(prev_txid, network=network) for prev_txid in self.previous_txids]
 
     def import_future_txs(self, future_txs = None, future_txids = None, network='bitcoin'):
         """
         Include the txs spending the outputs. If no tx is provided for an output, it will be considered unspent
         """
-        if future_txs:
-            self._future_txs = future_txs
-        else:
-            if not self.futures_txids:
-                if not future_txids:
-                    raise Exception(f"Include future txs_ids to compute the future_txs")
-                self.futures_txids = future_txids
+        if not self._future_txs:
+            if future_txs:
+                self._future_txs = future_txs
+            else:
+                if not self.futures_txids:
+                    if not future_txids:
+                        raise Exception(f"Include future txs_ids to compute the future_txs")
+                    self.futures_txids = future_txids
 
-            aux_future_txs = [None for _ in range(self.output_count)]
-            for future_txid in self.futures_txids:  
-                future_tx = self.__class__.from_txid(future_txid, network=network)
+                aux_future_txs = [None for _ in range(self.output_count)]
+                for future_txid in self.futures_txids:  
+                    future_tx = self.__class__.from_txid(future_txid, network=network)
 
-                for future_tx_input in future_tx._tx.vin:
-                    if b2x(future_tx_input.prevout.hash[::-1]) == self.txid:
-                        output_n = future_tx_input.prevout.n
-                        aux_future_txs[output_n] = future_tx
+                    for future_tx_input in future_tx._tx.vin:
+                        if b2x(future_tx_input.prevout.hash[::-1]) == self.txid:
+                            output_n = future_tx_input.prevout.n
+                            aux_future_txs[output_n] = future_tx
 
-            self._future_txs = aux_future_txs
+                self._future_txs = aux_future_txs
     
     def print_summary(self):
         print("=== Transaction Summary ===")

@@ -29,9 +29,9 @@ class _LocalSources(BaseAdapter):
         self.close()
 
     def get_raw_from_txid(self, txid: str) -> str:
-        raw = self._ldb.get(txid.encode().hex())
+        raw = self._ldb.get(txid.encode())
     
         if raw is None:
             raise NotFoundError(f"txid not found in local LevelDB: {txid}")
     
-        return raw.decode()
+        return raw.hex()
