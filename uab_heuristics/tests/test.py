@@ -4,6 +4,7 @@ import sqlite3
 import re
 import orjson
 import json
+import time
 
 SQL_DB_FILE = "data/change_gt.db"
 TXID_RE = re.compile(r'[0-9a-f]{64}')
@@ -26,7 +27,7 @@ def test_heuristics(tx, final_results):
     for heuristic in heuristic_list:
         final_results.setdefault(heuristic.name, {})
         try:    
-            print(f"Starting test with heuristic: {heuristic.name}")
+            #print(f"Starting test with heuristic: {heuristic.name}")
             if heuristic is RoundedChange:
                 for n in range(2, 8):
                     final_results[heuristic.name].setdefault(n, {})
@@ -60,6 +61,8 @@ def main():
     final_results = {}
 
     for main_txid, prev_json, fut_json in cursor:
+        initial_time = time.time()
+        print(f"Txid: {main_txid}")
         main_tx = Tx.from_txid(main_txid)
         future_txs = []
         for entry in orjson.loads(fut_json):
@@ -71,7 +74,12 @@ def main():
         main_tx.import_future_txs(future_txs=future_txs)
     
         final_results = test_heuristics(main_tx, final_results)
+        print(f"Elapsed time: {time.time() - initial_time}")
     
     with open(RES_FILE, "w") as f:
         f.write(json.dumps(final_results, indent=4))
     
+if __name__ == "__main__":
+    t0 = time.time()
+    main()
+    print(f"Total:{time.time()-t0}")
