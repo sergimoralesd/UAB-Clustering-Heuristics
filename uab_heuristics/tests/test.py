@@ -6,9 +6,9 @@ import orjson
 import json
 import time
 
-SQL_DB_FILE = "data/change_gt.db"
+SQL_DB_FILE = "../change_gt.db"
 TXID_RE = re.compile(r'[0-9a-f]{64}')
-RES_FILE = "data/results.json"
+RES_FILE = "./uab_heuristics/tests/data/results.json"
 # select a bunch of txid from sql
 # create the tx
 # load the previous
@@ -25,29 +25,30 @@ def test_heuristics(tx, final_results):
                        OneTimeChange, FutureAddressReuse, SegwitConformChange,
                        RoundedFiatChange]
     for heuristic in heuristic_list:
-        final_results.setdefault(heuristic.name, {})
+        heuristic_name = heuristic().name
+        final_results.setdefault(heuristic_name, {})
         try:    
-            #print(f"Starting test with heuristic: {heuristic.name}")
+            print(f"Starting test with heuristic: {heuristic_name}")
             if heuristic is RoundedChange:
                 for n in range(2, 8):
-                    final_results[heuristic.name].setdefault(n, {})
+                    final_results[heuristic_name].setdefault(n, {})
                     result = heuristic.apply(tx=tx, n=n)
-                    final_results[heuristic.name][n][tx.txid] = result
+                    final_results[heuristic_name][n][tx.txid] = result
 
             elif heuristic is RoundedFiatChange:
                 currencies = ['USD', 'EUR', 'GBP', 'CAD', 'CHF', 'AUD', 'JPY']
                 for currency in currencies:
-                    final_results[heuristic.name].setdefault(currency, {})
+                    final_results[heuristic_name].setdefault(currency, {})
                     for n in range(2, 8):
-                        final_results[heuristic.name][currency].setdefault(n, {})
+                        final_results[heuristic_name][currency].setdefault(n, {})
                         result = heuristic.apply(tx=tx, n=n, currency=currency)
-                        final_results[heuristic.name][currency][n][tx.txid] = result
+                        final_results[heuristic_name][currency][n][tx.txid] = result
             else:
                 result = heuristic.apply(tx=tx)
-                final_results[heuristic.name][tx.txid] = result
+                final_results[heuristic_name][tx.txid] = result
 
         except Exception as e:
-            final_results[heuristic.name][tx.txid] = {"error" : str(e)}
+            final_results[heuristic_name][tx.txid] = {"error" : str(e)}
             continue
 
     return final_results
@@ -76,8 +77,8 @@ def main():
         final_results = test_heuristics(main_tx, final_results)
         print(f"Elapsed time: {time.time() - initial_time}")
     
-    with open(RES_FILE, "w") as f:
-        f.write(json.dumps(final_results, indent=4))
+        with open(RES_FILE, "w") as f:
+            f.write(json.dumps(final_results, indent=4))
     
 if __name__ == "__main__":
     t0 = time.time()

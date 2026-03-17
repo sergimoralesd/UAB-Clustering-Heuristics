@@ -8,7 +8,7 @@ class SegwitConformChange(Heuristic):
     __accuracy__ = 0 #to be determined
 
     @classmethod
-    def apply(cls, tx=None):
+    def apply(self, tx=None):
         assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"

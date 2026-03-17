@@ -7,7 +7,7 @@ class SmallerOutputChange(Heuristic):
     __complexity__ = "none" #to be determined
     __accuracy__ = 0 #to be determined
 
-
+    @classmethod
     def apply(self, tx=None):
         assert tx != None, f"Specify a transaction"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
