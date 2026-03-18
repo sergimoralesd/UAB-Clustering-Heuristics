@@ -22,7 +22,7 @@ def test_heuristic(txs, heuristic_cls, prev_tx=False, future_txs=False, currency
             print(f"Applying heuristic to tx: \n{tx_id}")
             tx_object = Tx.from_raw(tx_raw)
             if future_txs:
-                tx_object.import_future_txs(tx["future_txs"])
+                tx_object.import_future_txs(future_txids=tx["future_txs"])
             
             if n and currency:
                 result_reused_addr_change = heuristic.apply(tx_object, n=n, currency=currency)
@@ -47,13 +47,13 @@ if __name__ == "__main__":
     
     #test_heuristic(txs, AddressTypeChange)
 
-    for n in range(2, 8):
-        print(f"-- N:{n} --")
-        test_heuristic(txs, RoundedChange, n=n)
+    #for n in range(2, 8):
+    #    print(f"-- N:{n} --")
+    #    test_heuristic(txs, RoundedChange, n=n)
 
-    test_heuristic(txs, SmallerOutputChange)
+    #test_heuristic(txs, SmallerOutputChange)
 
-    #test_heuristic(txs, OptimalChange)
+    test_heuristic(txs, OptimalChange)
 
     #test_heuristic(txs, InputOrderChange, future_txs=True)
     
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
 
-    test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
+    #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
     
     #test_heuristic(txs, LowRChange, future_txs=True)  
 
@@ -81,9 +81,10 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, OneTimeChange)
     
-    #test_heuristic(txs, FutureAddressReuse)
+    test_heuristic(txs, FutureAddressReuse)
 
     #test_heuristic(txs, SegwitConformChange, future_txs=True)
+    
     currencies = ['USD', 'EUR', 'GBP', 'CAD', 'CHF', 'AUD', 'JPY']
     
     #for currency in currencies:

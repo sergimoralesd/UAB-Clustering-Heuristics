@@ -1,6 +1,6 @@
 # Source: Heuristic-Based_Address_Clustering_in_Bitcoin
 from ..core.base_heuristic import Heuristic
-from ..utils import get_txs_by_address
+from ..utils import get_txs_by_address, get_block_from_txid
 
 class FutureAddressReuse(Heuristic):
     """
@@ -18,10 +18,10 @@ class FutureAddressReuse(Heuristic):
         for out_addr in tx.outputs_addresses:
             all_txs_from_address = get_txs_by_address(out_addr)
             if all_txs_from_address is None:
-                    return  {
-                        "result" : False,
-                        "address" : []
-                    }
+                return  {
+                    "result" : False,
+                    "address" : []
+                }
             blocks_heights = []
             for tx_from_addr in all_txs_from_address:
                 #to avoid computing the same tx we are using evaluating
@@ -29,8 +29,22 @@ class FutureAddressReuse(Heuristic):
                     blocks_heights.append(tx_from_addr["status"]["block_height"])
             total_blocks_heights.append(sorted(blocks_heights))
 
-        #if we dont find any tx, means it is never used before and after.
-        change = [out_addr for out_addr, blocks_heights in zip(tx.outputs_addresses, total_blocks_heights) if len(blocks_heights) == 0]
+        actual_block_height = get_block_from_txid(tx.txid)["block_height"]
+
+        address_with_future = []
+        #we look if there is any future tx where this address appeared, if not we will consider it the change address
+        for out_addr, blocks_heights in zip(tx.outputs_addresses, total_blocks_heights):
+            #since we have sorted the elements, we can only check the first block height
+            #means we found a future tx where this address is used, so is not new. If we find any equal block height, we also will asume it is not new
+            #this first comprovation is to check if we find any other tx rather than the one we are evaluating
+            if len(blocks_heights) > 0:
+                for block_height in blocks_heights:
+                    if actual_block_height < block_height:
+                        address_with_future.append(out_addr)
+                        break
+        
+        
+        change = [addr for addr in tx.outputs_addresses if addr not in address_with_future]
             
         if len(change) == 1:
             return {

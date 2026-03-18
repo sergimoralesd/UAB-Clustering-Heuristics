@@ -14,6 +14,7 @@ class SegwitConformChange(Heuristic):
         assert tx.future_txs != None, f"The tx {tx.txid} must contain future tx associated"
 
         tx.import_previous_txs()
+        
         for future_tx in tx.future_txs:
             if future_tx is not None:
                 future_tx.import_previous_txs()
