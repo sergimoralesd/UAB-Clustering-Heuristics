@@ -17,7 +17,7 @@ Identifies the change output by exploiting the fact that users tend to reuse the
 
 ## Information Needed
 
-This heurisitic needs the outputs' addresses from the transaction itself, and from the inputs.
+This heurisitic needs the inputs and outputs addresses from the transaction itself.
 
 ## Detailed Algorithm
 
