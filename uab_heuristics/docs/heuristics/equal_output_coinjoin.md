@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | **Class** | `EqualOutputCoinjoinChange` |
-| **Category** | Coinjoin |
+| **Category** | Value-based |
 | **Complexity** | Low |
 | **Accuracy** | TBD |
 | **Requirements** | >1-output transaction |
