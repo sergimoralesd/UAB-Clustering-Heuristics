@@ -12,4 +12,4 @@ def low_r_only(tx):
 
         if int(r_len, 16) > 32:
                 return False
-        return True
+    return True
