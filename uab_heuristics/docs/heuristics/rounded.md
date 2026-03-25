@@ -27,7 +27,7 @@ Below we can find the detailed algorithm to try to identify the change outputs:
 
     posible_change_addr = []
     FOR output in tx.outputs:
-        IF output.value % precision == 0 -> posible_change_addr.append(output)
+        IF output.value % precision != 0 -> posible_change_addr.append(output)
     IF len(posible_change_addr) != 1 -> RETURN None
     ELSE -> RETURN posible_change_addr
 
