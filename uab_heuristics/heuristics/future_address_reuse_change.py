@@ -34,8 +34,6 @@ class FutureAddressReuse(Heuristic):
         address_with_future = []
         #we look if there is any future tx where this address appeared, if not we will consider it the change address
         for out_addr, blocks_heights in zip(tx.outputs_addresses, total_blocks_heights):
-            #since we have sorted the elements, we can only check the first block height
-            #means we found a future tx where this address is used, so is not new. If we find any equal block height, we also will asume it is not new
             #this first comprovation is to check if we find any other tx rather than the one we are evaluating
             if len(blocks_heights) > 0:
                 for block_height in blocks_heights:
