@@ -26,7 +26,7 @@ Below we can find the detailed algorithm to try to identify the change outputs:
     actual_block_height = get_block_by_tx(tx)
 
     out_txs = []
-    total_blocks_txs
+    total_blocks_txs = []
     FOR out in tx.outputs:
         out_txs.append(get_txs_by_addr(out.addr))
         block_txs = []

@@ -25,9 +25,10 @@ Below we can find the detailed algorithm to try to identify the change outputs:
 
     posible_change_addr = []
     FOR output in tx.outputs:
-        IF tx.input.addr == output.addr -> change = output
-
-    RETURN change
+        IF tx.input.addr == output.addr -> posible_change_addr.append(output.addr)
+    
+    IF len(posible_change_addr) != 1 -> RETURN None
+    ELSE -> RETURN posible_change_addr
 
 ## When It Works
 

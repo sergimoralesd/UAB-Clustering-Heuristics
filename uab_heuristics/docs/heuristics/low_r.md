@@ -67,7 +67,7 @@ TX 2 (spends output_1):
     - output_3 (0.4 btc)
     - output_4 (0.5 btc)
 
-   Low_r policy = False
+    Low_r policy = False
 
 TX 3 (spends output_2):
 

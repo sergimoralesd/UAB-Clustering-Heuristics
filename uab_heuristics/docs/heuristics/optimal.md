@@ -42,7 +42,7 @@ Below we can find the detailed algorithm to try to identify the change outputs:
 | Scenario | Reason |
 | --- | --- |
 | Exists an unnecessary input | No match |
-| Both outputs amoutns have the same value | Both outputs match -> ambiguous |
+| Both outputs amounts have the same value | Both outputs match -> ambiguous |
 
 ## Exemple
 
