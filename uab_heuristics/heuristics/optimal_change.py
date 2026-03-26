@@ -38,5 +38,5 @@ class OptimalChange(Heuristic):
                 }
         return {
                 "result" : True,
-                "address" : [potential_change_addr]
+                "address" : potential_change_addr
             }

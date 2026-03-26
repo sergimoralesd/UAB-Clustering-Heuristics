@@ -16,7 +16,7 @@ class ConsistentAddressTypeChange(Heuristic):
         tx.import_previous_txs()
 
         #more than one type could mean more than one user
-        if len(set(tx.inputs_types)) > 2:
+        if len(set(tx.inputs_types)) > 1:
             return {
                 "result" : False,
                 "address" : []
