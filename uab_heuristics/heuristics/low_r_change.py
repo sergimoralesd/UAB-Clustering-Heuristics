@@ -5,7 +5,7 @@ class LowRChange(Heuristic):
     """
     Heurisitic that detects change address by using the low R value from the signature
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium-low"
     __accuracy__ = 0 #to be determined
 
     @classmethod

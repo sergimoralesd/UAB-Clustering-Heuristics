@@ -5,7 +5,7 @@ class ZeroConfirmationChange(Heuristic):
     """
     Heurisitic that detects change address by checking the waited time to spend the outputs, if it is less than 6 blocks(avoid double spend), may imply the user is spending change
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium-low"
     __accuracy__ = 0 #to be determined
 
     @classmethod

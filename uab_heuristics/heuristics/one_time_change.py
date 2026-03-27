@@ -5,7 +5,7 @@ class OneTimeChange(Heuristic):
     """
     Heurisitic that detects change address by checking if any output is the first time it appears
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "high"
     __accuracy__ = 0 #to be determined
 
     @classmethod

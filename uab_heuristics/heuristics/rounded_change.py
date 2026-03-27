@@ -4,7 +4,7 @@ class RoundedChange(Heuristic):
     """
     Heurisitic that detects change address by checking if exists any rounded value
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "none"
     __accuracy__ = 0 #to be determined
 
     @classmethod

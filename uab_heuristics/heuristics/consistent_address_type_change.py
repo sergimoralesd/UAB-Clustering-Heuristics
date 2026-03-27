@@ -5,7 +5,7 @@ class ConsistentAddressTypeChange(Heuristic):
     Heurisitic that detects change address by using same address type in all inputs and in outputs
     It differs with the other because this heuristic checks all inputs' types are the same
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "low"
     __accuracy__ = 0 #to be determined
 
     @classmethod

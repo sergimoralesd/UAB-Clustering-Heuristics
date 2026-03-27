@@ -5,7 +5,7 @@ class SignalRBFChange(Heuristic):
     """
     Heurisitic that detects change address by using the version field in tx
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium"
     __accuracy__ = 0 #to be determined
 
     @classmethod

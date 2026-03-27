@@ -5,7 +5,7 @@ class EqualOutputCoinjoinChange(Heuristic):
     """
     Heurisitic that detects change address by using the not equal-valued outputs in a coinjoin
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "low"
     __accuracy__ = 0 #to be determined
 
     @classmethod

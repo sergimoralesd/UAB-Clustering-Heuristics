@@ -6,7 +6,7 @@ class FutureAddressReuse(Heuristic):
     """
     Heurisitic that detects change address by checking if any output is the first time it appears and is never used again and the rest of them are reused later on
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "high"
     __accuracy__ = 0 #to be determined
 
     @classmethod

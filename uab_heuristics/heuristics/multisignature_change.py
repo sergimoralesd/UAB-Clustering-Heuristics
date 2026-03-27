@@ -5,7 +5,7 @@ class MultiSignatureChange(Heuristic):
     """
     Heurisitic that detects change address by checking if any input and output is a multisignature, a very unique script
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium-low"
     __accuracy__ = 0 #to be determined
 
     @classmethod

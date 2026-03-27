@@ -4,7 +4,7 @@ class FeeRelativeChange(Heuristic):
     """
     Heurisitic that detects change address by using the relative fee paid by the tx
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium-high" #to be determined
     __accuracy__ = 0 #to be determined
 
     @classmethod

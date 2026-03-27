@@ -4,7 +4,7 @@ class SegwitConformChange(Heuristic):
     """
     Heurisitic that detects change address by checking if the tx is segwit serialized
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium-high"
     __accuracy__ = 0 #to be determined
 
     @classmethod

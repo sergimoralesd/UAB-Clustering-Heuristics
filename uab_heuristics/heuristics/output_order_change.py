@@ -5,7 +5,7 @@ class OutputOrderChange(Heuristic):
     """
     Heurisitic that detects change address by using the input order of the tx and the tx spending the outputs
     """
-    __complexity__ = "none" #to be determined
+    __complexity__ = "medium-low"
     __accuracy__ = 0 #to be determined
 
     @classmethod
