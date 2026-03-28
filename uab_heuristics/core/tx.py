@@ -14,13 +14,13 @@ class Tx:
 
         
 
-        self._output_addrs = self.compute_output_addresses()
+        self._output_addrs = None
         self._inputs_addresses = None
 
         self._output_values = None
         self._inputs_values = None
 
-        self._outputs_types = [get_address_type(a) for a in self.outputs_addresses]
+        self._outputs_types = None
         self._inputs_types = None
         
 
@@ -66,9 +66,6 @@ class Tx:
                     self.previous_txids = [b2x(tx_input.prevout.hash[::-1]) for tx_input in self._tx.vin]
                 self._previous_txs = [self.__class__.from_txid(prev_txid, network=network) for prev_txid in self.previous_txids]
 
-        self._inputs_addresses = self.compute_inputs_addresses()
-        self._inputs_values = self.compute_inputs_values()
-        self._inputs_types = [get_address_type(a) for a in self.inputs_addresses]
 
     def import_future_txs(self, future_txs = None, future_txids = None, network='bitcoin'):
         """
@@ -147,19 +144,27 @@ class Tx:
     @property
     def inputs_values(self):
         assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
+        if not self._inputs_values:
+            self._inputs_values = self.compute_inputs_values()
         return self._inputs_types
 
     @property
     def outputs_values(self):
-        return [o.nValue for o in self._tx.vout]
+        if not self._output_values:
+            self._output_values = [o.nValue for o in self._tx.vout]
+        return self._output_values
 
     @property
     def inputs_addresses(self):
         assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
+        if not self.inputs_addresses:
+            self.inputs_addresses = self.compute_inputs_addresses()
         return self._inputs_addresses
 
     @property
     def outputs_addresses(self):
+        if not self._output_addrs:
+            self.outputs_addresses = self.compute_output_addresses()
         return self._output_addrs
 
     @property
@@ -201,10 +206,14 @@ class Tx:
 
     @property
     def inputs_types(self):
+        if not self._inputs_types:
+            self._inputs_types = [get_address_type(a) for a in self.inputs_addresses]
         return self._inputs_types
 
     @property
     def outputs_types(self):
+        if not self._outputs_types:
+            self._outputs_types = [get_address_type(a) for a in self.outputs_addresses]
         return self._outputs_types
 
     @property
