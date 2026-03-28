@@ -146,7 +146,7 @@ class Tx:
         assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
         if not self._inputs_values:
             self._inputs_values = self.compute_inputs_values()
-        return self._inputs_types
+        return self._inputs_values
 
     @property
     def outputs_values(self):
