@@ -12,6 +12,18 @@ class Tx:
         self._previous_txs = None
         self._future_txs = None
 
+        
+
+        self._output_addrs = self.compute_output_addresses()
+        self._inputs_addresses = None
+
+        self._output_values = None
+        self._inputs_values = None
+
+        self._outputs_types = [get_address_type(a) for a in self.outputs_addresses]
+        self._inputs_types = None
+        
+
     # ----------------------
     # Constructor methods
     # ----------------------
@@ -53,6 +65,10 @@ class Tx:
                 if not self.previous_txids:
                     self.previous_txids = [b2x(tx_input.prevout.hash[::-1]) for tx_input in self._tx.vin]
                 self._previous_txs = [self.__class__.from_txid(prev_txid, network=network) for prev_txid in self.previous_txids]
+
+        self._inputs_addresses = self.compute_inputs_addresses()
+        self._inputs_values = self.compute_inputs_values()
+        self._inputs_types = [get_address_type(a) for a in self.inputs_addresses]
 
     def import_future_txs(self, future_txs = None, future_txids = None, network='bitcoin'):
         """
@@ -131,11 +147,7 @@ class Tx:
     @property
     def inputs_values(self):
         assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
-        data =  []
-        for tx_input, prev_tx in zip(self._tx.vin, self._previous_txs):
-            prev_vout = tx_input.prevout.n
-            data.append(prev_tx.outputs_values[prev_vout])
-        return data
+        return self._inputs_types
 
     @property
     def outputs_values(self):
@@ -143,20 +155,12 @@ class Tx:
 
     @property
     def inputs_addresses(self):
-        addresses = []
-        for i, vin in enumerate(self._tx.vin):
-            prev_tx = self._previous_txs[i]
-            vout_idx = vin.prevout.n
-            script_pubkey = prev_tx._tx.vout[vout_idx].scriptPubKey
-            addresses.append(compute_addr(script_pubkey))
-        return addresses
+        assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
+        return self._inputs_addresses
 
     @property
     def outputs_addresses(self):
-        addrs = []
-        for vout in self._tx.vout:
-            addrs.append(compute_addr(vout.scriptPubKey))
-        return addrs
+        return self._output_addrs
 
     @property
     def txid(self):
@@ -197,11 +201,11 @@ class Tx:
 
     @property
     def inputs_types(self):
-        return [get_address_type(a) for a in self.inputs_addresses] 
+        return self._inputs_types
 
     @property
     def outputs_types(self):
-        return [get_address_type(a) for a in self.outputs_addresses]
+        return self._outputs_types
 
     @property
     def previous_txid(self):
@@ -267,3 +271,25 @@ class Tx:
     def is_segwit(self):
         raw = self._tx.serialize()
         return raw[4] == 0x00 and raw[5] == 0x01
+    
+    def compute_output_addresses(self):
+        addrs = []
+        for vout in self._tx.vout:
+            addrs.append(compute_addr(vout.scriptPubKey))
+        return addrs
+    
+    def compute_inputs_addresses(self):
+        addresses = []
+        for i, vin in enumerate(self._tx.vin):
+            prev_tx = self._previous_txs[i]
+            vout_idx = vin.prevout.n
+            script_pubkey = prev_tx._tx.vout[vout_idx].scriptPubKey
+            addresses.append(compute_addr(script_pubkey))
+        return addresses
+    
+    def compute_inputs_values(self):
+        data =  []
+        for tx_input, prev_tx in zip(self._tx.vin, self._previous_txs):
+            prev_vout = tx_input.prevout.n
+            data.append(prev_tx.outputs_values[prev_vout])
+        return data
