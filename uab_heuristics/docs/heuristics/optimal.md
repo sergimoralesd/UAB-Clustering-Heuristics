@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `OptimalChange` |
 | **Category** | Value-based |
-| **Complexity** | Medium-Low |
+| **Complexity** | Low |
 | **Accuracy** | TBD |
 | **Requirements** | >1-input and 2-output transaction |
 | **Additional Information** | previous transaction (to obtain the input values) |

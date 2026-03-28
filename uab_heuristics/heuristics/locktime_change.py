@@ -5,7 +5,7 @@ class LocktimeChange(Heuristic):
     """
     Heurisitic that detects change address by using the locktime field, checking if the speding tx have the same configuration
     """
-    __complexity__ = "medium"
+    __complexity__ = "medium-low"
     __accuracy__ = 0 #to be determined
 
     @classmethod

@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `LocktimeChange` |
 | **Category** | Fingerprinting |
-| **Complexity** | Medium |
+| **Complexity** | Medium-Low |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
 | **Additional Information** | future transactions (to search coincidences) |

@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `ReusedAddressChange` |
 | **Category** | Fingerprinting |
-| **Complexity** | Medium-Low |
+| **Complexity** | Low |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
 | **Additional Information** | previous transaction (to obtain the input address type) |
