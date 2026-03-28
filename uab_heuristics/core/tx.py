@@ -157,14 +157,14 @@ class Tx:
     @property
     def inputs_addresses(self):
         assert self._previous_txs is not None, f"Tx {self.txid} has not any previous tx, try running import_previous_txs"
-        if not self.inputs_addresses:
-            self.inputs_addresses = self.compute_inputs_addresses()
+        if not self._inputs_addresses:
+            self._inputs_addresses = self.compute_inputs_addresses()
         return self._inputs_addresses
 
     @property
     def outputs_addresses(self):
         if not self._output_addrs:
-            self.outputs_addresses = self.compute_output_addresses()
+            self._output_addrs = self.compute_output_addresses()
         return self._output_addrs
 
     @property
