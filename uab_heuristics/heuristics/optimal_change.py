@@ -4,7 +4,7 @@ class OptimalChange(Heuristic):
     """
     Heurisitic that detects change address by checking that any input has higher amount than any output, meaning that are all needed
     """
-    __complexity__ = "medium-low"
+    __complexity__ = "low"
     __accuracy__ = 0 #to be determined
 
     @classmethod
