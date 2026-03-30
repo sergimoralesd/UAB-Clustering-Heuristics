@@ -1,6 +1,6 @@
 def get_block_from_txid(txid):
     from ..core import BitcoinDataFetcher
-    data_fetcher = BitcoinDataFetcher()
+    data_fetcher = BitcoinDataFetcher(sources=["rpc", "external_sources"])
     try:
         return data_fetcher.get_block_from_txid(txid=txid)
     except Exception as e:
