@@ -22,6 +22,8 @@ class Tx:
 
         self._outputs_types = None
         self._inputs_types = None
+
+        self._txid = None
         
 
     # ----------------------
@@ -169,8 +171,10 @@ class Tx:
 
     @property
     def txid(self):
-        return b2x(self._tx.GetTxid()[::-1])
-
+        if not self._txid:
+            self._txid = b2x(self._tx.GetTxid()[::-1])
+        return self._txid
+    
     @property
     def size(self):
         return len(self._tx.serialize())
