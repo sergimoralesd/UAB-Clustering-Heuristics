@@ -67,7 +67,7 @@ TX 2 (spends output_1):
     - output_3 (1.0 btc)
     - output_4 (0.5 btc)
 
-   Segwit behaviour = True
+    Segwit behaviour = True
 
 TX 3 (spends output_2):
 
@@ -78,7 +78,7 @@ TX 3 (spends output_2):
     - output_5 (0.75 btc)
     - output_6 (0.75 btc)
     
-   Segwit behaviour = False
+    Segwit behaviour = False
 
 Step-by-step algorithm:
 

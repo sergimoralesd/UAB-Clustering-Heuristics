@@ -69,6 +69,7 @@ TX 2 (spends output_1):
     Outputs
     - output_3 (4.3 btc)
     - output_4 (3.5 btc)
+
     Inputs' order = Descending order
 
 TX 3 (spends output_2):
@@ -80,6 +81,7 @@ TX 3 (spends output_2):
     Outputs
     - output_5 (1.2 btc)
     - output_6 (0.3 btc)
+    
     Inputs' order = Ascending order
 
 Step-by-step algorithm:

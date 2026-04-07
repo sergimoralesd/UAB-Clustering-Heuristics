@@ -67,7 +67,7 @@ TX 2 (spends output_1):
     - output_3 (1.4 btc)
     - output_4 (0.5 btc)
 
-   Multisignature scheme = None
+    Multisignature scheme = None
 
 TX 3 (spends output_2):
 

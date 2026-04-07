@@ -68,7 +68,7 @@ TX 2 (spends output_1):
     - output_3 (1.0 btc)
     - output_4 (0.5 btc)
 
-   Actual block height = 30
+    Actual block height = 30
 
 TX 3 (spends output_2):
 

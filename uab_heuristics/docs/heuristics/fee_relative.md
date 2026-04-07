@@ -65,6 +65,7 @@ TX 2 (spends output_1):
     Outputs
     - output_3 (0.2 btc)
     - output_4 (1 btc)
+
     Absolute fee = 0.01 btc/vB
 
 TX 3 (spends output_2):
@@ -75,6 +76,7 @@ TX 3 (spends output_2):
     Outputs
     - output_5 (0.2 btc)
     - output_6 (0.8 btc)
+    
     Absolute fee = 0.08 btc/vB
 
 Step-by-step algorithm:
