@@ -81,7 +81,7 @@ TX 3 (spends output_2):
 
 Step-by-step algorithm:
 
-1. Compute the version values of each future transactions: {True, False}
+1. Compute if they follow the RBF policy of each future transactions: {True, False}
 2. Check for any coincidence with the actual transaction: (True)
 3. Return the address used in the transaction that matches the version fee.
 
