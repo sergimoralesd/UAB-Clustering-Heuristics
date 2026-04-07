@@ -12,6 +12,8 @@ from .varint_size import varint_size
 from .get_txs_by_address import get_txs_by_address
 from .get_historical_price import get_historical_price
 from .compute_addr import compute_addr
+from .has_uncompress_public_key import has_uncompress_public_keys
+
 
 __all__ = ["get_address_type", 
            "get_collection_tx", 
@@ -26,4 +28,5 @@ __all__ = ["get_address_type",
            "varint_size", 
            "get_txs_by_address",
            "get_historical_price", 
-           "compute_addr"]
+           "compute_addr", 
+           "has_uncompress_public_keys"]
