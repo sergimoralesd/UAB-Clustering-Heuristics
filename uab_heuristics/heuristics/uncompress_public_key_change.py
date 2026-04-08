@@ -28,7 +28,7 @@ class UncompressPublicKeyChange(Heuristic):
             for future_tx in tx.future_txs
         ]
 
-        change = [addr for addr, future_tx in zip(tx.outputs_addresses, uncompressed_public_keys_future_txs) if future_tx != has_uncompressed_public_keys]
+        change = [addr for addr, future_tx in zip(tx.outputs_addresses, uncompressed_public_keys_future_txs) if future_tx == has_uncompressed_public_keys]
         #if we find one coincidence, we can extract the change
         if len(change) == 1:
             return {
