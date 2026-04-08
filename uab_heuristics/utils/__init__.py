@@ -13,6 +13,7 @@ from .get_txs_by_address import get_txs_by_address
 from .get_historical_price import get_historical_price
 from .compute_addr import compute_addr
 from .has_uncompress_public_key import has_uncompress_public_keys
+from .is_backdating import is_backdating
 
 
 __all__ = ["get_address_type", 
@@ -29,4 +30,5 @@ __all__ = ["get_address_type",
            "get_txs_by_address",
            "get_historical_price", 
            "compute_addr", 
-           "has_uncompress_public_keys"]
+           "has_uncompress_public_keys",
+           "is_backdating"]

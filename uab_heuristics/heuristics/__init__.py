@@ -20,6 +20,7 @@ from .future_address_reuse_change import FutureAddressReuse
 from .segwit_conform_change import SegwitConformChange
 from .rounded_fiat_change import RoundedFiatChange
 from .uncompress_public_key_change import UncompressPublicKeyChange
+from .backdating_change import BackdatingChange
 
 __all__ = ["ReusedAddressChange", 
            "AddressTypeChange", 
@@ -42,4 +43,5 @@ __all__ = ["ReusedAddressChange",
            "FutureAddressReuse", 
            "SegwitConformChange", 
            "RoundedFiatChange", 
-           "UncompressPublicKeyChange"] 
+           "UncompressPublicKeyChange",
+           "BackdatingChange"] 

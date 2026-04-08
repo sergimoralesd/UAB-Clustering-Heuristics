@@ -1,7 +1,7 @@
 from ..core.base_heuristic import Heuristic
-from ..utils import has_uncompress_public_keys
+from ..utils import is_backdating
 
-class UncompressPublicKeyChange(Heuristic):
+class BackdatingChange(Heuristic):
     """
     Heurisitic that detects change address by checking if the public keys are compress or uncompress.
     """
@@ -20,15 +20,15 @@ class UncompressPublicKeyChange(Heuristic):
             if future_tx is not None:
                 future_tx.import_previous_txs()
 
-        has_uncompressed_public_keys = has_uncompress_public_keys(tx)
+        actual_is_backdating = is_backdating(tx)
 
         
-        uncompressed_public_keys_future_txs = [
-            has_uncompress_public_keys(future_tx) if future_tx is not None else None
+        backdating_future_txs = [
+            is_backdating(future_tx) if future_tx is not None else None
             for future_tx in tx.future_txs
         ]
 
-        change = [addr for addr, future_tx in zip(tx.outputs_addresses, uncompressed_public_keys_future_txs) if future_tx == has_uncompressed_public_keys]
+        change = [addr for addr, future_backdating in zip(tx.outputs_addresses, backdating_future_txs) if future_backdating == actual_is_backdating]
         #if we find one coincidence, we can extract the change
         if len(change) == 1:
             return {

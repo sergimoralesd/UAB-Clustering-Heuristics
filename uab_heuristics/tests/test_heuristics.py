@@ -58,7 +58,7 @@ if __name__ == "__main__":
     #    print(f"-- N:{n} --")
     #    test_heuristic(txs, RoundedChange, n=n)
 
-    test_heuristic(txs, SmallerOutputChange)
+    #test_heuristic(txs, SmallerOutputChange)
 
     #test_heuristic(txs, OptimalChange)
 
@@ -100,5 +100,7 @@ if __name__ == "__main__":
     #        print(f"-- N:{n} --")
     #        test_heuristic(txs, RoundedFiatChange, currency=currency, n=n)
 
-    test_heuristic(txs, UncompressPublicKeyChange, prev_tx=True, future_txs=True)
+    #test_heuristic(txs, UncompressPublicKeyChange, prev_tx=True, future_txs=True)
+
+    test_heuristic(txs, BackdatingChange, prev_tx=True, future_txs=True)
 
