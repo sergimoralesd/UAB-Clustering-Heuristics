@@ -37,7 +37,7 @@ impl Tx {
             .map(|a| a.to_string())
     }
 
-    fn get_prev_txs<'py>(&self, py: Python<'py>) -> PyResult<&'py Vec<PyObject>> {
+    fn get_prev_txs(&self) -> PyResult<&Vec<PyObject>> {
         self.previous_txs
             .as_ref()
             .ok_or_else(|| PyAssertionError::new_err("Call import_previous_txs first"))
@@ -252,7 +252,7 @@ impl Tx {
         self.tx
             .output
             .iter()
-            .map(|o| o.script_pubkey.to_hex())
+            .map(|o| hex::encode(o.script_pubkey.as_bytes()))
             .collect()
     }
 
@@ -290,7 +290,7 @@ impl Tx {
 
     #[getter]
     fn locktime(&self) -> u32 {
-        self.tx.lock_time
+        self.tx.lock_time.into()
     }
 
     #[getter]
@@ -300,12 +300,20 @@ impl Tx {
 
     #[getter]
     fn inputs_sequence(&self) -> Vec<u32> {
-        self.tx.input.iter().map(|i| i.sequence).collect()
+        self.tx
+            .input
+            .iter()
+            .map(|i| i.sequence.to_consensus_u32())
+            .collect()
     }
 
     #[getter]
     fn inputs_scriptSig(&self) -> Vec<String> {
-        self.tx.input.iter().map(|i| i.script_sig.to_hex()).collect()
+        self.tx
+            .input
+            .iter()
+            .map(|i| hex::encode(i.script_sig.as_bytes()))
+            .collect()
     }
 
     #[getter]
@@ -319,7 +327,7 @@ impl Tx {
 
     #[getter]
     fn is_segwit(&self) -> bool {
-        self.tx.has_witness()
+        self.tx.input.iter().any(|i| !i.witness.is_empty())
     }
 
     #[getter]
@@ -352,7 +360,7 @@ impl Tx {
 
     #[getter]
     fn inputs_values(&self, py: Python<'_>) -> PyResult<Vec<i64>> {
-        let prev_txs = self.get_prev_txs(py)?;
+        let prev_txs = self.get_prev_txs()?;
         let mut values = Vec::with_capacity(self.tx.input.len());
 
         for (i, txin) in self.tx.input.iter().enumerate() {
@@ -373,7 +381,7 @@ impl Tx {
 
     #[getter]
     fn inputs_addresses(&self, py: Python<'_>) -> PyResult<Vec<Option<String>>> {
-        let prev_txs = self.get_prev_txs(py)?;
+        let prev_txs = self.get_prev_txs()?;
         let mut addresses = Vec::with_capacity(self.tx.input.len());
 
         for (i, txin) in self.tx.input.iter().enumerate() {
