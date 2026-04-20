@@ -25,11 +25,11 @@ Below we can find the detailed algorithm to try to identify the change outputs:
 
     locktime_future = []
     FOR future_tx in tx.future_tx:
-        locktime_future.append(future_tx.locktime)   
+        locktime_future.append(anti_fee_sniping(future_tx))   
 
     posible_change_addr = []
     FOR (index, future_locktime) in enumerate(locktime_future):
-        IF tx.locktime == future_locktime -> posible_change_addr.append(tx.outputs[i])
+        IF anti_fee_sniping(tx) == future_locktime -> posible_change_addr.append(tx.outputs[i])
     IF len(posible_change_addr) != 1 -> RETURN None
     ELSE -> RETURN posible_change_addr
 
@@ -55,7 +55,7 @@ TX 1:
     - output_1 (1.5 btc)
     - output_2 (1.5 btc)
 
-    Locktime = 0
+    Anti_fee_sniping = True
 
 TX 2 (spends output_1):
 
@@ -66,7 +66,7 @@ TX 2 (spends output_1):
     - output_3 (0.5 btc)
     - output_4 (1 btc)
 
-    Locktime = 500000
+    Anti_fee_sniping = False
 
 TX 3 (spends output_2):
 
@@ -77,13 +77,13 @@ TX 3 (spends output_2):
     - output_5 (0.75 btc)
     - output_6 (0.75 btc)
 
-    Locktime = 0
+    Anti_fee_sniping = True
 
 Step-by-step algorithm:
 
-1. Compute the version values of each future transactions: {0, 500000}
-2. Check for any coincidence with the actual transaction: (0)
-3. Return the address used in the transaction that matches the version fee.
+1. Compute if the future transactions are following the anti_feesniping mechanism: {False, True}
+2. Check for any coincidence with the actual transaction: (True)
+3. Return the address used in the transaction that matches the mechanism.
 
 ## Real Transaction Exemple
 

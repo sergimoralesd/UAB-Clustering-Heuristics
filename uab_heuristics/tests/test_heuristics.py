@@ -97,5 +97,5 @@ if __name__ == "__main__":
 
     test_heuristic(txs, UncompressPublicKeyChange, prev_tx=True, future_txs=True)
 
-    #test_heuristic(txs, BackdatingChange, prev_tx=True, future_txs=True)
+    test_heuristic(txs, BackdatingChange, prev_tx=True, future_txs=True)
 
