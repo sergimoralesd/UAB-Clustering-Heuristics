@@ -467,6 +467,79 @@ impl Tx {
         println!("Relative Fee: {}", self.relative_fee(py)?);
         Ok(())
     }
+
+    #[getter]
+    fn is_segwit_conform(&self, py: Python<'_>) -> PyResult<bool> {
+        let witness_types = ["p2wpkh", "p2wsh", "p2tr", "p2sh-p2wpkh"];
+        let inputs_types = self.inputs_types(py)?;
+        
+        let mut has_segwit = false;
+        for t in inputs_types {
+            if let Ok(s) = t.extract::<String>(py) {
+                if witness_types.contains(&s.as_str()) {
+                    has_segwit = true;
+                    break;
+                }
+            }
+        }
+        
+        Ok(has_segwit && self.is_segwit())
+    }
+
+    #[getter]
+    fn has_uncompressed_public_keys(&self, py: Python<'_>) -> PyResult<bool> {
+        let inputs_types = self.inputs_types(py)?;
+        let prev_txs = self.get_prev_txs();
+        
+        for (i, txin) in self.tx.input.iter().enumerate() {
+            let type_str = if let Some(t) = inputs_types.get(i) {
+                if let Ok(s) = t.extract::<String>(py) {
+                    s
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            };
+
+            if type_str == "p2pkh" {
+                let script_sig = &txin.script_sig;
+                let instructions: Vec<_> = script_sig.instructions().filter_map(|i| i.ok()).collect();
+                if instructions.len() >= 2 {
+                    if let bitcoin::blockdata::script::Instruction::PushBytes(bytes) = &instructions[1] {
+                        let bytes_slice = bytes.as_bytes();
+                        if bytes_slice.len() == 65 && bytes_slice[0] == 0x04 {
+                            return Ok(true);
+                        }
+                    }
+                }
+            } else if type_str == "p2ms" {
+                if let Ok(prev_txs_list) = prev_txs {
+                    if let Some(prev_tx) = prev_txs_list.get(i) {
+                        if let Ok(outputs_script_pub_key) = prev_tx.as_ref(py).getattr("outputs_scriptPubKey") {
+                            if let Ok(scripts) = outputs_script_pub_key.extract::<Vec<String>>() {
+                                let idx = txin.previous_output.vout as usize;
+                                if let Some(script_hex) = scripts.get(idx) {
+                                    if let Ok(script_bytes) = hex::decode(script_hex) {
+                                        let script = Script::from(script_bytes);
+                                        for instruction in script.instructions() {
+                                            if let Ok(bitcoin::blockdata::script::Instruction::PushBytes(bytes)) = instruction {
+                                                let bytes_slice = bytes.as_bytes();
+                                                if bytes_slice.len() == 65 && bytes_slice[0] == 0x04 {
+                                                    return Ok(true);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(false)
+    }
 }
 
 #[pymodule]

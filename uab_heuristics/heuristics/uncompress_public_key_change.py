@@ -1,5 +1,4 @@
 from ..core.base_heuristic import Heuristic
-from ..utils import has_uncompress_public_keys
 
 class UncompressPublicKeyChange(Heuristic):
     """
@@ -20,11 +19,10 @@ class UncompressPublicKeyChange(Heuristic):
             if future_tx is not None:
                 future_tx.import_previous_txs()
 
-        has_uncompressed_public_keys = has_uncompress_public_keys(tx)
-
+        has_uncompressed_public_keys = tx.has_uncompressed_public_keys
         
         uncompressed_public_keys_future_txs = [
-            has_uncompress_public_keys(future_tx) if future_tx is not None else None
+            future_tx.has_uncompressed_public_keys if future_tx is not None else None
             for future_tx in tx.future_txs
         ]
 

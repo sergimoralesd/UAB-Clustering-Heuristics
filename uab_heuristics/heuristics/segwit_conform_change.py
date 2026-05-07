@@ -19,12 +19,9 @@ class SegwitConformChange(Heuristic):
             if future_tx is not None:
                 future_tx.import_previous_txs()
 
-        witness_types = ["p2wpkh", "p2wsh", "p2tr", "p2sh-p2wpkh"]
-        has_segwit = any(x in tx.inputs_types for x in witness_types)
-
-        actual_segwit_conform = has_segwit and tx.is_segwit
+        actual_segwit_conform = tx.is_segwit_conform
         future_segwit_conform = [
-            any(x in future_tx.inputs_types for x in witness_types) and future_tx.is_segwit if future_tx is not None else None 
+            future_tx.is_segwit_conform if future_tx is not None else None 
             for future_tx in tx.future_txs
         ]
 
