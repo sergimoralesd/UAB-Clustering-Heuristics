@@ -5,7 +5,7 @@ class BackdatingChange(Heuristic):
     """
     Heurisitic that detects change address by checking if the public keys are compress or uncompress.
     """
-    __complexity__ = "medium-high"
+    __complexity__ = "high"
     __accuracy__ = 0 #to be determined
 
     @classmethod

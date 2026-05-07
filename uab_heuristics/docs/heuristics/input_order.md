@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `InputOrderChange` |
 | **Category** | Fingerprinting |
-| **Complexity** | Medium-High |
+| **Complexity** | High |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
 | **Additional Information** | previous transactions (for inputs' values), future transactions (to search coincidences) and previous' future transactions (for inputs' values) |
@@ -17,7 +17,7 @@ Identifies the change output by exploiting the fact that wallets tend to generat
 
 ## Information Needed
 
-This heurisitic needs the inputs' values from the transaction itself, and from the spending ones. Meaning it needs the transaction, the ones where the inputs comes from, the future ones and the previous from each future.
+This heurisitic needs the inputs' values from the transaction itself, and from the spending ones. Meaning it needs the transaction, the ones where the inputs comes from, the future ones and the previous from each future. Besides that, it requires when the transactions appeared on the blockchain.
 
 ## Detailed Algorithm
 

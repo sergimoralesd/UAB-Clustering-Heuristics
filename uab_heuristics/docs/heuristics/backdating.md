@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `BackdatingChange` |
 | **Category** | Fingerprinting |
-| **Complexity** | Medium-High |
+| **Complexity** | High |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
 | **Additional Information** | previous transactions (for locktime field), future transactions (to search coincidences) and previous' future transactions (for locktime field) |
@@ -17,7 +17,7 @@ Identifies the change output by exploiting that wallets tend to generate consist
 
 ## Information Needed
 
-This heurisitic needs locktime from the transaction itself, from the previous ones, from the future transactions and from the future previous.
+This heurisitic needs locktime from the transaction itself, from the previous ones, from the future transactions and from the future previous. Besides, it needs the block height where the transactions were added.
 
 ## Detailed Algorithm
 

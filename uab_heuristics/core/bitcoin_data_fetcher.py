@@ -68,5 +68,14 @@ class BitcoinDataFetcher:
     def get_block_from_txid(self, txid: str) -> dict:
         return self._run("get_block_from_txid", txid)
 
-            
-        
+    def get_blocks_from_txids(self, txids: list) -> dict:
+        for adapter in self.adapters:
+            if not hasattr(adapter, "get_blocks_from_txids"):
+                continue
+            try:
+                return adapter.get_blocks_from_txids(txids)
+            except (FetchError, NotImplementedError, ImportError):
+                continue
+
+        raise FetchError("All sources failed")
+    
