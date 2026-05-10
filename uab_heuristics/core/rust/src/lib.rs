@@ -507,7 +507,7 @@ impl Tx {
                 let instructions: Vec<_> = script_sig.instructions().filter_map(|i| i.ok()).collect();
                 if instructions.len() >= 2 {
                     if let bitcoin::blockdata::script::Instruction::PushBytes(bytes) = &instructions[1] {
-                        let bytes_slice = bytes.as_bytes();
+                        let bytes_slice = bytes;
                         if bytes_slice.len() == 65 && bytes_slice[0] == 0x04 {
                             return Ok(true);
                         }
@@ -516,7 +516,7 @@ impl Tx {
             } else if type_str == "p2ms" {
                 if let Ok(prev_txs_list) = prev_txs {
                     if let Some(prev_tx) = prev_txs_list.get(i) {
-                        if let Ok(outputs_script_pub_key) = prev_tx.as_ref(py).getattr("outputs_scriptPubKey") {
+                        if let Ok(outputs_script_pub_key) = prev_tx.bind(py).getattr("outputs_scriptPubKey") {
                             if let Ok(scripts) = outputs_script_pub_key.extract::<Vec<String>>() {
                                 let idx = txin.previous_output.vout as usize;
                                 if let Some(script_hex) = scripts.get(idx) {
@@ -524,7 +524,7 @@ impl Tx {
                                         let script = Script::from(script_bytes);
                                         for instruction in script.instructions() {
                                             if let Ok(bitcoin::blockdata::script::Instruction::PushBytes(bytes)) = instruction {
-                                                let bytes_slice = bytes.as_bytes();
+                                                let bytes_slice = bytes;
                                                 if bytes_slice.len() == 65 && bytes_slice[0] == 0x04 {
                                                     return Ok(true);
                                                 }
