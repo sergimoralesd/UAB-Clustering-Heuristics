@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | **Class** | `ReusedAddressChange` |
-| **Category** | Fingerprinting |
+| **Category** | Address-Based |
 | **Complexity** | Low |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
