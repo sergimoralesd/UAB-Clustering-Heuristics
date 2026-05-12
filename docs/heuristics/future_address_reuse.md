@@ -17,7 +17,7 @@ Identifies the change output by exploiting that wallets behaviour. By checking i
 
 ## Information Needed
 
-This heurisitic needs the transactions where the output addresses are used in the future.
+This heuristic needs the transactions where the output addresses are used in the future.
 
 ## Detailed Algorithm
 

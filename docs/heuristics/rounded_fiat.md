@@ -17,7 +17,7 @@ Identifies the change output by exploiting the user behaviour. By checking the o
 
 ## Information Needed
 
-This heurisitic needs the outputs' values from the transaction itself and the historial information of the exchange rate.
+This heuristic needs the outputs' values from the transaction itself and the historial information of the exchange rate.
 
 ## Detailed Algorithm
 

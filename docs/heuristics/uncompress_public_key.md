@@ -17,7 +17,7 @@ Identifies the change output by exploiting that wallets tend to generate consist
 
 ## Information Needed
 
-This heurisitic needs scriptSig from the transaction itself, and from the future transactions, in some cases it needs the scriptPubKey.
+This heuristic needs scriptSig from the transaction itself, and from the future transactions, in some cases it needs the scriptPubKey.
 
 ## Detailed Algorithm
 

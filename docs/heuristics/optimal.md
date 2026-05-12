@@ -17,7 +17,7 @@ Identifies the change output by exploiting the fact that wallets tend to create 
 
 ## Information Needed
 
-This heurisitic needs the inputs and outputs values from the transaction itself.
+This heuristic needs the inputs and outputs values from the transaction itself.
 
 ## Detailed Algorithm
 

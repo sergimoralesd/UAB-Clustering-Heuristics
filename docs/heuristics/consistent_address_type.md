@@ -17,7 +17,7 @@ Identifies the change output by comparing the address types of the inputs and ou
 
 ## Information Needed
 
-This heurisitic needs the inputs and outputs addresses types. Meaning it needs the transaction itself and the ones where the inputs comes from.
+This heuristic needs the inputs and outputs addresses types. Meaning it needs the transaction itself and the ones where the inputs comes from.
 
 ## Detailed Algorithm
 

@@ -17,7 +17,7 @@ Identifies the change output by exploiting the user behaviour. By checking the o
 
 ## Information Needed
 
-This heurisitic needs the outputs' values from the transaction itself.
+This heuristic needs the outputs' values from the transaction itself.
 
 ## Detailed Algorithm
 

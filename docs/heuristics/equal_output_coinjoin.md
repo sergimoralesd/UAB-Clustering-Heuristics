@@ -17,7 +17,7 @@ Identifies the change output by exploiting the not-equal-valued outputs in a coi
 
 ## Information Needed
 
-This heurisitic needs the inputs' and outputs' values. Meaning it needs the transaction itself and the ones where the inputs comes from.
+This heuristic needs the inputs' and outputs' values. Meaning it needs the transaction itself and the ones where the inputs comes from.
 
 ## Detailed Algorithm
 

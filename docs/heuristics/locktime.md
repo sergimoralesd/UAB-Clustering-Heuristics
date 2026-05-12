@@ -13,7 +13,7 @@
 
 ## Description
 
-Identifies the change output by exploiting the fact that wallets tend to generate consistent transactions. By checking the "locktime" field and searching for coincidences with the spending transactions, this heurisitic is able to determine the change output.
+Identifies the change output by exploiting the fact that wallets tend to generate consistent transactions. By checking the "locktime" field and searching for coincidences with the spending transactions, this heuristic is able to determine the change output.
 
 ## Information Needed
 

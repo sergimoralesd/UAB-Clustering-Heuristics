@@ -17,7 +17,7 @@ Identifies the change output by exploiting users behaviours. By checking when th
 
 ## Information Needed
 
-This heurisitic needs the block height where the transactions were included.
+This heuristic needs the block height where the transactions were included.
 
 ## Detailed Algorithm
 

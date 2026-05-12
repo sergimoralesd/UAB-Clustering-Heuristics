@@ -17,7 +17,7 @@ Identifies the change output by exploiting the fact that wallets tend to generat
 
 ## Information Needed
 
-This heurisitic needs the inputs' values from the transaction itself, and from the spending ones. Meaning it needs the transaction, the ones where the inputs comes from, the future ones and the previous from each future. Besides that, it requires when the transactions appeared on the blockchain.
+This heuristic needs the inputs' values from the transaction itself, and from the spending ones. Meaning it needs the transaction, the ones where the inputs comes from, the future ones and the previous from each future. Besides that, it requires when the transactions appeared on the blockchain.
 
 ## Detailed Algorithm
 
