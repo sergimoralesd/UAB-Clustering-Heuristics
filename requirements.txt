@@ -1,0 +1,4 @@
+python-bitcoin-tx
+python-dotenv
+maturin
+pytest
