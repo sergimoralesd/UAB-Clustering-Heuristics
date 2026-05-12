@@ -105,10 +105,11 @@ class _RPCAdapter(BaseAdapter):
         }
 
     def get_blocks_from_txids(self, txids: list) -> dict:
-        """Batch fetch block metadata for multiple txids."""
+        """Batch fetch block metadata for multiple txids, deduplicating block queries."""
         if not txids:
             return {}
 
+        # 1. Fetch raw transaction to get the blockhash for all txids
         raw_requests = [
             {
                 "jsonrpc": "1.1",
@@ -121,44 +122,56 @@ class _RPCAdapter(BaseAdapter):
         raw_responses = self._batch_call(raw_requests)
         raw_by_id = {resp.get("id"): resp for resp in raw_responses}
 
-        block_hash_by_txid = {}
-        header_requests = []
+        # 2. Map txid -> blockhash AND collect unique blockhashes
+        txid_to_blockhash = {}
+        unique_blockhashes = set()
+        
         for idx, txid in enumerate(txids):
             resp = raw_by_id.get(f"raw-{idx}")
             if not resp or resp.get("error"):
                 continue
             result = resp.get("result") or {}
-            block_hash = result.get("blockhash")
-            if block_hash:
-                block_hash_by_txid[txid] = block_hash
-                header_requests.append(
-                    {
-                        "jsonrpc": "1.1",
-                        "id": f"hdr-{idx}",
-                        "method": "getblockheader",
-                        "params": [block_hash],
-                    }
-                )
+            blockhash = result.get("blockhash")
+            if blockhash:
+                txid_to_blockhash[txid] = blockhash
+                unique_blockhashes.add(blockhash)
 
-        if not header_requests:
+        if not unique_blockhashes:
             return {}
 
+        # 3. Fetch block headers ONLY for the unique block hashes
+        header_requests = [
+            {
+                "jsonrpc": "1.1",
+                "id": f"hdr-{b_hash}",
+                "method": "getblockheader",
+                "params": [b_hash],
+            }
+            for b_hash in unique_blockhashes
+        ]
+        
         header_responses = self._batch_call(header_requests)
-        header_by_id = {resp.get("id"): resp for resp in header_responses}
+        header_by_hash = {resp.get("id").replace("hdr-", ""): resp for resp in header_responses}
 
-        result_map = {}
-        for idx, txid in enumerate(txids):
-            if txid not in block_hash_by_txid:
-                continue
-            resp = header_by_id.get(f"hdr-{idx}")
+        # 4. Process the headers into a usable dictionary
+        block_metadata_by_hash = {}
+        for b_hash in unique_blockhashes:
+            resp = header_by_hash.get(b_hash)
             if not resp or resp.get("error"):
                 continue
-            block = resp.get("result") or {}
-            if block:
-                result_map[txid] = {
-                    "block_height": block["height"],
-                    "block_hash": block["hash"],
-                    "block_time": block["time"],
+            result = resp.get("result")
+            if result:
+                block_metadata_by_hash[b_hash] = {
+                    "block_height": result.get("height"),
+                    "block_hash": result.get("hash"),
+                    "block_time": result.get("time")
                 }
+
+        # 5. Bring it all together: map txid -> block metadata
+        result_map = {}
+        for txid in txids:
+            b_hash = txid_to_blockhash.get(txid)
+            if b_hash and b_hash in block_metadata_by_hash:
+                result_map[txid] = block_metadata_by_hash[b_hash]
 
         return result_map
