@@ -10,7 +10,8 @@ class EqualOutputCoinjoinChange(Heuristic):
 
     @classmethod
     def apply(cls, tx=None):
-        assert tx != None, f"Specify a transaction"
+        if tx is None:
+            raise ValueError("Specify a transaction")
         assert tx.output_count > 1, f"The tx {tx.txid} must containat least 2 outputs"
 
 

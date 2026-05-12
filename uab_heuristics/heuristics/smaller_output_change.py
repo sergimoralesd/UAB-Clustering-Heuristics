@@ -9,7 +9,8 @@ class SmallerOutputChange(Heuristic):
 
     @classmethod
     def apply(self, tx=None):
-        assert tx != None, f"Specify a transaction"
+        if tx is None:
+            raise ValueError("Specify a transaction")
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 
         min_value = min(tx.outputs_values)

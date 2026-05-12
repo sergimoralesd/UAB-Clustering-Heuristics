@@ -9,7 +9,8 @@ class OptimalChange(Heuristic):
 
     @classmethod
     def apply(self, tx=None):
-        assert tx != None, f"Specify a transaction"
+        if tx is None:
+            raise ValueError("Specify a transaction")
         assert tx.input_count > 1, f"The tx {tx.txid} must contain at min 2 inputs"
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
 

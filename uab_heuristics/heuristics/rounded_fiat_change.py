@@ -10,10 +10,13 @@ class RoundedFiatChange(Heuristic):
 
     @classmethod
     def apply(self, tx=None, n=None, currency=None):
-        assert tx != None, f"Specify a transaction"
+        if tx is None:
+            raise ValueError("Specify a transaction")
+        if currency is None:
+            raise ValueError("The currency can not be empty")
+        if n is None:
+            raise ValueError("The precision parameter can not be empty")
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
-        assert currency != None, f"The currency can not be empty"
-        assert n != None, f"The precision parameter can not be empty"
         
         block_time = get_block_from_txid(txid=tx.txid)["block_time"]
         price = get_historical_price(block_time, currency)

@@ -9,7 +9,8 @@ class RoundedChange(Heuristic):
 
     @classmethod
     def apply(self, tx=None, n=None):
-        assert tx != None, f"Specify a transaction"
+        if tx is None:
+            raise ValueError("Specify a transaction")
         assert tx.output_count == 2, f"The tx {tx.txid} must contain 2 outputs"
         assert n != None, f"The precision parameter can not be empty"
 

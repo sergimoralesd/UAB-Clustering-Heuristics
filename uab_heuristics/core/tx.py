@@ -1,11 +1,9 @@
-from bitcointx.core import CTransaction, lx, b2x, Hash160
-from bitcointx.core.script import CScript
-from bitcointx.wallet import CCoinAddress, P2PKHBitcoinAddress
+from bitcointx.core import CTransaction, b2x
 from ..utils import get_address_type, get_raw_tx_from_id, varint_size, compute_addr
 
 
 class Tx:
-    def __init__(self, base_tx: CTransaction = None, previous_txids: list[str] = None, futures_txids: list[str] = None):
+    def __init__(self, base_tx: CTransaction | None = None, previous_txids: list[str] = None, futures_txids: list[str] = None):
         self._tx = base_tx
         self.previous_txids = previous_txids
         self.futures_txids = futures_txids
