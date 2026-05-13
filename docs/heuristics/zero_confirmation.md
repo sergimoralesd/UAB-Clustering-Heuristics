@@ -6,7 +6,7 @@
 | --- | --- |
 | **Class** | `ZeroConfirmationChange` |
 | **Category** | Fingerprinting |
-| **Complexity** | Medium-Low |
+| **Complexity** | High |
 | **Accuracy** | TBD |
 | **Requirements** | 2-output transaction |
 | **Additional Information** | future transactions (to search coincidences) |
