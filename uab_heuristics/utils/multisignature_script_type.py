@@ -1,4 +1,4 @@
-from bitcoin.core.script import CScript, OP_CHECKMULTISIG
+from bitcointx.core.script import CScript, OP_CHECKMULTISIG
 
 
 def _decode_op_n(op):

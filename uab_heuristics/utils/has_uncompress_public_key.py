@@ -1,4 +1,4 @@
-from bitcoin.core.script import CScript
+from bitcointx.core.script import CScript
 #TODO:
 #detect other scenarios
     #- P2SH-P2PKH

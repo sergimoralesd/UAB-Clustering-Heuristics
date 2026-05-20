@@ -9,7 +9,7 @@ description = "Tools for clustering addresses in Bitcoin including heuristics an
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-    "python-bitcoin-tx",
+    "python-bitcointx",
     "python-dotenv"
 ]
 

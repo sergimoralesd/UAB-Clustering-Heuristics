@@ -32,9 +32,26 @@ impl Tx {
     }
 
     fn addr_from_script(script: &Script) -> Option<String> {
-        Address::from_script(script, Network::Bitcoin)
-            .ok()
-            .map(|a| a.to_string())
+        if let Ok(addr) = Address::from_script(script, Network::Bitcoin) {
+            return Some(addr.to_string());
+        }
+
+        let bytes = script.as_bytes();
+        // Mimic Python's script_pubkey[1:-1] unconditionally
+        let pubkey_bytes = if bytes.len() >= 2 {
+            &bytes[1..bytes.len() - 1]
+        } else {
+            &[]
+        };
+
+        use bitcoin::hashes::{hash160, Hash};
+        let hash = hash160::Hash::hash(pubkey_bytes);
+        let payload = bitcoin::util::address::Payload::PubkeyHash(bitcoin::PubkeyHash::from_hash(hash));
+        let addr = bitcoin::Address {
+            network: Network::Bitcoin,
+            payload,
+        };
+        Some(addr.to_string())
     }
 
     fn get_prev_txs(&self) -> PyResult<&Vec<PyObject>> {

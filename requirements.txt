@@ -1,4 +1,4 @@
-python-bitcoin-tx
+python-bitcointx
 python-dotenv
 maturin
 pytest
