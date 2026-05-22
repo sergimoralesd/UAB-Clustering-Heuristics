@@ -436,7 +436,8 @@ impl Tx {
         if v <= 0.0 {
             return Err(PyRuntimeError::new_err("Invalid vsize"));
         }
-        Ok(((abs as f64) / v).round() as i64)
+        // satoshis per 1000 virtual bytes
+        Ok((abs * 1000) / (v as i64)) 
     }
 
     #[getter]
