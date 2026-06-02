@@ -22,14 +22,26 @@ class MultiSignatureChange(Heuristic):
                 "address" : []
             }
         multisignature_type = multisignature_type[0]
-
-        future_tx_multisignature_type = [
-            get_multisignature_script_type(future_tx) if future_tx is not None else None
-            for future_tx in tx.future_txs
-        ]
-
         change = []
-        for addr, ms_type in zip(tx.outputs_addresses, future_tx_multisignature_type):
+        for vout_index, (addr, future_tx) in enumerate(zip(tx.outputs_addresses, tx.future_txs)):
+            # unspent output
+            if future_tx is None:
+                continue
+
+            # find the input index in future_tx that spends this exact output
+            spending_input_index = None
+            for i in range(future_tx.input_count):
+                if future_tx.previous_txid[i] != tx.txid:
+                    continue
+                if future_tx._tx.vin[i].prevout.n != vout_index:
+                    continue
+                spending_input_index = i
+                break
+
+            if spending_input_index is None:
+                continue
+
+            ms_type = get_multisignature_script_type(future_tx, input_index=spending_input_index)
             if len(ms_type) != 1:
                 continue
             if multisignature_type == ms_type[0]:
