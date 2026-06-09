@@ -1,8 +1,7 @@
-from ..api import _RPCAdapter, _ExternaSourcesAdapter, _BlocksciAdapter, _LocalSources
+from ..api import _RPCAdapter, _ExternaSourcesAdapter, _BlocksciAdapter
 from .exceptions import NotFoundError, FetchError, ConfigurationError
 
 SOURCES = {
-    "local_sources" : _LocalSources,
     "blocksci" : _BlocksciAdapter,
     "rpc": _RPCAdapter,
     "external_sources": _ExternaSourcesAdapter
