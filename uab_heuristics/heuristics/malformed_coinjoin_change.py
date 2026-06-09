@@ -1,7 +1,7 @@
 from ..core.base_heuristic import Heuristic
 from collections import Counter
 
-class EqualOutputCoinjoinChange(Heuristic):
+class MalformedCoinjoinChange(Heuristic):
     """
     Heurisitic that detects change address by using the not equal-valued outputs in a coinjoin
     """

@@ -1,7 +1,7 @@
 from ..core.base_heuristic import Heuristic
 from ..utils import get_block_from_txid
 
-class ZeroConfirmationChange(Heuristic):
+class LowConfirmationChange(Heuristic):
     """
     Heurisitic that detects change address by checking the waited time to spend the outputs, if it is less than 6 blocks(avoid double spend), may imply the user is spending change
     """

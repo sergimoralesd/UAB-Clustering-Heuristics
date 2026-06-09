@@ -97,13 +97,13 @@ if __name__ == "__main__":
 
     #test_heuristic(txs, ConsistentAddressTypeChange, future_txs=True)
 
-    #test_heuristic(txs, ZeroConfirmationChange, future_txs=True) 
+    #test_heuristic(txs, LowConfirmationChange, future_txs=True) 
     
     #test_heuristic(txs, LowRChange, future_txs=True)  
 
-    #test_heuristic(txs, MultiSignatureChange, future_txs=True)
+    test_heuristic(txs, MultiSignatureChange, future_txs=True)
 
-    #test_heuristic(txs_coinjoin, EqualOutputCoinjoinChange)
+    #test_heuristic(txs_coinjoin, MalformedCoinjoinChange)
 
     #test_heuristic(txs, OneTimeChange)
     

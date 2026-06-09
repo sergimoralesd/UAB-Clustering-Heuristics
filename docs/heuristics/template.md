@@ -1,4 +1,4 @@
-# Equal Output Conjoin
+# Malformed Coinjoin
 
 ## Basic Information
 

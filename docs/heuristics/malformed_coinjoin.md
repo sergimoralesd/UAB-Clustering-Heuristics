@@ -1,10 +1,10 @@
-# Equal Output Conjoin
+# Malformed Conjoin
 
 ## Basic Information
 
 | Field | Value |
 | --- | --- |
-| **Class** | `EqualOutputCoinjoinChange` |
+| **Class** | `MalformedCoinjoinChange` |
 | **Category** | Value-based |
 | **Complexity** | Low |
 | **Accuracy** | TBD |

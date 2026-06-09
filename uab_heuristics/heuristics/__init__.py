@@ -11,9 +11,9 @@ from .fee_relative_change import FeeRelativeChange
 from .version_change import VersionChange
 from .signal_rbf_change import SignalRBFChange
 from .consistent_address_type_change import ConsistentAddressTypeChange
-from .zero_confirmation_change import ZeroConfirmationChange
+from .low_confirmation_value import LowConfirmationChange
 from .low_r_change import LowRChange
-from .equal_output_coinjoin_change import EqualOutputCoinjoinChange
+from .malformed_coinjoin_change import MalformedCoinjoinChange
 from .multisignature_change import MultiSignatureChange
 from .one_time_change import OneTimeChange
 from .future_address_reuse_change import FutureAddressReuse
@@ -35,9 +35,9 @@ __all__ = ["ReusedAddressChange",
            "VersionChange", 
            "SignalRBFChange", 
            "ConsistentAddressTypeChange", 
-           "ZeroConfirmationChange", 
+           "LowConfirmationChange", 
            "LowRChange", 
-           "EqualOutputCoinjoinChange", 
+           "MalformedCoinjoinChange", 
            "MultiSignatureChange", 
            "OneTimeChange", 
            "FutureAddressReuse", 

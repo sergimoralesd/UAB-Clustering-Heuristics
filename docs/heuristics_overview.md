@@ -9,8 +9,8 @@ This document summarizes basic information of each heuristic implemented in this
 | Category | Heuristics |
 | --- | --- |
 | **Address-based** | [Reused Address](./heuristics/reused_address.md), [Address Type](./heuristics/address_type.md), [Consistent Address Type](./heuristics/consistent_address_type.md), [One Time](./heuristics/one_time.md), [Future Address Reuse](./heuristics/future_address_reuse.md) |
-| **Value-based** | [Smaller Output](./heuristics/smaller_output.md), [Rounded](./heuristics/rounded.md), [Rounded Fiat](./heuristics/rounded_fiat.md), [Optimal](./heuristics/optimal.md), [Equal Output Coinjoin](./heuristics/equal_output_coinjoin.md) |
-| **Wallet fingerprint** | [Backdating](./heuristics/backdating.md), [Fee Absolute](./heuristics/fee_absolute.md), [Fee Relative](./heuristics/fee_relative.md), [Input Order](./heuristics/input_order.md), [Output Order](./heuristics/output_order.md), [Locktime](./heuristics/locktime.md), [Version](./heuristics/version.md), [Signal RBF](./heuristics/signal_rbf.md), [LowR](./heuristics/low_r.md), [Multi Signature](./heuristics/multisignature.md), [Segwit Conform](./heuristics/segwit_conform.md), [Uncompress Public Key](./heuristics/uncompress_public_key.md), [Zero Confirmation](./heuristics/zero_confirmation.md) |
+| **Value-based** | [Smaller Output](./heuristics/smaller_output.md), [Rounded](./heuristics/rounded.md), [Rounded Fiat](./heuristics/rounded_fiat.md), [Optimal](./heuristics/optimal.md), [Malformed Coinjoin](./heuristics/malformed_coinjoin.md) |
+| **Wallet fingerprint** | [Backdating](./heuristics/backdating.md), [Fee Absolute](./heuristics/fee_absolute.md), [Fee Relative](./heuristics/fee_relative.md), [Input Order](./heuristics/input_order.md), [Output Order](./heuristics/output_order.md), [Locktime](./heuristics/locktime.md), [Version](./heuristics/version.md), [Signal RBF](./heuristics/signal_rbf.md), [LowR](./heuristics/low_r.md), [Multi Signature](./heuristics/multisignature.md), [Segwit Conform](./heuristics/segwit_conform.md), [Uncompress Public Key](./heuristics/uncompress_public_key.md), [Low Confirmation Value](./heuristics/low_confirmation_value.md) |
 
 ---
 

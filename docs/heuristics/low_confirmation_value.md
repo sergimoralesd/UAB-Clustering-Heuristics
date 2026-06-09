@@ -1,10 +1,10 @@
-# Zero Confirmation
+# Low Confirmation Value
 
 ## Basic Information
 
 | Field | Value |
 | --- | --- |
-| **Class** | `ZeroConfirmationChange` |
+| **Class** | `LowConfirmationChange` |
 | **Category** | Fingerprinting |
 | **Complexity** | High |
 | **Accuracy** | TBD |
