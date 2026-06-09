@@ -490,18 +490,16 @@ impl Tx {
     fn is_segwit_conform(&self, py: Python<'_>) -> PyResult<bool> {
         let witness_types = ["p2wpkh", "p2wsh", "p2tr", "p2sh-p2wpkh"];
         let inputs_types = self.inputs_types(py)?;
-        
-        let mut has_segwit = false;
-        for t in inputs_types {
-            if let Ok(s) = t.extract::<String>(py) {
-                if witness_types.contains(&s.as_str()) {
-                    has_segwit = true;
-                    break;
-                }
-            }
-        }
-        
-        Ok(has_segwit && self.is_segwit())
+
+        let has_segwit_input = inputs_types.iter().any(|t| {
+            t.extract::<String>(py)
+                .map(|s| witness_types.contains(&s.as_str()))
+                .unwrap_or(false)
+        });
+
+        let uses_segwit_serialization = self.is_segwit();
+
+        Ok(has_segwit_input == uses_segwit_serialization)
     }
 
     #[getter]
