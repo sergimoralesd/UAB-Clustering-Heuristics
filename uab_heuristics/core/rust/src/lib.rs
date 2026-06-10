@@ -497,9 +497,7 @@ impl Tx {
                 .unwrap_or(false)
         });
 
-        let uses_segwit_serialization = self.is_segwit();
-
-        Ok(has_segwit_input == uses_segwit_serialization)
+        Ok(has_segwit_input)
     }
 
     #[getter]
