@@ -5,7 +5,7 @@ class SmallerOutputChange(Heuristic):
     Heurisitic that detects change address by checking if one output is smaller than the other
     """
     __complexity__ = "none"
-    __accuracy__ = 0 #to be determined
+    
 
     @classmethod
     def apply(self, tx=None):

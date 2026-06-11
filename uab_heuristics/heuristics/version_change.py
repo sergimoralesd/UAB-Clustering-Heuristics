@@ -5,7 +5,7 @@ class VersionChange(Heuristic):
     Heurisitic that detects change address by using the version field in tx
     """
     __complexity__ = "medium-low"
-    __accuracy__ = 0 #to be determined
+    
 
     @classmethod
     def apply(cls, tx=None):

@@ -171,7 +171,7 @@ for cls in [
 # ---------------------------------------------------------------------------
 
 print("\n" + "=" * 60)
-print("3. COMBINED HEURISTICS  (import_previous_txs + import_future_txs)")
+print("3. PREV + FUTURE HEURISTICS  (import_previous_txs + import_future_txs)")
 print("=" * 60)
 
 tx_c = Tx.from_raw(TX_FUTURE["tx_raw"])

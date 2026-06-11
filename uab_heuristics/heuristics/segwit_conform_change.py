@@ -5,7 +5,7 @@ class SegwitConformChange(Heuristic):
     Heurisitic that detects change address by checking if the tx is segwit serialized
     """
     __complexity__ = "medium-high"
-    __accuracy__ = 0 #to be determined
+    
 
     @classmethod
     def apply(self, tx=None):

@@ -6,7 +6,7 @@ class MalformedCoinjoinChange(Heuristic):
     Heurisitic that detects change address by using the not equal-valued outputs in a coinjoin
     """
     __complexity__ = "low"
-    __accuracy__ = 0 #to be determined
+    
 
     @classmethod
     def apply(cls, tx=None):

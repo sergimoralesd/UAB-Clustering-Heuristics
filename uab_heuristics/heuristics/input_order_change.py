@@ -6,7 +6,7 @@ class InputOrderChange(Heuristic):
     Heurisitic that detects change address by using the input order of the tx and the tx spending the outputs
     """
     __complexity__ = "high"
-    __accuracy__ = 0 #to be determined
+    
 
     @classmethod
     def apply(cls, tx=None):

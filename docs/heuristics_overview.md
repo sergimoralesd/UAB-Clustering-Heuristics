@@ -24,10 +24,3 @@ Here we are going to use the terminology "actual transaction", "previous transac
 | :--- | :---: | :---: | :---: | :---: | :---: | ---: |
 | Information required | Actual | Actual + Previous | Actual + Future | Actual + Previous + Future | Actual + Previous + Future + Previous' Future | Whole blockchain |
 
-## Accuracy Overview
-
-In the --- below is shown the accuracy of every heuristic, this is computed from a [ground truth][1]. The values goes from "0" to "1", using up to two decimals.
-
-## Citations
-
-[1]: <https://arxiv.org/abs/2107.05749> "Resurrecting Address Clustering in Bitcoin"

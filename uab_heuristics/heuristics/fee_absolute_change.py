@@ -5,7 +5,6 @@ class FeeAbsoluteChange(Heuristic):
     Heurisitic that detects change address by using the absolute payed by the tx
     """
     __complexity__ = "medium-high"
-    __accuracy__ = 0 #to be determined
 
     @classmethod
     def apply(cls, tx=None):

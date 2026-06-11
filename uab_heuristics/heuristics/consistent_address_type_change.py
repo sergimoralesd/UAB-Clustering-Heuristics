@@ -6,7 +6,6 @@ class ConsistentAddressTypeChange(Heuristic):
     It differs with the other because this heuristic checks all inputs' types are the same
     """
     __complexity__ = "low"
-    __accuracy__ = 0 #to be determined
 
     @classmethod
     def apply(cls, tx=None):

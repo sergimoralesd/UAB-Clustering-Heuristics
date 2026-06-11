@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 
 class Heuristic(ABC):
     __complexity__ = "none"
-    __accuracy__ = 0
 
     @property
     def name(self):
