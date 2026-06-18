@@ -28,7 +28,7 @@ class _RPCAdapter(BaseAdapter):
     def _call(self, method: str, params: list) -> dict:
         self._id += 1
         payload = json.dumps({
-            "jsonrpc": "1.1",
+            "jsonrpc": "1.0",
             "id": self._id,
             "method": method,
             "params": params,
@@ -112,7 +112,7 @@ class _RPCAdapter(BaseAdapter):
         # 1. Fetch raw transaction to get the blockhash for all txids
         raw_requests = [
             {
-                "jsonrpc": "1.1",
+                "jsonrpc": "1.0",
                 "id": f"raw-{idx}",
                 "method": "getrawtransaction",
                 "params": [txid, True],
@@ -142,7 +142,7 @@ class _RPCAdapter(BaseAdapter):
         # 3. Fetch block headers ONLY for the unique block hashes
         header_requests = [
             {
-                "jsonrpc": "1.1",
+                "jsonrpc": "1.0",
                 "id": f"hdr-{b_hash}",
                 "method": "getblockheader",
                 "params": [b_hash],
