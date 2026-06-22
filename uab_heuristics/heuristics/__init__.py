@@ -21,6 +21,7 @@ from .segwit_conform_change import SegwitConformChange
 from .rounded_fiat_change import RoundedFiatChange
 from .uncompress_public_key_change import UncompressPublicKeyChange
 from .backdating_change import BackdatingChange
+from.rbf_change import RBFChange
 
 __all__ = ["ReusedAddressChange", 
            "AddressTypeChange", 
@@ -44,4 +45,5 @@ __all__ = ["ReusedAddressChange",
            "SegwitConformChange", 
            "RoundedFiatChange", 
            "UncompressPublicKeyChange",
-           "BackdatingChange"] 
+           "BackdatingChange",
+           "RBFChange"] 
