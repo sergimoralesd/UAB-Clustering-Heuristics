@@ -13,6 +13,7 @@ from .features import (
     FEATURES_NO_PREV,
     FEATURES_NEED_PREV,
     # individual features
+    low_r_only,
     anti_fee_sniping,
     nonstandard_sighash,
     unusual_outputs,
@@ -35,6 +36,7 @@ __all__ = [
     "ALL_FEATURES",
     "FEATURES_NO_PREV",
     "FEATURES_NEED_PREV",
+    "low_r_only",
     "anti_fee_sniping",
     "nonstandard_sighash",
     "unusual_outputs",

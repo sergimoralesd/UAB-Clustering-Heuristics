@@ -15,7 +15,10 @@ Features split into two groups:
 from binascii import unhexlify
 from decimal import Decimal
 
-from ..utils import signals_rbf, low_r_only, get_output_order
+from ..utils import signals_rbf, get_output_order
+# NOTE: utils.low_r_only is buggy for segwit inputs (returns False for any
+# witness input regardless of the signature), so it conflates "fully-legacy" with
+# "low-R". We use the corrected `low_r_only` defined below instead.
 
 # Dust threshold in satoshis (standard Bitcoin Core relay limit for P2PKH-ish).
 DUST_SATS = 546
@@ -27,6 +30,41 @@ STANDARD_TYPES = {"p2pkh", "p2sh", "p2wpkh", "p2wsh", "p2tr"}
 # ──────────────────────────────────────────────────────────────────────────────
 #  NO_PREV features
 # ──────────────────────────────────────────────────────────────────────────────
+
+def low_r_only(tx) -> bool:
+    """
+    True if every ECDSA signature in the inputs is low-R (the r value is encoded
+    in <= 32 bytes). Low-R grinding is a wallet fingerprint (Bitcoin Core, BDK,
+    Electrum and others grind to a low r).
+
+    Works for both witness (p2wpkh, p2sh-p2wpkh) and legacy (p2pkh) inputs.
+    Taproot (Schnorr, 64-byte) signatures have no low-R concept and are skipped.
+
+    DER signature layout (hex): 30 <total_len> 02 <r_len> <r...> 02 <s_len> <s...> <sighash>
+    so the r length byte is at hex offset [6:8].
+    """
+    for i in range(tx.input_count):
+        wit = tx.inputs_witness[i]
+        sig = None
+        if wit:
+            # Find the DER signature among the witness items (starts with '30').
+            # Taproot key-path spends carry a 64-byte Schnorr sig instead -> skipped.
+            for item in wit:
+                if item.startswith("30"):
+                    sig = item
+                    break
+        else:
+            ss = tx.inputs_scriptSig[i]
+            if ss and len(ss) >= 4 and ss[2:4] == "30":
+                sig = ss[2:]  # skip the 1-byte push opcode before the DER sig
+        if sig and len(sig) >= 8:
+            try:
+                if int(sig[6:8], 16) > 32:
+                    return False
+            except ValueError:
+                pass
+    return True
+
 
 def anti_fee_sniping(tx) -> int:
     """
