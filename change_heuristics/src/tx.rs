@@ -2,42 +2,10 @@ use bitcoin::{Address, AddressType, Network, PublicKey, Script, Transaction, Txi
 use bitcoin::hashes::hex::FromHex;
 use bitcoin::consensus::{deserialize};
 
-use std::fmt::{self};
+use crate::errors::TxError;
+
+
 use std::collections::HashMap;
-
-use crate::tx;
-
-#[derive(Debug)]
-pub enum TxError {
-    Hex(String),
-    Decode(String),
-    MismatchNumberInputs(String),
-    MismatchNumberOuputs(String),
-    NoPrevTxs(String),
-    NoFutureTxs(String),
-    InvalidPrevTx(String),
-    InvalidFutureTx(String),
-    UnrecognizedScript(String),
-}
-
-impl fmt::Display for TxError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            TxError::Hex(err) => write!(f, "failed to decode the transaction hex: {err}"),
-            TxError::Decode(err) => write!(f, "failed to deserialize the transaction: {err}"),
-            TxError::MismatchNumberInputs(err) => write!(f, "not enough inputs provided: {err}"),
-            TxError::MismatchNumberOuputs(err) => write!(f, "not enough outputs provided: {err}"),
-            TxError::NoPrevTxs(err) => write!(f, " previous transactions not imported: {err}"),
-            TxError::NoFutureTxs(err) => write!(f, "future transactions not imported: {err}"),
-            TxError::InvalidPrevTx(err) => write!(f, "invalid previous transaction provided: {err}"),
-            TxError::InvalidFutureTx(err) => write!(f, "invalid futures transaction provided: {err}"),
-            TxError::UnrecognizedScript(err) => write!(f, "unrecognized scriptPubKey: {err}"),
-        
-        }
-    }
-}
-
-impl std::error::Error for TxError {}
 
 #[derive(Debug)]
 pub struct Tx {
@@ -46,6 +14,7 @@ pub struct Tx {
     future_txs: Option<Vec<Transaction>>,  
     replacement: Option<Transaction>,
     network: Network,
+    block_height: Option<usize>,
 }
 
 impl Tx {
@@ -133,6 +102,7 @@ impl Tx {
             future_txs: None,
             replacement: None,
             network: network,
+            block_height: None
         })
     }
 
@@ -223,6 +193,10 @@ impl Tx {
         Ok(())
     }
 
+    pub fn import_block_height(&mut self, block_height: usize) {
+        self.block_height = Some(block_height);
+    }
+
     pub fn txid(&self) -> Txid {
         return self.target.txid();
     }
@@ -266,7 +240,7 @@ impl Tx {
     }
     pub fn inputs_values(&self) -> Result<Vec<u64>, TxError> {
         if self.previous_txs == None {
-            return Err(TxError::NoPrevTxs(
+            return Err(TxError::MissingPreviousTxs(
                 format!("no prev_txs founded, import them first")
             ));
         }
@@ -298,7 +272,7 @@ impl Tx {
 
     pub fn inputs_addresses(&self) -> Result<Vec<Address>, TxError> {
         if self.previous_txs == None {
-            return Err(TxError::NoPrevTxs(
+            return Err(TxError::MissingPreviousTxs(
                 format!("no prev_txs founded, import them first")
             ));
         }
@@ -336,24 +310,15 @@ impl Tx {
     }
 
     pub fn inputs_types(&self) -> Result<Vec<AddressType>, TxError> {
-        let input_addresses:Vec<Address> = match self.inputs_addresses() {
-           Err(err) => return Err(err),
-           Ok(inputs_addresses) => inputs_addresses 
-        }; 
+        let input_addresses:Vec<Address> = self.inputs_addresses()?; 
 
-        let input_types: Vec<AddressType> = match Self::get_addresses_types(&input_addresses) {
-            Err(err) => return Err(err),
-            Ok(inputs_types) => inputs_types
-        };
+        let input_types: Vec<AddressType> = Self::get_addresses_types(&input_addresses)?;
 
         Ok(input_types)
     }
 
     pub fn absolute_fee(&self) -> Result<u64, TxError> {
-        let input_values: Vec<u64> = match self.inputs_values() {
-            Err(err) => return Err(err),
-            Ok(input_values) => input_values
-        };
+        let input_values: Vec<u64> = self.inputs_values()?;
         let output_values: Vec<u64> = self.outputs_values();
 
         let sum_inputs: u64 = input_values.iter().sum();
@@ -363,14 +328,19 @@ impl Tx {
     }
 
     pub fn relative_fee(&self) -> Result<f32, TxError> {
-        let absolute_fee: u64 = match self.absolute_fee() {
-            Err(err) => return Err(err),
-            Ok(abs_fee) => abs_fee
-        };
+        let absolute_fee: u64 = self.absolute_fee()?;
 
         let vsize: f32 = self.vsize();
 
         Ok((absolute_fee as f32) / vsize)
+    }
+
+    pub fn previous_txs(&self) -> Option<&Vec<Transaction>> {
+        return self.previous_txs.as_ref()
+    }
+
+    pub fn future_txs(&self) -> Option<&Vec<Transaction>> {
+        return self.future_txs.as_ref() 
     }
 
 
@@ -378,7 +348,7 @@ impl Tx {
 
 #[cfg(test)]
 mod tests {
-    use std::{ops::Add, str::FromStr};
+    use std::{str::FromStr};
 
 use super::*;
 
