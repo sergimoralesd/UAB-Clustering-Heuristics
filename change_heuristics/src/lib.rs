@@ -1,7 +1,8 @@
 pub mod tx;
 pub mod heuristics;
-pub mod errors;
+pub mod types;
 
 pub use tx::Tx;
 pub use heuristics::Heuristic;
-pub use errors::TxError;
+pub use types::AppError;
+pub use types::InputDataRequirements;

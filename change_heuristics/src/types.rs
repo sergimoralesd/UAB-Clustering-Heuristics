@@ -35,6 +35,7 @@ pub enum HeuristicError {
     PreviousTxNotImported(String),
     FutureTxsNotImported(String),
     InconsistenInputsAddressesTypes(String),
+    BlockHeightNotImported(String)
 }
 
 impl fmt::Display for HeuristicError {
@@ -43,6 +44,8 @@ impl fmt::Display for HeuristicError {
             HeuristicError::PreviousTxNotImported(err) => write!(f, "previous transactions not imported: {err}"),
             HeuristicError::FutureTxsNotImported(err) => write!(f, "future transactions not imported: {err}"),
             HeuristicError::InconsistenInputsAddressesTypes(err) => write!(f, "many inputs addresses types: {err}"),
+            HeuristicError::BlockHeightNotImported(err) => write!(f, "block height not imported: {err}"),
+
         }
     }
 }
@@ -62,7 +65,7 @@ pub enum AppError {
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            AppError::Tx(err)        => write!(f, "transaction error: {err}"),
+            AppError::Tx(err) => write!(f, "transaction error: {err}"),
             AppError::Heuristic(err) => write!(f, "heuristic error: {err}"),
         }
     }
@@ -70,7 +73,7 @@ impl fmt::Display for AppError {
 
 impl std::error::Error for AppError {}
 
-// these allow ? to convert automatically
+
 impl From<TxError> for AppError {
     fn from(err: TxError) -> Self {
         AppError::Tx(err)
@@ -80,5 +83,28 @@ impl From<TxError> for AppError {
 impl From<HeuristicError> for AppError {
     fn from(err: HeuristicError) -> Self {
         AppError::Heuristic(err)
+    }
+}
+
+
+pub enum InputDataRequirements {
+    None,
+    Low,
+    MediumLow,
+    MediumHigh,
+    HighIndexed,
+    HighNonIndexed
+}
+
+impl InputDataRequirements {
+    pub fn value(&self) -> u8 {
+        match self {
+            InputDataRequirements::None => 0,
+            InputDataRequirements::Low => 1,
+            InputDataRequirements::MediumLow => 2,
+            InputDataRequirements::MediumHigh => 3,
+            InputDataRequirements::HighIndexed => 4,
+            InputDataRequirements::HighNonIndexed => 5,
+        }
     }
 }

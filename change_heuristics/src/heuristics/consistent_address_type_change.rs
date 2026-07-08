@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use bitcoin::AddressType;
 
 use crate::tx::Tx;
-use crate::errors::{AppError, HeuristicError};
+use crate::types::{AppError, HeuristicError, InputDataRequirements};
 
 use super::Heuristic; 
 
@@ -14,8 +14,8 @@ impl Heuristic for ConsistentAddressTypeChange {
         "ConsistentAddressTypeChange"
     }
 
-    fn input_data_requirements(&self) -> &str {
-        "low"
+    fn input_data_requirements(&self) -> InputDataRequirements{
+        InputDataRequirements::Low
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {

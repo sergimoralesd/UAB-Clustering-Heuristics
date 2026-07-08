@@ -1,5 +1,5 @@
 use crate::tx::Tx;
-use crate::errors::AppError;
+use crate::types::{AppError, InputDataRequirements};
 
 pub trait Heuristic {
 
@@ -7,7 +7,7 @@ pub trait Heuristic {
     fn name(&self) -> &str;
 
     //Heurisitic's input data requirement level, following the documentation
-    fn input_data_requirements(&self) -> &str;
+    fn input_data_requirements(&self) -> InputDataRequirements;
 
     //Heuristic's main functionality
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError>;

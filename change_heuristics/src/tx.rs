@@ -2,7 +2,7 @@ use bitcoin::{Address, AddressType, Network, PublicKey, Script, Transaction, Txi
 use bitcoin::hashes::hex::FromHex;
 use bitcoin::consensus::{deserialize};
 
-use crate::errors::TxError;
+use crate::types::TxError;
 
 
 use std::collections::HashMap;
