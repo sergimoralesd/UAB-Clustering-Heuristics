@@ -7,12 +7,12 @@ use crate::errors::TxError;
 
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Tx {
     target: Transaction,
-    previous_txs: Option<Vec<Transaction>>,
-    future_txs: Option<Vec<Transaction>>,  
-    replacement: Option<Transaction>,
+    previous_txs: Option<Vec<Box<Tx>>>,
+    future_txs: Option<Vec<Box<Tx>>>,
+    replacement: Option<Box<Tx>>,
     network: Network,
     block_height: Option<usize>,
 }
@@ -119,20 +119,20 @@ impl Tx {
             ));
         }
 
-        let mut prev_txs_dict: HashMap<Txid, Transaction> = HashMap::new();
+        let mut prev_txs_dict: HashMap<Txid, Tx> = HashMap::new();
         for prev_tx in previous_txs.iter() {
-            match Self::build_tx_from_hex(prev_tx){
+            match Self::from_raw(prev_tx, self.network){
                 Err(err) => return Err(err),
                 Ok(tx_raw) => prev_txs_dict.insert(tx_raw.txid(), tx_raw)
             };   
         }
 
-        let mut prev_txs: Vec<Transaction> = Vec::new();
+        let mut prev_txs: Vec<Box<Tx>> = Vec::new();
         let previous_txids: Vec<Txid> = self.previous_txids();
 
         for prev_txid in previous_txids.iter() {
             match prev_txs_dict.get(prev_txid) {
-                Some(prev_tx) => prev_txs.push(prev_tx.clone()),
+                Some(prev_tx) => prev_txs.push(Box::new(prev_tx.clone())),
                 None => return Err(TxError::InvalidPrevTx(
                     format!("tx expected {} but it could not be found", prev_txid)
                 ))
@@ -152,11 +152,11 @@ impl Tx {
             ));
         }
 
-        let mut future_txs_dict:HashMap<usize, Transaction> = HashMap::new();
-        let mut aux_future_txs: Vec<Transaction> = Vec::new();
+        let mut future_txs_dict:HashMap<usize, Tx> = HashMap::new();
+        let mut aux_future_txs: Vec<Tx> = Vec::new();
 
         for future_tx_hex in future_txs_hex.iter() {
-            match Self::build_tx_from_hex(future_tx_hex) {
+            match Self::from_raw(future_tx_hex, self.network) {
                 Err(err) => return Err(err),
                 Ok(future_tx) => aux_future_txs.push(future_tx),
             }
@@ -165,8 +165,8 @@ impl Tx {
         let target_txid: Txid = self.txid();
 
         for future_tx in aux_future_txs.iter() {
-            let future_prevouts: Vec<usize> = Self::get_prevouts(future_tx);
-            let future_prevtxid: Vec<Txid> = Self::get_previous_txids(future_tx);
+            let future_prevouts: Vec<usize> = future_tx.prevouts();
+            let future_prevtxid: Vec<Txid> = future_tx.previous_txids();
 
             for (index, future_prevtxid) in future_prevtxid.iter().enumerate() {
                 if future_prevtxid == &target_txid {
@@ -179,10 +179,10 @@ impl Tx {
             }
         }
 
-        let mut future_txs: Vec<Transaction>= Vec::new();
+        let mut future_txs: Vec<Box<Tx>>= Vec::new();
         for (index, _) in aux_future_txs.iter().enumerate() {
             match future_txs_dict.get(&index) {
-                Some(future_tx) => future_txs.push(future_tx.clone()),
+                Some(future_tx) => future_txs.push(Box::new(future_tx.clone())),
                 None => return Err(TxError::InvalidFutureTx(
                     format!("could not be found the future tx that spends the target one")
                 ))
@@ -239,7 +239,7 @@ impl Tx {
         return outputs_values;
     }
     pub fn inputs_values(&self) -> Result<Vec<u64>, TxError> {
-        if self.previous_txs == None {
+        if self.previous_txs.is_none() {
             return Err(TxError::MissingPreviousTxs(
                 format!("no prev_txs founded, import them first")
             ));
@@ -251,12 +251,22 @@ impl Tx {
 
         if let Some(prev_txs) = &self.previous_txs {
             for (index, prev_tx) in prev_txs.iter().enumerate() {
-                let amount = prev_tx.output[prev_vouts[index]].value;
+                let prev_output_amounts = prev_tx.outputs_values();
+                let amount = prev_output_amounts[prev_vouts[index]];
                 input_values.push(amount);
             }
         }
 
         Ok(input_values)
+    }
+
+    pub fn outputs_scriptpubkeys(&self) -> Vec<Script> {
+        let output_scriptpubkeys: Vec<Script> = self.target.output
+        .iter()
+        .map(|output| output.script_pubkey.clone())
+        .collect();
+
+        return output_scriptpubkeys;
     }
 
     pub fn outputs_addresses(&self) -> Result<Vec<Address>, TxError> {
@@ -271,7 +281,7 @@ impl Tx {
     }
 
     pub fn inputs_addresses(&self) -> Result<Vec<Address>, TxError> {
-        if self.previous_txs == None {
+        if self.previous_txs.is_none() {
             return Err(TxError::MissingPreviousTxs(
                 format!("no prev_txs founded, import them first")
             ));
@@ -282,9 +292,11 @@ impl Tx {
 
         if let Some(prev_txs) = &self.previous_txs {
             for (index, prev_tx) in prev_txs.iter().enumerate() {
-                let output_scriptpubkey = &prev_tx.output[prevouts[index]].script_pubkey;
+                let outputs_scriptpubkeys:Vec<Script> = prev_tx.outputs_scriptpubkeys();
                 
-                match Self::get_address_from_script(output_scriptpubkey, self.network) {
+                let output_scriptpubkey = &outputs_scriptpubkeys[prevouts[index]];
+                
+                match Self::get_address_from_script(&output_scriptpubkey, self.network) {
                     Err(err) => return Err(err),
                     Ok(address) => input_addresses.push(address) 
                 };
@@ -335,12 +347,16 @@ impl Tx {
         Ok((absolute_fee as f32) / vsize)
     }
 
-    pub fn previous_txs(&self) -> Option<&Vec<Transaction>> {
+    pub fn previous_txs(&self) -> Option<&Vec<Box<Tx>>> {
         return self.previous_txs.as_ref()
     }
 
-    pub fn future_txs(&self) -> Option<&Vec<Transaction>> {
+    pub fn future_txs(&self) -> Option<&Vec<Box<Tx>>> {
         return self.future_txs.as_ref() 
+    }
+
+    pub fn block_height(&self) -> Option<usize> {
+        return self.block_height;
     }
 
 
