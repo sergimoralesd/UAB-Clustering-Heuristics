@@ -15,7 +15,7 @@ impl Heuristic for LocktimeChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        self.check_requirements(tx, true);
+        let _ = self.check_requirements(tx, true);
 
         let actual_anti_fee_snipping_conf: u8 = get_anti_fee_snipping(tx)?;
 

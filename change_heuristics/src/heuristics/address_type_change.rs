@@ -17,7 +17,7 @@ impl Heuristic for AddressTypeChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false);
 
         let input_types: Vec<AddressType> = tx.inputs_types()?;
         let output_types: Vec<AddressType> = tx.outputs_types()?;
