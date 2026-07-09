@@ -91,7 +91,9 @@ fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_
         },
 
         InputDataRequirements::HighNonIndexed => {
-
+            if block_height_needed {
+                check_block_height(tx)?;
+            }
         }
     }
 
@@ -111,6 +113,10 @@ pub use malformed_coinjoin_change::MalformedCoinjoinChange;
 pub use optimal_change::OptimalChange;
 pub use output_order_change::OutputOrderChange;
 pub use present_reused_address_change::PresentReusedAddressChange;
+pub use rounded_change::RoundedChange;
+pub use rounded_fiat_change::RoundedFiatChange;
+pub use segwit_conform_change::SegwitConformChange;
+
 
 
 mod address_type_change;

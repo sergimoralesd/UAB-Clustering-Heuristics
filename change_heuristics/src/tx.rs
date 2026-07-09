@@ -367,6 +367,9 @@ impl Tx {
         return self.block_height;
     }
 
+    pub fn is_segwit(&self) -> bool {
+        self.target.strippedsize() != self.target.size()
+    }
 
 }
 
