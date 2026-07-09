@@ -108,6 +108,7 @@ pub use locktime_change::LocktimeChange;
 pub use low_confirmation_value::LowConfirmationValue;
 pub use low_r_change::LowRChange;
 pub use malformed_coinjoin_change::MalformedCoinjoinChange;
+pub use optimal_change::OptimalChange;
 
 
 mod address_type_change;
