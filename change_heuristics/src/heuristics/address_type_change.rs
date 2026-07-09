@@ -20,17 +20,11 @@ impl Heuristic for AddressTypeChange {
         let _ = self.check_requirements(tx, false);
 
         let input_types: Vec<AddressType> = tx.inputs_types()?;
-        let output_types: Vec<AddressType> = tx.outputs_types()?;
 
-        let mut possible_change: Vec<bool> = Vec::new();
-        for output_type in output_types {
-            if input_types.contains(&output_type) {
-                possible_change.push(true);
-            }
-            else {
-                possible_change.push(false);
-            }
-        }
+        let possible_change: Vec<bool> = tx.outputs_types()?
+        .iter()
+        .map(|out_type| input_types.contains(out_type))
+        .collect();
 
         Ok(possible_change)
     }

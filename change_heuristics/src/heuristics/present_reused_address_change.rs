@@ -20,17 +20,11 @@ impl Heuristic for PresentReusedAddressChange {
         let _ = self.check_requirements(tx, false);
 
         let input_addresses: Vec<Address> = tx.inputs_addresses()?;
-        let output_addresses: Vec<Address> = tx.outputs_addresses()?;
 
-        let mut possible_change: Vec<bool> = Vec::new();
-        for output_addr in output_addresses {
-            if input_addresses.contains(&output_addr) {
-                possible_change.push(true);
-            }
-            else {
-                possible_change.push(false);
-            }
-        }
+        let possible_change: Vec<bool> = tx.outputs_addresses()?
+        .iter()
+        .map(|addr| input_addresses.contains(addr))
+        .collect();
 
         Ok(possible_change)
     }
