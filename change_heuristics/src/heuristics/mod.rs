@@ -85,7 +85,7 @@ fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_
             if block_height_needed {
                 check_block_height(tx)?;
                 for prev_tx in tx.previous_txs().unwrap() {
-                    check_block_height(&prev_tx);
+                    check_block_height(&prev_tx)?;
                 }
             }
         },
@@ -107,6 +107,7 @@ pub use input_order_change::InputOrderChange;
 pub use locktime_change::LocktimeChange;
 pub use low_confirmation_value::LowConfirmationValue;
 pub use low_r_change::LowRChange;
+pub use malformed_coinjoin_change::MalformedCoinjoinChange;
 
 
 mod address_type_change;
