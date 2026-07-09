@@ -36,10 +36,9 @@ fn is_low_r_only(tx: &Tx) -> Result<bool, AppError> {
             let items: Vec<&[u8]> = witness.iter().collect();
 
             match items.len() {
-                // P2TR keypath — Schnorr, not applicable
                 1 => continue,
 
-                // P2WPKH — [signature, pubkey]
+                // P2WPKH
                 2 => {
                     let r_len = *items[0].get(3)
                         .ok_or(TxError::MalformedScript(
@@ -50,7 +49,7 @@ fn is_low_r_only(tx: &Tx) -> Result<bool, AppError> {
                     }
                 },
 
-                // P2WSH multisig — [OP_0, sig1, sig2, ..., redeem_script]
+                // P2WSH multisig
                 n if n >= 4 => {
                     for sig in &items[1..items.len()-1] {
                         if sig.is_empty() { continue; }
@@ -64,7 +63,7 @@ fn is_low_r_only(tx: &Tx) -> Result<bool, AppError> {
                     }
                 },
 
-                // P2TR scriptpath — Schnorr, not applicable
+                // P2TR
                 _ => continue,
             }
 
