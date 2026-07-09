@@ -91,6 +91,7 @@ pub enum InputDataRequirements {
     None,
     Low,
     MediumLow,
+    Medium,
     MediumHigh,
     HighIndexed,
     HighNonIndexed
@@ -102,9 +103,10 @@ impl InputDataRequirements {
             InputDataRequirements::None => 0,
             InputDataRequirements::Low => 1,
             InputDataRequirements::MediumLow => 2,
-            InputDataRequirements::MediumHigh => 3,
-            InputDataRequirements::HighIndexed => 4,
-            InputDataRequirements::HighNonIndexed => 5,
+            InputDataRequirements::Medium => 3,
+            InputDataRequirements::MediumHigh => 4,
+            InputDataRequirements::HighIndexed => 5,
+            InputDataRequirements::HighNonIndexed => 6,
         }
     }
 }

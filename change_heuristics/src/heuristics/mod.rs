@@ -1,5 +1,5 @@
 use crate::tx::Tx;
-use crate::types::{AppError, InputDataRequirements};
+use crate::types::{AppError, HeuristicError, InputDataRequirements};
 
 pub trait Heuristic {
 
@@ -11,11 +11,100 @@ pub trait Heuristic {
 
     //Heuristic's main functionality
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError>;
+
+    fn check_requirements(&self, tx: &Tx, block_height_needed: bool) -> Result<(), AppError> {
+        check_data_requirements(tx, &self.input_data_requirements(), block_height_needed)
+    }
+}
+
+fn check_previous_txs(tx: &Tx) -> Result<(), AppError> {
+    if tx.previous_txs().is_none() {
+        return Err(AppError::Heuristic(HeuristicError::PreviousTxNotImported(
+            format!("import_previous_txs before running the heuristic"))
+        ));
+    }
+    Ok(())
+}
+fn check_future_txs(tx: &Tx) -> Result<(), AppError> { 
+    if tx.future_txs().is_none() {
+        return Err(AppError::Heuristic(HeuristicError::FutureTxsNotImported(
+            format!("import_future_txs before running the heuristic"))
+        ));
+    }
+    Ok(())
+}
+fn check_block_height(tx: &Tx) -> Result<(), AppError> { 
+    if tx.block_height().is_none() {
+        return Err(AppError::Heuristic(HeuristicError::BlockHeightNotImported(
+            format!("import_block_height before running the heuristic"))
+        ));
+    }
+    Ok(())
+
+}
+fn check_future_txs_previous_txs(tx: &Tx) -> Result<(), AppError> { 
+    for future_tx in tx.future_txs().unwrap() {
+        if future_tx.previous_txs().is_none() {
+            return Err(AppError::Heuristic(HeuristicError::PreviousTxNotImported(
+            format!("import_previous_txs for each future transaction before running the heuristic"))
+            ));
+        }
+    }
+    Ok(())
+}
+
+
+fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_height_needed: bool) -> Result<(), AppError> {
+        match requirements {
+        InputDataRequirements::None => {},
+
+        InputDataRequirements::Low => {
+            check_previous_txs(tx)?;
+        },
+
+        InputDataRequirements::MediumLow => {
+            check_future_txs(tx)?;
+        },
+
+        InputDataRequirements::Medium => {
+            check_previous_txs(tx)?;
+            check_future_txs(tx)?;
+        },
+
+        InputDataRequirements::MediumHigh => {
+            check_previous_txs(tx)?;
+            check_future_txs(tx)?;
+            check_future_txs_previous_txs(tx)?;
+        },
+
+        InputDataRequirements::HighIndexed => {
+            check_previous_txs(tx)?;
+            check_future_txs(tx)?;
+            check_future_txs_previous_txs(tx)?;
+            
+            if block_height_needed {
+                check_block_height(tx)?;
+                for prev_tx in tx.previous_txs().unwrap() {
+                    check_block_height(&prev_tx);
+                }
+            }
+        },
+
+        InputDataRequirements::HighNonIndexed => {
+
+        }
+    }
+
+    Ok(())
 }
 
 pub use address_type_change::AddressTypeChange;
-
+pub use backdating_change::BackdatingChange;
 pub use consistent_address_type_change::ConsistentAddressTypeChange;
+pub use fee_absolute_change::FeeAbsoluteChange;
+pub use fee_relative_change::FeeRelativeChange;
+pub use input_order_change::InputOrderChange;
+
 
 
 mod address_type_change;
