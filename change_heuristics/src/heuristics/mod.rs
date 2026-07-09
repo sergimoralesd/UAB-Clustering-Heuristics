@@ -110,6 +110,7 @@ pub use low_r_change::LowRChange;
 pub use malformed_coinjoin_change::MalformedCoinjoinChange;
 pub use optimal_change::OptimalChange;
 pub use output_order_change::OutputOrderChange;
+pub use present_reused_address_change::PresentReusedAddressChange;
 
 
 mod address_type_change;
