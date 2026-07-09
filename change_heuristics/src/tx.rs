@@ -1,4 +1,4 @@
-use bitcoin::{Address, AddressType, Network, PublicKey, Script, Transaction, Txid};
+use bitcoin::{Address, AddressType, Network, PublicKey, Script, Transaction, TxIn, TxOut, Txid, Witness};
 use bitcoin::hashes::hex::FromHex;
 use bitcoin::consensus::{deserialize};
 
@@ -231,6 +231,7 @@ impl Tx {
     pub fn output_count(&self) -> usize {
         return self.target.output.len()
     }
+    
     pub fn outputs_values(&self) -> Vec<u64> {
         let outputs_values: Vec<u64> = self.target.output
         .iter()
@@ -261,14 +262,24 @@ impl Tx {
     }
 
     pub fn outputs_scriptpubkeys(&self) -> Vec<Script> {
-        let output_scriptpubkeys: Vec<Script> = self.target.output
+        self.target.output
         .iter()
         .map(|output| output.script_pubkey.clone())
-        .collect();
-
-        return output_scriptpubkeys;
+        .collect()
     }
-
+    pub fn inputs_scriptsig(&self) -> Vec<Script> {
+        self.target.input
+        .iter()
+        .map(|input| input.script_sig.clone())
+        .collect()
+    }
+    pub fn inputs_witness(&self) -> Vec<Witness> {
+        self.target.input
+        .iter()
+        .map(|input| input.witness.clone())
+        .collect()
+    }
+    
     pub fn outputs_addresses(&self) -> Result<Vec<Address>, TxError> {
         let mut output_addresses: Vec<Address> = Vec::new(); 
         for output in self.target.output.iter() {
@@ -279,7 +290,6 @@ impl Tx {
         }
         Ok(output_addresses)
     }
-
     pub fn inputs_addresses(&self) -> Result<Vec<Address>, TxError> {
         if self.previous_txs.is_none() {
             return Err(TxError::MissingPreviousTxs(
@@ -320,7 +330,6 @@ impl Tx {
 
         Ok(output_types)
     }
-
     pub fn inputs_types(&self) -> Result<Vec<AddressType>, TxError> {
         let input_addresses:Vec<Address> = self.inputs_addresses()?; 
 
@@ -338,7 +347,6 @@ impl Tx {
 
         Ok(sum_inputs - sum_outptus)
     }
-
     pub fn relative_fee(&self) -> Result<f32, TxError> {
         let absolute_fee: u64 = self.absolute_fee()?;
 
@@ -469,4 +477,14 @@ use super::*;
         let result = tx.import_future_txs(&[FUT_TX_1.to_string(), FUT_TX_2.to_string()]);
         assert!(result.is_err() || tx.future_txs.is_some());
     }
+    #[test]
+    fn script_sig_and_witness() {
+       let mut tx = Tx::from_raw("0200000000010165053460d77bb38c813842cf5a946b45a169fe28144df0e2e35e6521b18a203d0000000000ffffffff02a4c8460000000000225120d8e89976b915c28526187cacab1e3de153bb13cf9833f99de548a92e01d263070000000000000000236a5d20ff7f818a8090f0d3b682808884b0b08bc02eff7fd184dad7ef94a4d0b2a797010140ce5c3acca0db7f57049b963f089455ff7ee49041c9102524cfec390b9df140cbc0c93d2a2ba43bc278e3cff29d236a3a5fb276facdf907befaf35c753f28981900000000", Network::Bitcoin).expect("tx should build");
+       let script_sig = tx.inputs_scriptsig();
+       let witness = tx.inputs_witness();
+
+       println!("{:?}", script_sig);
+       println!("{:?}", witness); 
+    }
+
 }

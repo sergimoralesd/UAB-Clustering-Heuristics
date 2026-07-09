@@ -106,7 +106,7 @@ pub use fee_relative_change::FeeRelativeChange;
 pub use input_order_change::InputOrderChange;
 pub use locktime_change::LocktimeChange;
 pub use low_confirmation_value::LowConfirmationValue;
-
+pub use low_r_change::LowRChange;
 
 
 mod address_type_change;

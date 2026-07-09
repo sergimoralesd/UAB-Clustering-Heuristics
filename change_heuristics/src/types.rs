@@ -11,6 +11,7 @@ pub enum TxError {
     InvalidPrevTx(String),
     InvalidFutureTx(String),
     UnrecognizedScript(String),
+    MalformedScript(String),
 }
 
 impl fmt::Display for TxError {
@@ -25,6 +26,7 @@ impl fmt::Display for TxError {
             TxError::InvalidPrevTx(err) => write!(f, "invalid previous transaction provided: {err}"),
             TxError::InvalidFutureTx(err) => write!(f, "invalid futures transaction provided: {err}"),
             TxError::UnrecognizedScript(err) => write!(f, "unrecognized scriptPubKey: {err}"),
+            TxError::MalformedScript(err) => write!(f, "malformed scriptSig: {err}"),
         
         }
     }
