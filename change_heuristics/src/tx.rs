@@ -371,6 +371,10 @@ impl Tx {
         self.target.strippedsize() != self.target.size()
     }
 
+    pub fn signals_rbf(&self) -> bool {
+        self.target.is_explicitly_rbf()
+    }
+
 }
 
 #[cfg(test)]

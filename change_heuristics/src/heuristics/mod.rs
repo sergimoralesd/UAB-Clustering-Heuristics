@@ -116,6 +116,7 @@ pub use present_reused_address_change::PresentReusedAddressChange;
 pub use rounded_change::RoundedChange;
 pub use rounded_fiat_change::RoundedFiatChange;
 pub use segwit_conform_change::SegwitConformChange;
+pub use signal_rbf_change::SignalRBFChange;
 
 
 
