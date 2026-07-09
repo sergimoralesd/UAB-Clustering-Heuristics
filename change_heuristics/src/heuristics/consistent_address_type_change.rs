@@ -19,12 +19,7 @@ impl Heuristic for ConsistentAddressTypeChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        if tx.previous_txs().is_none() {
-            return Err(AppError::Heuristic(HeuristicError::PreviousTxNotImported(
-                format!("import_previous_txs before running the heuristic"))
-            ));
-        }
-
+        self.check_requirements(tx, false);
 
         let input_types: Vec<AddressType> = tx.inputs_types()?;
 
