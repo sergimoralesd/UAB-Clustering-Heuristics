@@ -104,6 +104,8 @@ pub use consistent_address_type_change::ConsistentAddressTypeChange;
 pub use fee_absolute_change::FeeAbsoluteChange;
 pub use fee_relative_change::FeeRelativeChange;
 pub use input_order_change::InputOrderChange;
+pub use locktime_change::LocktimeChange;
+pub use low_confirmation_value::LowConfirmationValue;
 
 
 
