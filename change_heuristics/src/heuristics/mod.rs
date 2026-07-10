@@ -100,11 +100,15 @@ fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_
     Ok(())
 }
 
+pub mod api;
+pub use api::get_txs_by_address;
+
 pub use address_type_change::AddressTypeChange;
 pub use backdating_change::BackdatingChange;
 pub use consistent_address_type_change::ConsistentAddressTypeChange;
 pub use fee_absolute_change::FeeAbsoluteChange;
 pub use fee_relative_change::FeeRelativeChange;
+pub use future_address_reuse_change::FutureReusedAddressChange;
 pub use input_order_change::InputOrderChange;
 pub use locktime_change::LocktimeChange;
 pub use low_confirmation_value::LowConfirmationValue;
