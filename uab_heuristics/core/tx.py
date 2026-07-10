@@ -1,3 +1,4 @@
+from __future__ import annotations # To allows Tx class to reference itself 
 from bitcointx.core import CTransaction, b2x
 from ..utils import get_address_type, get_raw_tx_from_id, varint_size, compute_addr
 
@@ -8,10 +9,12 @@ class Tx:
         base_tx: CTransaction | None = None,
         previous_txids: list[str] = None,
         futures_txids: list[str] = None,
+        replacement: Tx = None,
     ):
         self._tx = base_tx
         self.previous_txids = previous_txids
         self.futures_txids = futures_txids
+        self.replacement = replacement
         self._previous_txs = None
         self._future_txs = None
         self._output_addrs = None
@@ -101,6 +104,19 @@ class Tx:
                     output_n = future_tx_input.prevout.n
                     aux_future_txs[output_n] = future_tx
         self._future_txs = aux_future_txs
+
+    def import_original_tx(self, original: Tx = None):
+        """
+        Import the previous transactions of a replace by fee chain
+        """
+        if self.replacement:
+            return
+
+        if original:
+            self.replacement = original
+            return
+
+        raise ValueError("The original tx must be of the type Tx")
 
     def print_summary(self):
         print("=== Transaction Summary ===")
