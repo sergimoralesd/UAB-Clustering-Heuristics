@@ -46,3 +46,40 @@ pub fn get_txs_by_address(addr: String) -> Result<Vec<Tx>, AppError> {
     Ok(txs)
     
 }
+
+pub fn get_historical_price(block_height: usize, currency: String) -> Result<f32, AppError> {
+    let block_hash_url = format!("https://mempool.space/api/block-height/{block_height}");
+    let block_hash = reqwest::blocking::get(&block_hash_url)
+        .map_err(|e| ApiError::UnableToFetch(e.to_string()))?
+        .text()
+        .map_err(|e| AppError::Api(ApiError::UnableToFetch(e.to_string())))?
+        .trim()
+        .to_owned();
+
+    let block_url = format!("https://mempool.space/api/block/{block_hash}");
+    let block_json: serde_json::Value = reqwest::blocking::get(&block_url)
+        .map_err(|e| AppError::Api(ApiError::UnableToFetch(e.to_string())))?
+        .json()
+        .map_err(|e| AppError::Tx(TxError::Decode(e.to_string())))?;
+
+    let timestamp = block_json["timestamp"]
+        .as_u64()
+        .ok_or_else(|| AppError::Tx(TxError::Decode("missing block timestamp".to_string())))?;
+
+    
+    let price_url = format!("https://mempool.space/api/v1/historical-price?currency={currency}&timestamp={timestamp}");
+
+    let price_json: serde_json::Value = reqwest::blocking::get(&price_url)
+        .map_err(|e| AppError::Api(ApiError::UnableToFetch(e.to_string())))?
+        .json()
+        .map_err(|e| AppError::Tx(TxError::Decode(e.to_string())))?;
+
+    let price = price_json["prices"]
+        .as_array()
+        .and_then(|prices| prices.first())
+        .and_then(|first| first.get(currency.as_str()))
+        .and_then(|value| value.as_f64())
+        .ok_or_else(|| AppError::Api(ApiError::UnableToFetch("missing historical price".to_string())))?;
+
+    Ok(price as f32)
+}

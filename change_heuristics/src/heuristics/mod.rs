@@ -101,7 +101,7 @@ fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_
 }
 
 pub mod api;
-pub use api::get_txs_by_address;
+pub use api::{get_txs_by_address, get_historical_price};
 
 pub use address_type_change::AddressTypeChange;
 pub use backdating_change::BackdatingChange;
