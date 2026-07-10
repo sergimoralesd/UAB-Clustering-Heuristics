@@ -1,11 +1,11 @@
-use bitcoin::{Address, AddressType, Network, PublicKey, Script, Transaction, TxIn, TxOut, Txid, Witness};
+use bitcoin::{Address, AddressType, Network, OutPoint, PublicKey, Script, Transaction, TxIn, TxOut, Txid, Witness, Sequence};
 use bitcoin::hashes::hex::FromHex;
 use bitcoin::consensus::{deserialize};
 
-use crate::types::TxError;
-
+use crate::types::{TxError, JsonTx};
 
 use std::collections::HashMap;
+use std::str::FromStr;
 
 #[derive(Debug, Clone)]
 pub struct Tx {
@@ -28,6 +28,65 @@ impl Tx {
             .map_err(|err| TxError::Decode(err.to_string()))?;
         
         Ok(tx)
+    }
+
+    fn build_tx_from_json(json_tx: &JsonTx) -> Result<Transaction, TxError> {
+        let inputs: Result<Vec<TxIn>, TxError> = json_tx.vin
+            .iter()
+            .map(|vin| {
+
+                let txid = Txid::from_str(&vin.txid)
+                    .map_err(|e| TxError::Decode(e.to_string()))?;
+
+                let script_sig = match Script::from_hex(&vin.scriptsig) {
+                    Err(err) => return Err(TxError::Decode(err.to_string())),
+                    Ok(script_sig) => script_sig
+                };
+
+                let witness = if let Some(witness_items) = &vin.witness {
+                    let items: Result<Vec<Vec<u8>>, TxError> = witness_items
+                        .iter()
+                        .map(|item| Vec::<u8>::from_hex(item)
+                            .map_err(|e| TxError::Decode(e.to_string())))
+                        .collect();
+                    Witness::from_vec(items?)
+                } else {
+                    Witness::new()
+                };
+
+                Ok(TxIn {
+                    previous_output: OutPoint {
+                        txid,
+                        vout: vin.vout,
+                    },
+                    script_sig,
+                    sequence: Sequence(vin.sequence),
+                    witness,
+                })
+            })
+            .collect();
+
+        let outputs: Result<Vec<TxOut>, TxError> = json_tx.vout
+            .iter()
+            .map(|vout| {
+                let script_pubkey = match Script::from_hex(&vout.scriptpubkey) {
+                    Err(err) => return Err(TxError::Decode(err.to_string())),
+                    Ok(script_pubkey) => script_pubkey
+                };
+
+                Ok(TxOut {
+                    value: vout.value,
+                    script_pubkey,
+                })
+            })
+            .collect();
+
+        Ok(Transaction {
+            version: json_tx.version,
+            lock_time: bitcoin::PackedLockTime(json_tx.locktime),
+            input: inputs?,
+            output: outputs?,
+        })
     }
 
     fn get_address_from_script(script_pubkey: &Script, network: Network) -> Result<Address, TxError> {
@@ -108,6 +167,19 @@ impl Tx {
 
     pub fn from_txid(txid: &str) -> Result<Self, TxError> {
         todo!("Implement from_txid function");
+    }
+
+    pub fn from_json(json_tx: &JsonTx, network: Network) -> Result<Self, TxError> {
+        let tx = Self::build_tx_from_json(json_tx)?;
+        
+        Ok(Self {
+            target: tx,
+            previous_txs: None,
+            future_txs: None,
+            replacement: None,
+            network: network,
+            block_height: None
+        })
     }
 
     pub fn import_previous_txs(&mut self, previous_txs: &[String]) -> Result<(), TxError> {
@@ -486,7 +558,7 @@ use super::*;
     }
     #[test]
     fn script_sig_and_witness() {
-       let mut tx = Tx::from_raw("0200000000010165053460d77bb38c813842cf5a946b45a169fe28144df0e2e35e6521b18a203d0000000000ffffffff02a4c8460000000000225120d8e89976b915c28526187cacab1e3de153bb13cf9833f99de548a92e01d263070000000000000000236a5d20ff7f818a8090f0d3b682808884b0b08bc02eff7fd184dad7ef94a4d0b2a797010140ce5c3acca0db7f57049b963f089455ff7ee49041c9102524cfec390b9df140cbc0c93d2a2ba43bc278e3cff29d236a3a5fb276facdf907befaf35c753f28981900000000", Network::Bitcoin).expect("tx should build");
+       let tx = Tx::from_raw("0200000000010165053460d77bb38c813842cf5a946b45a169fe28144df0e2e35e6521b18a203d0000000000ffffffff02a4c8460000000000225120d8e89976b915c28526187cacab1e3de153bb13cf9833f99de548a92e01d263070000000000000000236a5d20ff7f818a8090f0d3b682808884b0b08bc02eff7fd184dad7ef94a4d0b2a797010140ce5c3acca0db7f57049b963f089455ff7ee49041c9102524cfec390b9df140cbc0c93d2a2ba43bc278e3cff29d236a3a5fb276facdf907befaf35c753f28981900000000", Network::Bitcoin).expect("tx should build");
        let script_sig = tx.inputs_scriptsig();
        let witness = tx.inputs_witness();
 

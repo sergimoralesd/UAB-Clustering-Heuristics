@@ -1,4 +1,6 @@
 use std::fmt::{self};
+use serde::Deserialize;
+
 
 #[derive(Debug)]
 pub enum TxError {
@@ -51,13 +53,26 @@ impl fmt::Display for HeuristicError {
             HeuristicError::NotApplicable(err) => write!(f, "the transaction does not meet the requirements for the heuristic: {err}"),
 
 
+
+        }
+    }
+}
+#[derive(Debug)]
+pub enum ApiError {
+    UnableToFetch(String),
+}
+
+impl fmt::Display for ApiError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ApiError::UnableToFetch(err) => write!(f ,"unable to fetch: {err}"), 
         }
     }
 }
 
-
 impl std::error::Error for TxError {}
 impl std::error::Error for HeuristicError {}
+impl std::error::Error for ApiError {}
 
 
 // combined error that wraps both
@@ -65,6 +80,7 @@ impl std::error::Error for HeuristicError {}
 pub enum AppError {
     Tx(TxError),
     Heuristic(HeuristicError),
+    Api(ApiError),
 }
 
 impl fmt::Display for AppError {
@@ -72,6 +88,7 @@ impl fmt::Display for AppError {
         match self {
             AppError::Tx(err) => write!(f, "transaction error: {err}"),
             AppError::Heuristic(err) => write!(f, "heuristic error: {err}"),
+            AppError::Api(err) => write!(f, "api error: {err}"),
         }
     }
 }
@@ -88,6 +105,12 @@ impl From<TxError> for AppError {
 impl From<HeuristicError> for AppError {
     fn from(err: HeuristicError) -> Self {
         AppError::Heuristic(err)
+    }
+}
+
+impl From<ApiError> for AppError {
+    fn from(err: ApiError) -> Self {
+        AppError::Api(err)
     }
 }
 
@@ -114,4 +137,29 @@ impl InputDataRequirements {
             InputDataRequirements::HighNonIndexed => 6,
         }
     }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct JsonTx {
+    pub txid: String,
+    pub version: i32,
+    pub locktime: u32,
+    pub vin: Vec<JsonInput>,
+    pub vout: Vec<JsonOutput>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct JsonInput {
+    pub txid: String,
+    pub vout: u32,
+    pub scriptsig: String,
+    pub sequence: u32,
+    #[serde(default)] 
+    pub witness: Option<Vec<String>>,  // ← hex encoded witness items
+}
+
+#[derive(Debug, Deserialize)]
+pub struct JsonOutput {
+    pub value: u64,
+    pub scriptpubkey: String,  // ← hex encoded
 }

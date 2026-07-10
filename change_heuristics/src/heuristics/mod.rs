@@ -112,6 +112,7 @@ pub use low_r_change::LowRChange;
 pub use malformed_coinjoin_change::MalformedCoinjoinChange;
 pub use optimal_change::OptimalChange;
 pub use output_order_change::OutputOrderChange;
+pub use past_address_reuse_change::PastReusedAddressChange;
 pub use present_reused_address_change::PresentReusedAddressChange;
 pub use rounded_change::RoundedChange;
 pub use rounded_fiat_change::RoundedFiatChange;
