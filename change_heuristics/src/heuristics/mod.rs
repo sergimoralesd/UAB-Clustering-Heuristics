@@ -118,6 +118,7 @@ pub use rounded_fiat_change::RoundedFiatChange;
 pub use segwit_conform_change::SegwitConformChange;
 pub use signal_rbf_change::SignalRBFChange;
 pub use smaller_output_change::SmallerOuputChange;
+pub use uncompress_public_key_change::UncompressPublicKeyChange;
 
 
 
