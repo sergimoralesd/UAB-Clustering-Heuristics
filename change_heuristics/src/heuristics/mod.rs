@@ -119,6 +119,7 @@ pub use segwit_conform_change::SegwitConformChange;
 pub use signal_rbf_change::SignalRBFChange;
 pub use smaller_output_change::SmallerOuputChange;
 pub use uncompress_public_key_change::UncompressPublicKeyChange;
+pub use version_change::VersionChange;
 
 
 
