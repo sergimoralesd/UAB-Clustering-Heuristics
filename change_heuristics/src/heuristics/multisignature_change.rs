@@ -17,7 +17,7 @@ impl Heuristic for MultisignatureChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false, false);
 
         // use get_multisig_type which internally uses inputs_scriptsig/inputs_witness
         let multisig_types = get_multisig_type(tx, None);

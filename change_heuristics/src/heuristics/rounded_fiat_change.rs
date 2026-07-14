@@ -25,7 +25,7 @@ impl Heuristic for RoundedFiatChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true);
+        let _ = self.check_requirements(tx, true, false);
 
         let precision: f32 = (10 ^ self.precision_parameter as u64) as f32;
         let price: f32 = get_historical_price(tx.block_height().unwrap(), self.currency.clone())?;

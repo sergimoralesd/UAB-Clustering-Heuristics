@@ -23,7 +23,7 @@ impl Heuristic for RoundedChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false, false);
 
         let precision: u64 = 10 ^ self.precision_parameter as u64;
         let possible_change: Vec<bool> = tx.outputs_values()

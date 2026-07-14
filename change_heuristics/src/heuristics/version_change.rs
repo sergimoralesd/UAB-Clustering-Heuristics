@@ -15,7 +15,7 @@ impl Heuristic for VersionChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false,false);
 
         let possible_change: Vec<bool> = tx.future_txs().unwrap()
         .iter()

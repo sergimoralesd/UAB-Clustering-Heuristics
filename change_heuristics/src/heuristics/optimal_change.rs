@@ -15,7 +15,7 @@ impl Heuristic for OptimalChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false, false);
 
         let outputs_values = tx.outputs_values();
         let inputs_values = tx.inputs_values()?;

@@ -15,7 +15,7 @@ impl Heuristic for LowRChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true);
+        let _ = self.check_requirements(tx, true, false);
 
         let actual_low_r: bool = is_low_r_only(tx)?;
 

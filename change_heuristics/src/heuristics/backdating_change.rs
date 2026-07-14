@@ -15,7 +15,7 @@ impl Heuristic for BackdatingChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true);
+        let _ = self.check_requirements(tx, true, false);
 
         let actual_is_backdating: bool = is_backdated(tx);
     

@@ -12,8 +12,8 @@ pub trait Heuristic {
     //Heuristic's main functionality
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError>;
 
-    fn check_requirements(&self, tx: &Tx, block_height_needed: bool) -> Result<(), AppError> {
-        check_data_requirements(tx, &self.input_data_requirements(), block_height_needed)
+    fn check_requirements(&self, tx: &Tx, block_height_needed: bool, replacement_needed: bool) -> Result<(), AppError> {
+        check_data_requirements(tx, &self.input_data_requirements(), block_height_needed, replacement_needed)
     }
 }
 
@@ -52,9 +52,16 @@ fn check_future_txs_previous_txs(tx: &Tx) -> Result<(), AppError> {
     }
     Ok(())
 }
+fn check_replacement(tx: &Tx) -> Result<(), AppError> {
+    if tx.replacement().is_none() {
+        return Err(AppError::Heuristic(HeuristicError::ReplacementNotImported(
+            format!("import_replacement_tx before running the heuristic"))
+        ));
+    }
+    Ok(())
+}
 
-
-fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_height_needed: bool) -> Result<(), AppError> {
+fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_height_needed: bool, replacement_needed: bool) -> Result<(), AppError> {
         match requirements {
         InputDataRequirements::None => {},
 
@@ -87,12 +94,28 @@ fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_
                 for prev_tx in tx.previous_txs().unwrap() {
                     check_block_height(&prev_tx)?;
                 }
+                for fut_tx in tx.future_txs().unwrap() {
+                    check_block_height(&fut_tx)?;
+                }
+            }
+
+            if replacement_needed {
+                check_replacement(tx)?;
             }
         },
 
         InputDataRequirements::HighNonIndexed => {
             if block_height_needed {
                 check_block_height(tx)?;
+                for prev_tx in tx.previous_txs().unwrap() {
+                    check_block_height(&prev_tx)?;
+                }
+                for fut_tx in tx.future_txs().unwrap() {
+                    check_block_height(&fut_tx)?;
+                }
+            }
+            if replacement_needed {
+                check_replacement(tx)?;
             }
         }
     }
@@ -119,6 +142,7 @@ pub use optimal_change::OptimalChange;
 pub use output_order_change::OutputOrderChange;
 pub use past_address_reuse_change::PastReusedAddressChange;
 pub use present_reused_address_change::PresentReusedAddressChange;
+pub use rbf_change::RBFChange;
 pub use rounded_change::RoundedChange;
 pub use rounded_fiat_change::RoundedFiatChange;
 pub use segwit_conform_change::SegwitConformChange;
@@ -145,6 +169,7 @@ mod optimal_change;
 mod output_order_change;
 mod past_address_reuse_change;
 mod present_reused_address_change;
+mod rbf_change;
 mod rounded_change;
 mod rounded_fiat_change;
 mod segwit_conform_change;

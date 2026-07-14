@@ -17,7 +17,7 @@ impl Heuristic for OutputOrderChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true);
+        let _ = self.check_requirements(tx, true, false);
 
         let actual_ouput_order: u8 = get_output_order(tx)?;
 

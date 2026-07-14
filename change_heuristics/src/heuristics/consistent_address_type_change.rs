@@ -19,7 +19,7 @@ impl Heuristic for ConsistentAddressTypeChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false, false);
 
         let input_types: Vec<AddressType> = tx.inputs_types()?;
 

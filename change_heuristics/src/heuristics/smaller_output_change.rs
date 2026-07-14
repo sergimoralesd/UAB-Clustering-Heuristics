@@ -15,7 +15,7 @@ impl Heuristic for SmallerOuputChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false);
+        let _ = self.check_requirements(tx, false, false);
 
         let output_values = tx.outputs_values();
         let min_value: &u64 = output_values.iter().min().unwrap();
