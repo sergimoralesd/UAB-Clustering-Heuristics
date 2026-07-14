@@ -269,6 +269,12 @@ impl Tx {
         self.block_height = Some(block_height);
     }
 
+    pub fn import_replacement_tx(&mut self, replacement: String) -> Result<(), TxError> {
+        let tx: Tx = Self::from_raw(&replacement, self.network)?;
+        self.replacement = Some(Box::new(tx));
+        Ok(())
+    }
+
     pub fn txid(&self) -> Txid {
         return self.target.txid();
     }
@@ -439,6 +445,9 @@ impl Tx {
         return self.block_height;
     }
 
+    pub fn replacement(&self) -> Option<&Box<Tx>> {
+        return self.replacement.as_ref();
+    }
     pub fn is_segwit(&self) -> bool {
         self.target.strippedsize() != self.target.size()
     }

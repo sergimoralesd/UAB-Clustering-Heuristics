@@ -29,7 +29,6 @@ impl fmt::Display for TxError {
             TxError::InvalidFutureTx(err) => write!(f, "invalid futures transaction provided: {err}"),
             TxError::UnrecognizedScript(err) => write!(f, "unrecognized scriptPubKey: {err}"),
             TxError::MalformedScript(err) => write!(f, "malformed scriptSig: {err}"),
-        
         }
     }
 }
@@ -38,6 +37,7 @@ impl fmt::Display for TxError {
 pub enum HeuristicError {
     PreviousTxNotImported(String),
     FutureTxsNotImported(String),
+    ReplacementNotImported(String),
     InconsistenInputsAddressesTypes(String),
     BlockHeightNotImported(String),
     NotApplicable(String),
@@ -50,9 +50,9 @@ impl fmt::Display for HeuristicError {
             HeuristicError::FutureTxsNotImported(err) => write!(f, "future transactions not imported: {err}"),
             HeuristicError::InconsistenInputsAddressesTypes(err) => write!(f, "many inputs addresses types: {err}"),
             HeuristicError::BlockHeightNotImported(err) => write!(f, "block height not imported: {err}"),
-            HeuristicError::NotApplicable(err) => write!(f, "the transaction does not meet the requirements for the heuristic: {err}"),
-
-
+            HeuristicError::NotApplicable(err) => write!(f, "the transaction does not meet the requirements for the 
+            heuristic: {err}"),
+            HeuristicError::ReplacementNotImported(err) => write!(f, "missing replacement transaction: {err}"),
 
         }
     }
