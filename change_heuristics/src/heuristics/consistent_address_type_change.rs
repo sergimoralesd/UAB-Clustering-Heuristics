@@ -29,7 +29,7 @@ impl Heuristic for ConsistentAddressTypeChange {
         }
 
         if counts.len() != 1 {
-            return Err(AppError::Heuristic(HeuristicError::InconsistenInputsAddressesTypes(
+            return Err(AppError::Heuristic(HeuristicError::InconsistentInputsAddressesTypes(
                 format!("more than one input type founded")
             )));
         }
