@@ -38,7 +38,7 @@ pub enum HeuristicError {
     PreviousTxNotImported(String),
     FutureTxsNotImported(String),
     ReplacementNotImported(String),
-    InconsistenInputsAddressesTypes(String),
+    InconsistentInputsAddressesTypes(String),
     BlockHeightNotImported(String),
     NotApplicable(String),
 }
@@ -48,7 +48,7 @@ impl fmt::Display for HeuristicError {
         match self {
             HeuristicError::PreviousTxNotImported(err) => write!(f, "previous transactions not imported: {err}"),
             HeuristicError::FutureTxsNotImported(err) => write!(f, "future transactions not imported: {err}"),
-            HeuristicError::InconsistenInputsAddressesTypes(err) => write!(f, "many inputs addresses types: {err}"),
+            HeuristicError::InconsistentInputsAddressesTypes(err) => write!(f, "many inputs addresses types: {err}"),
             HeuristicError::BlockHeightNotImported(err) => write!(f, "block height not imported: {err}"),
             HeuristicError::NotApplicable(err) => write!(f, "the transaction does not meet the requirements for the 
             heuristic: {err}"),
