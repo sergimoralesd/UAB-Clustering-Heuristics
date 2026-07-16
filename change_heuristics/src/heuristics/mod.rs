@@ -98,10 +98,6 @@ fn check_data_requirements(tx: &Tx, requirements: &InputDataRequirements, block_
                     check_block_height(&fut_tx)?;
                 }
             }
-
-            if replacement_needed {
-                check_replacement(tx)?;
-            }
         },
 
         InputDataRequirements::HighNonIndexed => {
@@ -177,3 +173,8 @@ mod signal_rbf_change;
 mod smaller_output_change;
 mod uncompress_public_key_change;
 mod version_change;
+
+
+
+#[cfg(test)]
+pub(crate) mod test_utils;

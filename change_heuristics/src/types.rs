@@ -3,6 +3,29 @@ use serde::Deserialize;
 
 
 #[derive(Debug)]
+pub enum TestError {
+    MissingTxid(String),
+    MissingRawTx(String),
+    MissingBlockHeight(String),
+    MissingPreviousTxs(String),
+    MissingFutureTxs(String),
+
+}
+
+impl fmt::Display for TestError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            TestError::MissingTxid(err) => write!(f, "missing txid: {err}"),
+            TestError::MissingRawTx(err) => write!(f, "missing raw tx: {err}"),
+            TestError::MissingBlockHeight(err) => write!(f, "missing block height: {err}"),
+            TestError::MissingPreviousTxs(err) => write!(f, "missing prev txs: {err}"),
+            TestError::MissingFutureTxs(err) => write!(f, "missing future txs: {err}"),
+
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum TxError {
     Hex(String),
     Decode(String),
@@ -73,6 +96,7 @@ impl fmt::Display for ApiError {
 impl std::error::Error for TxError {}
 impl std::error::Error for HeuristicError {}
 impl std::error::Error for ApiError {}
+impl std::error::Error for TestError {}
 
 
 // combined error that wraps both
@@ -81,6 +105,7 @@ pub enum AppError {
     Tx(TxError),
     Heuristic(HeuristicError),
     Api(ApiError),
+    Test(TestError),
 }
 
 impl fmt::Display for AppError {
@@ -89,6 +114,7 @@ impl fmt::Display for AppError {
             AppError::Tx(err) => write!(f, "transaction error: {err}"),
             AppError::Heuristic(err) => write!(f, "heuristic error: {err}"),
             AppError::Api(err) => write!(f, "api error: {err}"),
+            AppError::Test(err) => write!(f, "test error: {err}")
         }
     }
 }

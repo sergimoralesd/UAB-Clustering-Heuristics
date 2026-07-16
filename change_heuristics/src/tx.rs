@@ -268,7 +268,7 @@ impl Tx {
         Ok(())
     }
 
-    pub fn import_previous_txs_from_hex(&mut self, previous_txs: &[String])-> Result<(), TxError> { 
+    pub fn import_previous_txs_from_hex(&mut self, previous_txs: Vec<String>)-> Result<(), TxError> { 
         let n_inputs: usize = self.input_count();
 
         if n_inputs != previous_txs.len() {
@@ -287,7 +287,7 @@ impl Tx {
         Ok(())
         }
 
-    pub fn import_future_txs_from_hex(&mut self, future_txs_hex: &[String]) -> Result<(), TxError> {
+    pub fn import_future_txs_from_hex(&mut self, future_txs_hex: Vec<String>) -> Result<(), TxError> {
         let n_outputs = self.output_count();
 
         if n_outputs != future_txs_hex.len() {
@@ -535,7 +535,9 @@ use super::*;
 #[test]
     fn from_raw_builds_tx() {
         let mut tx = Tx::from_raw(RAW_TX_1, Network::Bitcoin).expect("hex should parse");
-        tx.import_previous_txs_from_hex(&[PREV_TX.to_string()]).expect("should import");
+        let mut prev_txs = Vec::new();
+        prev_txs.push(PREV_TX.to_string());
+        tx.import_previous_txs_from_hex(prev_txs).expect("should import");
 
         let expected_txid: &str = "145c0c98ce449d8f478bae7019e3d4ae98c0a52fe574978b8a2169ac59c47420";
         let expected_size: usize = 382usize;
@@ -586,28 +588,34 @@ use super::*;
     #[test]
     fn import_previous_txs_rejects_count_mismatch() {
         let mut tx = Tx::from_raw(RAW_TX_1, Network::Bitcoin).expect("tx should build");
-        let err = tx.import_previous_txs_from_hex(&[]).unwrap_err();
+        let err = tx.import_previous_txs_from_hex(Vec::new()).unwrap_err();
         matches!(err, TxError::MismatchNumberInputs(_));
     }
 
     #[test]
     fn import_future_txs_rejects_count_mismatch() {
         let mut tx = Tx::from_raw(RAW_TX_1, Network::Bitcoin).expect("tx should build");
-        let err = tx.import_future_txs_from_hex(&[]).unwrap_err();
+        let err = tx.import_future_txs_from_hex(Vec::new()).unwrap_err();
         matches!(err, TxError::MismatchNumberOutputs(_));
     }
 
     #[test]
     fn import_previous_txs_sets_previous_txs_when_counts_match() {
         let mut tx = Tx::from_raw(RAW_TX_1, Network::Bitcoin).expect("tx should build");
-        let result = tx.import_previous_txs_from_hex(&[PREV_TX.to_string()]);
+        let mut prev_txs = Vec::new();
+        prev_txs.push(PREV_TX.to_string());
+        let result = tx.import_previous_txs_from_hex(prev_txs);
         assert!(result.is_err() || tx.previous_txs.is_some());
     }
 
     #[test]
     fn import_future_txs_sets_future_txs_when_counts_match() {
         let mut tx = Tx::from_raw(RAW_TX_1, Network::Bitcoin).expect("tx should build");
-        let result = tx.import_future_txs_from_hex(&[FUT_TX_1.to_string(), FUT_TX_2.to_string()]);
+        let mut fut_txs = Vec::new();
+        fut_txs.push(FUT_TX_1.to_string());
+        fut_txs.push(FUT_TX_2.to_string());
+
+        let result = tx.import_future_txs_from_hex(fut_txs);
         assert!(result.is_err() || tx.future_txs.is_some());
     }
     #[test]
