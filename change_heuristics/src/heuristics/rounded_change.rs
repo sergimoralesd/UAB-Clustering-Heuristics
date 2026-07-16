@@ -14,8 +14,8 @@ impl RoundedChange {
 }
 
 impl Heuristic for RoundedChange {
-    fn name(&self) -> &str {
-        "RoundedChange"
+    fn name(&self) -> String {
+        return format!("RoundedChange_{}", self.precision_parameter);
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

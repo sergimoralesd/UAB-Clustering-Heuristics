@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct LocktimeChange;
 
 impl Heuristic for LocktimeChange {
-    fn name(&self) -> &str {
-        "LocktimeChange"
+    fn name(&self) -> String {
+        return "LocktimeChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

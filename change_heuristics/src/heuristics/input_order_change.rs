@@ -8,8 +8,8 @@ use super::Heuristic;
 pub struct InputOrderChange;
 
 impl Heuristic for InputOrderChange {
-    fn name(&self) -> &str {
-        "InputOrderChange"
+    fn name(&self) -> String {
+        return "InputOrderChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

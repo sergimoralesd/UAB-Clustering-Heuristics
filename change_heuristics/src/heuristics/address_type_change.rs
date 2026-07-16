@@ -8,8 +8,8 @@ use super::Heuristic;
 pub struct AddressTypeChange;
 
 impl Heuristic for AddressTypeChange {
-    fn name(&self) -> &str {
-        "AddressTypeChange"
+    fn name(&self) -> String {
+        return "AddressTypeChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

@@ -8,8 +8,8 @@ use super::Heuristic;
 pub struct PresentReusedAddressChange;
 
 impl Heuristic for PresentReusedAddressChange {
-    fn name(&self) -> &str {
-        "PresentReusedAddressChange"
+    fn name(&self) -> String {
+        return "PresentReusedAddressChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

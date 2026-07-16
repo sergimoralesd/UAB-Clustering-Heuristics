@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct BackdatingChange;
 
 impl Heuristic for BackdatingChange {
-    fn name(&self) -> &str {
-        "BackdatingChange"
+    fn name(&self) -> String {
+        return "BackdatingChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

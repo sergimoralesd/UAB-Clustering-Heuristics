@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct FeeAbsoluteChange;
 
 impl Heuristic for FeeAbsoluteChange {
-    fn name(&self) -> &str {
-        "FeeAbsoluteChange"
+    fn name(&self) -> String {
+        return "FeeAbsoluteChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

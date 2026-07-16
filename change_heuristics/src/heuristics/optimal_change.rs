@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct OptimalChange;
 
 impl Heuristic for OptimalChange {
-    fn name(&self) -> &str {
-        "OptimalChange"
+    fn name(&self) -> String {
+        return "OptimalChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

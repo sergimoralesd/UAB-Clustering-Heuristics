@@ -9,8 +9,8 @@ use super::Heuristic;
 pub struct RBFChange;
 
 impl Heuristic for RBFChange {
-    fn name(&self) -> &str {
-        "RBFChange"
+    fn name(&self) -> String {
+        return "RBFChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

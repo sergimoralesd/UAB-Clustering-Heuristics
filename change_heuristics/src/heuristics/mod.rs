@@ -4,7 +4,7 @@ use crate::types::{AppError, HeuristicError, InputDataRequirements};
 pub trait Heuristic {
 
     //Heuristic's name
-    fn name(&self) -> &str;
+    fn name(&self) -> String;
 
     //Heurisitic's input data requirement level, following the documentation
     fn input_data_requirements(&self) -> InputDataRequirements;

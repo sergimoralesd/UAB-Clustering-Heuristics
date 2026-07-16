@@ -8,8 +8,8 @@ use super::Heuristic;
 pub struct MultisignatureChange;
 
 impl Heuristic for MultisignatureChange {
-    fn name(&self) -> &str {
-        "MultisignatureChange"
+    fn name(&self) -> String{
+        return "MultisignatureChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

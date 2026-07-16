@@ -10,8 +10,8 @@ use super::Heuristic;
 pub struct ConsistentAddressTypeChange;
 
 impl Heuristic for ConsistentAddressTypeChange {
-    fn name(&self) -> &str {
-        "ConsistentAddressTypeChange"
+    fn name(&self) -> String {
+        return "ConsistentAddressTypeChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements{

@@ -7,8 +7,8 @@ use super::api::get_txs_by_address;
 pub struct PastReusedAddressChange;
 
 impl Heuristic for PastReusedAddressChange {
-    fn name(&self) -> &str {
-        "PastReusedAddressChange"
+    fn name(&self) -> String {
+        return "PastReusedAddressChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

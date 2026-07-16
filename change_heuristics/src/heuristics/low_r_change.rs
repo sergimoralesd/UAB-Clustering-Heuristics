@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct LowRChange;
 
 impl Heuristic for LowRChange {
-    fn name(&self) -> &str {
-        "LowRChange"
+    fn name(&self) -> String {
+        return "LowRChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

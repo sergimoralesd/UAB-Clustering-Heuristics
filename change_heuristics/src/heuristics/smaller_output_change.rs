@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct SmallerOuputChange;
 
 impl Heuristic for SmallerOuputChange {
-    fn name(&self) -> &str {
-        "SmallerOuputChange"
+    fn name(&self) -> String {
+        return "SmallerOuputChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

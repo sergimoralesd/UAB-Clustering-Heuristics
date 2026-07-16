@@ -8,8 +8,8 @@ use super::Heuristic;
 pub struct SegwitConformChange;
 
 impl Heuristic for SegwitConformChange {
-    fn name(&self) -> &str {
-        "SegwitConformChange"
+    fn name(&self) -> String {
+        return "SegwitConformChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

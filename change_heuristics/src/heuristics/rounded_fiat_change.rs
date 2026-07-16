@@ -16,8 +16,8 @@ impl RoundedFiatChange {
 }
 
 impl Heuristic for RoundedFiatChange {
-    fn name(&self) -> &str {
-        "RoundedFiatChange"
+    fn name(&self) -> String {
+        return format!("RoundedChange_{}_{}", self.precision_parameter, self.currency);
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

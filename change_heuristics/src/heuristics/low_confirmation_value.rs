@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct LowConfirmationValue;
 
 impl Heuristic for LowConfirmationValue {
-    fn name(&self) -> &str {
-        "LowConfirmationValue"
+    fn name(&self) -> String {
+        return "LowConfirmationValue".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {
@@ -22,7 +22,7 @@ impl Heuristic for LowConfirmationValue {
         let possible_change: Vec<bool> = tx.future_txs().unwrap()
         .iter()
         .map(|future_tx| -> Result<bool, AppError> {
-            Ok((actual_block_height - future_tx.block_height().unwrap()) < 6)
+            Ok((future_tx.block_height().unwrap() - actual_block_height) < 6)
         })
         .collect::<Result<Vec<bool>, AppError>>()?;
 

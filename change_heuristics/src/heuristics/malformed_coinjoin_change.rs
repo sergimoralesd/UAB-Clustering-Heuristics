@@ -8,8 +8,8 @@ use super::Heuristic;
 pub struct MalformedCoinjoinChange;
 
 impl Heuristic for MalformedCoinjoinChange {
-    fn name(&self) -> &str {
-        "MalformedCoinjoinChange"
+    fn name(&self) -> String {
+        return "MalformedCoinjoinChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

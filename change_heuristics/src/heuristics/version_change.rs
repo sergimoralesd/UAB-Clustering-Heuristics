@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct VersionChange;
 
 impl Heuristic for VersionChange {
-    fn name(&self) -> &str {
-        "VersionChange"
+    fn name(&self) -> String {
+        return "VersionChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

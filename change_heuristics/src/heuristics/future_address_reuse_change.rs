@@ -7,8 +7,8 @@ use super::api::get_txs_by_address;
 pub struct FutureReusedAddressChange;
 
 impl Heuristic for FutureReusedAddressChange {
-    fn name(&self) -> &str {
-        "FutureReusedAddressChange"
+    fn name(&self) -> String {
+        return "FutureReusedAddressChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

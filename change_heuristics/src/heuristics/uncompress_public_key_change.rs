@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct UncompressPublicKeyChange;
 
 impl Heuristic for UncompressPublicKeyChange {
-    fn name(&self) -> &str {
-        "UncompressPublicKeyChange"
+    fn name(&self) -> String {
+        return "UncompressPublicKeyChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {

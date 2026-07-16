@@ -6,8 +6,8 @@ use super::Heuristic;
 pub struct SignalRBFChange;
 
 impl Heuristic for SignalRBFChange {
-    fn name(&self) -> &str {
-        "SignalRBFChange"
+    fn name(&self) -> String {
+        return "SignalRBFChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {
