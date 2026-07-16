@@ -14,7 +14,7 @@ impl Heuristic for RBFChange {
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {
-        InputDataRequirements::HighIndexed
+        InputDataRequirements::HighNonIndexed
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
