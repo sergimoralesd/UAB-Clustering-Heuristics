@@ -78,3 +78,30 @@ fn get_input_order(tx: &Tx) -> Result<u8, AppError> {
     }
     Ok(5)
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_input_order_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "8bccb2e4dd9d871983159f185931a5c9757ee4b70e420825fd2dba501865fd13", 
+            "578a49b922e6bdc28b27d94a03361d47cd204a8865777ea63db674e7611672ca", 
+            "6ce498efd53cd610ca11325700d731c2025ea0a193e9f3b874071bcd9dab6c98"
+        ];
+
+        let expected_results = vec![
+            vec![false, false],
+            vec![false, true],
+            vec![true, false]
+        ];
+
+        run_heuristic_test(&InputOrderChange, txids, expected_results, true)
+
+
+        
+    }
+}

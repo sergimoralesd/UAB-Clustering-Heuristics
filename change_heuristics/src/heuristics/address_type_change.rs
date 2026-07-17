@@ -33,16 +33,11 @@ impl Heuristic for AddressTypeChange {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::heuristics::test_utils::build_tx;
-    use crate::types::TestError;
+    use crate::heuristics::test_utils::run_heuristic_test;
     
 
     #[test]
     fn test_address_type_heuristic() -> Result<(),AppError> {
-        let tx_file = std::fs::File::open("tests/data/sampled_transactions.json")
-            .expect("JSON file was not formatted correctly");
-        let dict_txs: serde_json::Value = serde_json::from_reader(tx_file)
-            .expect("JSON was not well-formatted");
 
         let txids = vec![
             "fe2ead7ab8d6d720f06eb33481e1cecf58066eabd10e2cc9219dd3cd50250664", 
@@ -55,22 +50,6 @@ mod tests {
             vec![true, true]
         ];
 
-
-        for (txid, expected_result) in txids.iter().zip(expected_results) {
-            let tx_dict = match dict_txs.get(txid) {
-                None => return Err(AppError::Test(TestError::MissingTxid(format!("missing tx")))),
-                Some(tx) => tx
-            };
-
-            let tx = build_tx(tx_dict, &AddressTypeChange.input_data_requirements(), false)?;
-
-            match AddressTypeChange.apply(&tx) {
-                Err(err) => println!("Error: {}", err.to_string()),
-                Ok(res) => assert_eq!(res, expected_result)
-            };
-        }
-
-        Ok(())
-
+        run_heuristic_test(&AddressTypeChange, txids, expected_results, false)
     }
 }

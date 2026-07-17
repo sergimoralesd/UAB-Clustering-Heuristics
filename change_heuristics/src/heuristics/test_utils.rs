@@ -1,6 +1,7 @@
 use bitcoin::Network::Bitcoin;
 
 use crate::AppError;
+use crate::Heuristic;
 use crate::types::TestError;
 use crate::InputDataRequirements;
 use crate::Tx;
@@ -66,8 +67,7 @@ fn build_fut_txs(tx_dict: &serde_json::Value, block_height_needed: bool, with_pr
         .collect()
 }
 
-pub fn build_tx(tx_dict: &serde_json::Value, req: &InputDataRequirements, block_height_needed: bool) -> Result<Tx, AppError> {
-    // build directly from raw in the dict
+fn build_tx(tx_dict: &serde_json::Value, req: &InputDataRequirements, block_height_needed: bool) -> Result<Tx, AppError> {
     let mut tx = build_tx_from_dict(&tx_dict, block_height_needed, "tx")?;
 
     match req {
@@ -108,4 +108,32 @@ pub fn build_tx(tx_dict: &serde_json::Value, req: &InputDataRequirements, block_
     }
 
     Ok(tx)
+}
+
+pub fn run_heuristic_test<H: Heuristic>(heuristic: &H, txids: Vec<&str>, expected_results: Vec<Vec<bool>>, needs_block_height: bool) -> Result<(), AppError> {
+    let tx_file = std::fs::File::open("tests/data/sampled_transactions.json")
+        .expect("JSON file was not found");
+    let dict_txs: serde_json::Value = serde_json::from_reader(tx_file)
+        .expect("JSON was not well-formatted");
+
+    for (txid, expected_result) in txids.iter().zip(expected_results.iter()) {
+        let tx_dict = dict_txs
+            .get(txid)
+            .ok_or(AppError::Test(TestError::MissingTxid(
+                format!("missing txid: {}", txid)
+            )))?;
+
+        let tx = build_tx(tx_dict, &heuristic.input_data_requirements(), needs_block_height)?;
+
+        match heuristic.apply(&tx) {
+            Err(err) => println!("[{}] Error on {}: {}", heuristic.name(), txid, err),
+            Ok(res) => assert_eq!(
+                res, *expected_result,
+                "[{}] failed for txid: {}",
+                heuristic.name(), txid
+            ),
+        }
+    }
+
+    Ok(())
 }
