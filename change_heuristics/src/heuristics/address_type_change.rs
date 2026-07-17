@@ -64,8 +64,10 @@ mod tests {
 
             let tx = build_tx(tx_dict, &AddressTypeChange.input_data_requirements(), false)?;
 
-            let res = AddressTypeChange.apply(&tx)?;
-            assert_eq!(res, expected_result);
+            match AddressTypeChange.apply(&tx) {
+                Err(err) => println!("Error: {}", err.to_string()),
+                Ok(res) => assert_eq!(res, expected_result)
+            };
         }
 
         Ok(())

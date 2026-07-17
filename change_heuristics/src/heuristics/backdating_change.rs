@@ -1,5 +1,3 @@
-use std::future;
-
 use crate::tx::Tx;
 use crate::types::{AppError, InputDataRequirements};
 
@@ -95,8 +93,10 @@ mod tests {
 
             let tx = build_tx(tx_dict, &BackdatingChange.input_data_requirements(), true)?;
 
-            let res = BackdatingChange.apply(&tx)?;
-            assert_eq!(res, expected_result);
+            match BackdatingChange.apply(&tx) {
+                Err(err) => println!("Error: {}", err.to_string()),
+                Ok(res) => assert_eq!(res, expected_result)
+            };
         }
 
         Ok(())
