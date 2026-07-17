@@ -59,3 +59,27 @@ impl Heuristic for OptimalChange {
         Ok(possible_change)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_optimal_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "9ba576707044407d0543c3060cafc4dd9320fb60e4e55940653863cc6f9baafa", 
+            "285a12fe93eb0679446e9845e50f61b033601eedc777c566ff2dfd5c62aa2341", 
+            "7aaa37a2775a1bc61841248ec559a210d18717cb2cd12899e40606b6c88e13c1"
+        ];
+
+        let expected_results = vec![
+            vec![true, false],
+            vec![false, true],
+            vec![false, false]
+        ];
+
+        run_heuristic_test(&OptimalChange, txids, expected_results, false)
+
+    }
+}

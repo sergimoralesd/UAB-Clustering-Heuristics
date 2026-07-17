@@ -41,3 +41,27 @@ fn is_segwit_conform(tx: &Tx) -> Result<bool, AppError> {
 
     Ok(has_witness_inputs && tx.is_segwit())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_segwit_conform_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "9ba576707044407d0543c3060cafc4dd9320fb60e4e55940653863cc6f9baafa", 
+            "f626b1aa370c29e39f44f1764b8026b8a868e7017b7a16630f871cdcd7c96958",
+            "285a12fe93eb0679446e9845e50f61b033601eedc777c566ff2dfd5c62aa2341" 
+        ];
+
+        let expected_results = vec![
+            vec![true, true],
+            vec![true, false],
+            vec![true, true],
+        ];
+
+        run_heuristic_test(&SegwitConformChange, txids, expected_results, false)
+
+    }
+}

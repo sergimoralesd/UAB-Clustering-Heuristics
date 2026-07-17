@@ -67,3 +67,27 @@ fn get_output_order(tx: &Tx) -> Result<u8, AppError> {
     }
     Ok(3)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_output_order_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "9ba576707044407d0543c3060cafc4dd9320fb60e4e55940653863cc6f9baafa", 
+            "46d8960eb6d0660f2b2cc68662e46345b086870ab9ac75092b064e0dbf0fbc8b", 
+            "7aaa37a2775a1bc61841248ec559a210d18717cb2cd12899e40606b6c88e13c1"
+        ];
+
+        let expected_results = vec![
+            vec![true, true],
+            vec![true, false],
+            vec![true, true]
+        ];
+
+        run_heuristic_test(&OutputOrderChange, txids, expected_results, false)
+
+    }
+}

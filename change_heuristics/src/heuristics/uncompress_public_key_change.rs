@@ -1,3 +1,5 @@
+use bitcoin::AddressType;
+
 use crate::tx::Tx;
 use crate::types::{AppError, InputDataRequirements};
 
@@ -19,6 +21,10 @@ impl Heuristic for UncompressPublicKeyChange {
 
         let actual_has_uncompressed: bool = has_uncompressed_public_keys(tx);
 
+        for fut in tx.future_txs().unwrap().iter() {
+            println!("{}", has_uncompressed_public_keys(fut));
+        }
+
         let possible_change: Vec<bool> = tx.future_txs().unwrap()
         .iter()
         .map(|future_tx| -> Result<bool, AppError> {
@@ -30,53 +36,97 @@ impl Heuristic for UncompressPublicKeyChange {
     }
 }
 
-fn has_uncompressed_public_keys(tx: &Tx) -> bool {
-    for scriptsig in tx.inputs_scriptsig().iter() {
-        if scriptsig.is_empty() {
-            //we return early false because if scriptsig is empty it means it has segwit
-            return false;
+fn parse_script_items(bytes: &[u8]) -> Vec<&[u8]> {
+    let mut items: Vec<&[u8]> = Vec::new();
+    let mut i = 0;
+
+    while i < bytes.len() {
+        let push_len = bytes[i] as usize;
+        i += 1;
+        
+        if i + push_len > bytes.len() {
+            break; 
         }
-        let scriptsig_bytes = scriptsig.as_bytes();
-        let mut i = 0;
-        let mut items: Vec<&[u8]> = Vec::new();
+        
+        items.push(&bytes[i..i + push_len]);
+        i += push_len;
+    }
 
-        // parse all scriptSig items
-        while i < scriptsig_bytes.len() {
-            let push_len = scriptsig_bytes[i] as usize;
-            i += 1;
-            if i + push_len > scriptsig_bytes.len() { break; }
-                items.push(&scriptsig_bytes[i..i + push_len]);
-                i += push_len;
-            }
+    items
+}
+
+fn is_uncompressed_pubkey(bytes: &[u8]) -> bool {
+    bytes.len() == 65 && bytes.first() == Some(&0x04)
+}
 
 
-        for item in &items {
-            // check if item is uncompressed pubkey
-            if item.len() == 65 && item.first() == Some(&0x04) {
-                return true;
-            }
+fn has_uncompressed_public_keys(tx: &Tx) -> bool {
+    let input_types = match tx.inputs_types() {
+        Ok(types) => types,
+        Err(_) => return false,
+    };
 
-            // check if item is a redeem script (P2SH-P2MS)
-            // redeem script contains pubkeys inside it
-            if item.first() == Some(&0x52) ||  // OP_2
-                item.first() == Some(&0x53) ||  // OP_3
-                item.first() == Some(&0x51) {   // OP_1
-                // parse the redeem script to find pubkeys
-                let mut j = 1;  // skip OP_n
-                while j < item.len() {
-                    let inner_push = item[j] as usize;
-                    j += 1;
-                    if j + inner_push > item.len() { break; }
-                    let inner_item = &item[j..j + inner_push];
-                    
-                    // check if inner item is uncompressed pubkey
-                    if inner_item.len() == 65 && inner_item.first() == Some(&0x04) {
+    let script_sigs = tx.inputs_scriptsig();
+
+    for (idx, input_type) in input_types.iter().enumerate() {
+        match input_type {
+            // P2PKH — pubkey is second item in scriptSig
+            AddressType::P2pkh => {
+                let script_sig = match script_sigs.get(idx) {
+                    Some(s) => s,
+                    None => continue,
+                };
+
+                let items = parse_script_items(script_sig.as_bytes());
+
+                if items.len() >= 2 && is_uncompressed_pubkey(items[1]) {
+                    return true;
+                }
+            },
+
+            // P2SH — pubkeys inside redeem script (last scriptSig item)
+            AddressType::P2sh => {
+                let script_sig = match script_sigs.get(idx) {
+                    Some(s) => s,
+                    None => continue,
+                };
+
+                let items = parse_script_items(script_sig.as_bytes());
+                if let Some(redeem_script) = items.last() {
+                    let inner_items = parse_script_items(redeem_script);
+                    if inner_items.iter().any(|item| is_uncompressed_pubkey(item)) {
                         return true;
                     }
-                    j += inner_push;
                 }
-            }
+            },
+
+            // P2WPKH, P2WSH, P2TR — compressed keys enforced by protocol
+            _ => continue,
         }
     }
-        return false;
+
+    false
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_uncompressed_pubkey_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "2fb20b3eca06902bdfdfbda4bf7f03555325ea7886a0af9b2dc76324fe3e382a", 
+            "118ffa26c1645625ae370b2b59054c5e966acb16e066e8caa5047f7b093734b3", 
+        ];
+
+        let expected_results = vec![
+            vec![true, true],
+            vec![false, true],
+        ];
+
+        run_heuristic_test(&UncompressPublicKeyChange, txids, expected_results, false)
+
+    }
 }

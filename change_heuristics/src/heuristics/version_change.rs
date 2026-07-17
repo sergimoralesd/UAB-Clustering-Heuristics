@@ -25,3 +25,25 @@ impl Heuristic for VersionChange {
         Ok(possible_change)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_version_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "83c0b88e22ca42c147ea9f92ce993bd7e760532b5587abcb9b67464904543a57", 
+            "d2416edba67840e699b064f17125e6fb071cae153227a8e8ca0a6c1c7596095e", 
+        ];
+
+        let expected_results = vec![
+            vec![true, true],
+            vec![true, false],
+        ];
+
+        run_heuristic_test(&VersionChange, txids, expected_results, false)
+
+    }
+}
