@@ -112,3 +112,30 @@ fn is_low_r_only(tx: &Tx) -> Result<bool, AppError> {
 
     Ok(true)
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_low_r_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "185220295af86fd3c861c8d7d09b48816d5cff1f4eb0b791092a6ac9e8a4946c", 
+            "b94c30064e4cbc4d30929fa0f6c24445e26b1118307e098c962120ef1b0fba35", 
+            "2dc42e7e2c4622a2c2d82a45e76336f603907d0aed407c855f4e4eba8adabcd6"
+        ];
+
+        let expected_results = vec![
+            vec![true, false],
+            vec![false, true],
+            vec![false, false]
+        ];
+
+        run_heuristic_test(&LowRChange, txids, expected_results, false)
+
+
+        
+    }
+}

@@ -179,3 +179,29 @@ fn get_multisig_type(tx: &Tx, input_index: Option<usize>) -> Vec<String> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+
+    #[test]
+    fn test_multisignature_heuristic() -> Result<(),AppError> {
+        let txids = vec![
+            "ef1b72cc5dc7556b9c288fec07f68496a79ac9b65a93fceb5c5730cb65d8fbf8", 
+            "b126f3ff2e510e09ea8487f904d54aad74d3fca441a5c252a131baf37c708723", 
+            "2a1f0786f97551c501f75219db691f4c62e564a3ee3c0a250cd3ca054d3cd8ff"
+        ];
+
+        let expected_results = vec![
+            vec![false, false],
+            vec![false, false],
+            vec![false, true]
+        ];
+
+        run_heuristic_test(&MultisignatureChange, txids, expected_results, false)
+
+
+        
+    }
+}
