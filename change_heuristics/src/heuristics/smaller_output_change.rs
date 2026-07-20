@@ -45,7 +45,7 @@ mod tests {
             vec![false, true],
         ];
 
-        run_heuristic_test(&SmallerOuputChange, txids, expected_results, false)
+        run_heuristic_test(&SmallerOuputChange, txids, expected_results, false, false)
 
     }
 }

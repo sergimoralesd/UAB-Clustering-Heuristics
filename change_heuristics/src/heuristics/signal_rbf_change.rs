@@ -47,7 +47,7 @@ mod tests {
             vec![true, false],
         ];
 
-        run_heuristic_test(&SignalRBFChange, txids, expected_results, false)
+        run_heuristic_test(&SignalRBFChange, txids, expected_results, false, false)
 
     }
 }

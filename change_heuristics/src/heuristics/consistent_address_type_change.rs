@@ -62,7 +62,7 @@ mod tests {
             vec![true, true]
         ];
 
-        run_heuristic_test(&ConsistentAddressTypeChange, txids, expected_results, false)
+        run_heuristic_test(&ConsistentAddressTypeChange, txids, expected_results, false, false)
 
     }
 }

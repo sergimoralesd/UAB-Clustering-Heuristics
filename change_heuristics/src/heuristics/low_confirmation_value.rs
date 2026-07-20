@@ -50,7 +50,7 @@ mod tests {
             vec![false, false]
         ];
 
-        run_heuristic_test(&LowConfirmationValue, txids, expected_results, true)
+        run_heuristic_test(&LowConfirmationValue, txids, expected_results, true, false)
 
 
         

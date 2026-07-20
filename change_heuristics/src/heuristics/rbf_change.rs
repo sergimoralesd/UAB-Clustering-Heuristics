@@ -92,3 +92,24 @@ fn different_output(tx: &Tx, tx_replacement: &Tx) -> Result<Vec<bool>, AppError>
     Ok(possible_change)
 
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+    
+
+    #[test]
+    fn test_rbf_heuristic() -> Result<(),AppError> {
+
+        let txids = vec![
+            "0671a6a6f9385a0886cfcada90e74d18cd153956295ac4a5c3c7b0847f7e6bf1"
+        ];
+
+        let expected_results = vec![
+            vec![false, true],
+        ];
+
+        run_heuristic_test(&RBFChange, txids, expected_results, false, true)
+    }
+}

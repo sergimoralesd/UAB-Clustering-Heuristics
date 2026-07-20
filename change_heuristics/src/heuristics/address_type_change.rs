@@ -50,6 +50,6 @@ mod tests {
             vec![true, true]
         ];
 
-        run_heuristic_test(&AddressTypeChange, txids, expected_results, false)
+        run_heuristic_test(&AddressTypeChange, txids, expected_results, false, false)
     }
 }

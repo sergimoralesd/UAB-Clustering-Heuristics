@@ -66,3 +66,24 @@ impl Heuristic for MalformedCoinjoinChange {
     
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+    
+
+    #[test]
+    fn test_malformed_coinjoin_heuristic() -> Result<(),AppError> {
+
+        let txids = vec![
+            "c38aac9910f327700e0f199972eed8ea7c6b1920e965f9cb48a92973e7325046",
+        ];
+
+        let expected_results = vec![
+            vec![false, true, false, true],
+        ];
+
+        run_heuristic_test(&MalformedCoinjoinChange, txids, expected_results, false, false)
+    }
+}

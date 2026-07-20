@@ -77,7 +77,7 @@ mod tests {
             vec![false, true]
         ];
 
-        run_heuristic_test(&BackdatingChange, txids, expected_results, true)
+        run_heuristic_test(&BackdatingChange, txids, expected_results, true, false)
 
     }
 }

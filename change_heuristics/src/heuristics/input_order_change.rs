@@ -99,7 +99,7 @@ mod tests {
             vec![true, false]
         ];
 
-        run_heuristic_test(&InputOrderChange, txids, expected_results, true)
+        run_heuristic_test(&InputOrderChange, txids, expected_results, true, false)
 
 
         

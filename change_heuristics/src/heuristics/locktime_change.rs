@@ -62,7 +62,7 @@ mod tests {
             vec![true, false]
         ];
 
-        run_heuristic_test(&LocktimeChange, txids, expected_results, false)
+        run_heuristic_test(&LocktimeChange, txids, expected_results, true, false)
 
 
         

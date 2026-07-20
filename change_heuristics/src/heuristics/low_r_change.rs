@@ -133,7 +133,7 @@ mod tests {
             vec![false, false]
         ];
 
-        run_heuristic_test(&LowRChange, txids, expected_results, false)
+        run_heuristic_test(&LowRChange, txids, expected_results, false, false)
 
 
         

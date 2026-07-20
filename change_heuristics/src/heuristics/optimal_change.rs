@@ -79,7 +79,7 @@ mod tests {
             vec![false, false]
         ];
 
-        run_heuristic_test(&OptimalChange, txids, expected_results, false)
+        run_heuristic_test(&OptimalChange, txids, expected_results, false, false)
 
     }
 }

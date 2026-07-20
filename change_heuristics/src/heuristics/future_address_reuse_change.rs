@@ -21,7 +21,6 @@ impl Heuristic for FutureReusedAddressChange {
         let outputs_addresses = tx.outputs_addresses()?;
         let actual_block_height = tx.block_height().unwrap();
 
-        // initialize all outputs as false
         let mut possible_change: Vec<bool> = vec![false; outputs_addresses.len()];
 
         let mut total_blocks_heights: Vec<Vec<usize>> = Vec::new();
@@ -29,7 +28,6 @@ impl Heuristic for FutureReusedAddressChange {
         for out_addr in outputs_addresses.iter() {
             let all_txs = get_txs_by_address(out_addr.to_string())?;
 
-            // get block heights excluding current tx
             let mut blocks_heights: Vec<usize> = all_txs
                 .iter()
                 .filter(|tx_from_addr| tx_from_addr.txid() != tx.txid())
@@ -40,7 +38,6 @@ impl Heuristic for FutureReusedAddressChange {
             total_blocks_heights.push(blocks_heights);
         }
 
-        // find addresses with future txs
         let mut addresses_with_future: Vec<String> = Vec::new();
 
         for (out_addr, blocks_heights) in outputs_addresses.iter().zip(total_blocks_heights.iter()) {
@@ -53,21 +50,35 @@ impl Heuristic for FutureReusedAddressChange {
                 }
             }
         }
-
-        // change = [addr for addr in tx.outputs_addresses if addr not in address_with_future]
-        // mark as possible change if address does NOT have future txs
+        
         for (index, out_addr) in outputs_addresses.iter().enumerate() {
             if !addresses_with_future.contains(&&out_addr.to_string()) {
                 possible_change[index] = true;
             }
         }
 
-        // only return true if exactly one change found
-        let change_count = possible_change.iter().filter(|&&b| b).count();
-        if change_count != 1 {
-            return Ok(vec![false; outputs_addresses.len()]);
-        }
-
         Ok(possible_change)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+    
+
+    #[test]
+    fn test_future_address_reuse_heuristic() -> Result<(),AppError> {
+
+        let txids = vec![
+            "ddf89407656fd4ac32e375420f96186c6b54661746d815e96648812dc3f44669", "d2416edba67840e699b064f17125e6fb071cae153227a8e8ca0a6c1c7596095e"
+        ];
+
+        let expected_results = vec![
+            vec![false, false],
+            vec![false, false]
+        ];
+
+        run_heuristic_test(&FutureReusedAddressChange, txids, expected_results, true, false)
     }
 }

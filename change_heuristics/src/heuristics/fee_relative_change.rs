@@ -50,7 +50,7 @@ mod tests {
             vec![true, false]
         ];
 
-        run_heuristic_test(&FeeRelativeChange, txids, expected_results, false)
+        run_heuristic_test(&FeeRelativeChange, txids, expected_results, false, false)
 
     }
 }

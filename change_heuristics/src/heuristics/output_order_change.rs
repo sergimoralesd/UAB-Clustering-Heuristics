@@ -87,7 +87,7 @@ mod tests {
             vec![true, true]
         ];
 
-        run_heuristic_test(&OutputOrderChange, txids, expected_results, false)
+        run_heuristic_test(&OutputOrderChange, txids, expected_results, false, false)
 
     }
 }

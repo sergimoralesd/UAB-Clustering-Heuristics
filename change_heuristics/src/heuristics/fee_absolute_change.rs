@@ -50,7 +50,7 @@ mod tests {
         ];
 
 
-        run_heuristic_test(&FeeAbsoluteChange, txids, expected_results, false)
+        run_heuristic_test(&FeeAbsoluteChange, txids, expected_results, false, false)
         
 
     }

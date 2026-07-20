@@ -48,3 +48,25 @@ impl Heuristic for PastReusedAddressChange {
         Ok(possible_change)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::heuristics::test_utils::run_heuristic_test;
+    
+
+    #[test]
+    fn test_past_address_reuse_heuristic() -> Result<(),AppError> {
+
+        let txids = vec![
+            "ddf89407656fd4ac32e375420f96186c6b54661746d815e96648812dc3f44669", "d2416edba67840e699b064f17125e6fb071cae153227a8e8ca0a6c1c7596095e"
+        ];
+
+        let expected_results = vec![
+            vec![true, false],
+            vec![true, false]
+        ];
+
+        run_heuristic_test(&PastReusedAddressChange, txids, expected_results, true, false)
+    }
+}

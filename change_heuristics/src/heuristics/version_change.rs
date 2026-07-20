@@ -43,7 +43,7 @@ mod tests {
             vec![true, false],
         ];
 
-        run_heuristic_test(&VersionChange, txids, expected_results, false)
+        run_heuristic_test(&VersionChange, txids, expected_results, false, false)
 
     }
 }
