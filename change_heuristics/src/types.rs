@@ -9,6 +9,7 @@ pub enum TestError {
     MissingBlockHeight(String),
     MissingPreviousTxs(String),
     MissingFutureTxs(String),
+    MissingReplacementTxs(String),
 
 }
 
@@ -20,6 +21,7 @@ impl fmt::Display for TestError {
             TestError::MissingBlockHeight(err) => write!(f, "missing block height: {err}"),
             TestError::MissingPreviousTxs(err) => write!(f, "missing prev txs: {err}"),
             TestError::MissingFutureTxs(err) => write!(f, "missing future txs: {err}"),
+            TestError::MissingReplacementTxs(err) => write!(f, "missing replacement txs: {err}"),
 
         }
     }
