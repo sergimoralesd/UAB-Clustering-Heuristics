@@ -3,11 +3,11 @@ use crate::types::{AppError, InputDataRequirements};
 
 use super::Heuristic; 
 
-pub struct SmallerOuputChange;
+pub struct SmallerOutputChange;
 
-impl Heuristic for SmallerOuputChange {
+impl Heuristic for SmallerOutputChange {
     fn name(&self) -> String {
-        return "SmallerOuputChange".to_string();
+        return "SmallerOutputChange".to_string();
     }
 
     fn input_data_requirements(&self) -> InputDataRequirements {
@@ -45,7 +45,7 @@ mod tests {
             vec![false, true],
         ];
 
-        run_heuristic_test(&SmallerOuputChange, txids, expected_results, false, false)
+        run_heuristic_test(&SmallerOutputChange, txids, expected_results, false, false)
 
     }
 }

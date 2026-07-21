@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fs, vec};
 use bitcoin::Network::Bitcoin;
 use serde_json;
-use change_heuristics::{Heuristic, Tx, heuristics::{AddressTypeChange, BackdatingChange, ConsistentAddressTypeChange, FeeAbsoluteChange, FeeRelativeChange, FutureReusedAddressChange, InputOrderChange, LocktimeChange, LowConfirmationValue, LowRChange, MalformedCoinjoinChange, MultisignatureChange, OptimalChange, PastReusedAddressChange, PresentReusedAddressChange, RoundedChange, RoundedFiatChange, SegwitConformChange, SignalRBFChange, SmallerOuputChange, UncompressPublicKeyChange, VersionChange}};
+use change_heuristics::{Heuristic, Tx, heuristics::{AddressTypeChange, BackdatingChange, ConsistentAddressTypeChange, FeeAbsoluteChange, FeeRelativeChange, FutureReusedAddressChange, InputOrderChange, LocktimeChange, LowConfirmationValue, LowRChange, MalformedCoinjoinChange, MultisignatureChange, OptimalChange, PastReusedAddressChange, PresentReusedAddressChange, RoundedChange, RoundedFiatChange, SegwitConformChange, SignalRBFChange, SmallerOutputChange, UncompressPublicKeyChange, VersionChange}};
 
 fn deserialize_tx_dict(tx_dict: &serde_json::Value) -> Result<Tx, String> {
     let raw: &str = match tx_dict.get("raw").and_then(|v| v.as_str()) {
@@ -111,7 +111,7 @@ fn test_heuristics() -> Result<(), String> {
         Box::new(PresentReusedAddressChange),
         Box::new(SegwitConformChange),
         Box::new(SignalRBFChange),
-        Box::new(SmallerOuputChange),
+        Box::new(SmallerOutputChange),
         Box::new(UncompressPublicKeyChange),
         Box::new(VersionChange),
     ];

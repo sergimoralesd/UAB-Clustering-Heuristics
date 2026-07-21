@@ -7,7 +7,7 @@ use crate::heuristics::{
     LowConfirmationValue, LowRChange, MalformedCoinjoinChange, MultisignatureChange,
     OptimalChange, OutputOrderChange, PastReusedAddressChange, PresentReusedAddressChange,
     RBFChange, RoundedChange, RoundedFiatChange, SegwitConformChange, SignalRBFChange,
-    SmallerOuputChange, UncompressPublicKeyChange, VersionChange,
+    SmallerOutputChange, UncompressPublicKeyChange, VersionChange,
 };
 use crate::types::AppError;
 
@@ -59,7 +59,7 @@ define_simple_heuristic!(PyPresentReusedAddressChange, PresentReusedAddressChang
 define_simple_heuristic!(PyRBFChange, RBFChange, "RBFChange", RBFChange);
 define_simple_heuristic!(PySegwitConformChange, SegwitConformChange, "SegwitConformChange", SegwitConformChange);
 define_simple_heuristic!(PySignalRBFChange, SignalRBFChange, "SignalRBFChange", SignalRBFChange);
-define_simple_heuristic!(PySmallerOuputChange, SmallerOuputChange, "SmallerOuputChange", SmallerOuputChange);
+define_simple_heuristic!(PySmallerOuputChange, SmallerOutputChange, "SmallerOuputChange", SmallerOutputChange);
 define_simple_heuristic!(PyUncompressPublicKeyChange, UncompressPublicKeyChange, "UncompressPublicKeyChange", UncompressPublicKeyChange);
 define_simple_heuristic!(PyVersionChange, VersionChange, "VersionChange", VersionChange);
 
