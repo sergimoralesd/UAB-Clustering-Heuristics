@@ -21,10 +21,6 @@ impl Heuristic for UncompressPublicKeyChange {
 
         let actual_has_uncompressed: bool = has_uncompressed_public_keys(tx);
 
-        for fut in tx.future_txs().unwrap().iter() {
-            println!("{}", has_uncompressed_public_keys(fut));
-        }
-
         let possible_change: Vec<bool> = tx.future_txs().unwrap()
         .iter()
         .map(|future_tx| -> Result<bool, AppError> {
