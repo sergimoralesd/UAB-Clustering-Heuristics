@@ -1,5 +1,5 @@
 use crate::tx::Tx;
-use crate::types::{AppError, InputDataRequirements};
+use crate::types::{AppError, HeuristicError, InputDataRequirements};
 
 use super::Heuristic; 
 
