@@ -1,6 +1,6 @@
-use pyo3::exceptions::PyValueError;
+pub(crate) use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
-
+use crate::heuristics::Heuristic;
 use crate::heuristics::{
     AddressTypeChange, BackdatingChange, ConsistentAddressTypeChange, FeeAbsoluteChange,
     FeeRelativeChange, FutureReusedAddressChange, InputOrderChange, LocktimeChange,
@@ -9,7 +9,12 @@ use crate::heuristics::{
     RBFChange, RoundedChange, RoundedFiatChange, SegwitConformChange, SignalRBFChange,
     SmallerOutputChange, UncompressPublicKeyChange, VersionChange,
 };
+use crate::python_package::python_tx::PyTx;
 use crate::types::AppError;
+
+fn py_error(err: AppError) -> PyErr {
+    PyValueError::new_err(err.to_string())
+}
 
 macro_rules! define_simple_heuristic {
     ($py_struct:ident, $rust_ty:ty, $python_name:expr, $ctor:expr) => {
@@ -59,7 +64,7 @@ define_simple_heuristic!(PyPresentReusedAddressChange, PresentReusedAddressChang
 define_simple_heuristic!(PyRBFChange, RBFChange, "RBFChange", RBFChange);
 define_simple_heuristic!(PySegwitConformChange, SegwitConformChange, "SegwitConformChange", SegwitConformChange);
 define_simple_heuristic!(PySignalRBFChange, SignalRBFChange, "SignalRBFChange", SignalRBFChange);
-define_simple_heuristic!(PySmallerOuputChange, SmallerOutputChange, "SmallerOuputChange", SmallerOutputChange);
+define_simple_heuristic!(PySmallerOutputChange, SmallerOutputChange, "SmallerOutputChange", SmallerOutputChange);
 define_simple_heuristic!(PyUncompressPublicKeyChange, UncompressPublicKeyChange, "UncompressPublicKeyChange", UncompressPublicKeyChange);
 define_simple_heuristic!(PyVersionChange, VersionChange, "VersionChange", VersionChange);
 
@@ -139,7 +144,7 @@ fn change_heuristics(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyRoundedFiatChange>()?;
     m.add_class::<PySegwitConformChange>()?;
     m.add_class::<PySignalRBFChange>()?;
-    m.add_class::<PySmallerOuputChange>()?;
+    m.add_class::<PySmallerOutputChange>()?;
     m.add_class::<PyUncompressPublicKeyChange>()?;
     m.add_class::<PyVersionChange>()?;
     Ok(())

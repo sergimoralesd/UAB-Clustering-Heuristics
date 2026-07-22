@@ -1,10 +1,10 @@
-use pyo3::exceptions::PyValueError;
+pub(crate) use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use crate::tx::Tx as RustTx;
-use crate::types::AppError;
+use crate::types::TxError;
 
 
-fn py_error(err: AppError) -> PyErr {
+fn py_error(err: TxError) -> PyErr {
     PyValueError::new_err(err.to_string())
 }
 
@@ -19,8 +19,8 @@ fn parse_network(network: &str) -> PyResult<bitcoin::Network> {
 }
 
 #[pyclass]
-struct PyTx {
-    inner: RustTx,
+pub struct PyTx {
+    pub(crate) inner: RustTx,
 }
 
 #[pymethods]
@@ -167,14 +167,28 @@ impl PyTx {
             .collect()
     }
 
-    fn import_previous_txs(&mut self, previous_txs: Vec<PyTx>) -> PyResult<()> {
-        let txs: Vec<RustTx> = previous_txs.into_iter().map(|tx| tx.inner).collect();
+    fn import_previous_txs(&mut self, previous_txs: Vec<Py<PyAny>>, py: Python<'_>) -> PyResult<()> {
+        let txs: Vec<RustTx> = previous_txs
+            .into_iter()
+            .map(|tx| {
+                let tx_ref = tx.bind(py).extract::<PyRef<'_, PyTx>>()?;
+                Ok(tx_ref.inner.clone())
+            })
+            .collect::<PyResult<Vec<_>>>()?;
+
         self.inner.import_previous_txs(txs).map_err(py_error)?;
         Ok(())
     }
 
-    fn import_future_txs(&mut self, future_txs: Vec<PyTx>) -> PyResult<()> {
-        let txs: Vec<RustTx> = future_txs.into_iter().map(|tx| tx.inner).collect();
+    fn import_future_txs(&mut self, future_txs: Vec<Py<PyAny>>, py: Python<'_>) -> PyResult<()> {
+        let txs: Vec<RustTx> = future_txs
+            .into_iter()
+            .map(|tx| {
+                let tx_ref = tx.bind(py).extract::<PyRef<'_, PyTx>>()?;
+                Ok(tx_ref.inner.clone())
+            })
+            .collect::<PyResult<Vec<_>>>()?;
+
         self.inner.import_future_txs(txs).map_err(py_error)?;
         Ok(())
     }
