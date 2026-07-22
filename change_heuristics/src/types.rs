@@ -66,6 +66,8 @@ pub enum HeuristicError {
     InconsistentInputsAddressesTypes(String),
     BlockHeightNotImported(String),
     NotApplicable(String),
+    PrecisionOverflow(String),
+
 }
 
 impl fmt::Display for HeuristicError {
@@ -78,6 +80,7 @@ impl fmt::Display for HeuristicError {
             HeuristicError::NotApplicable(err) => write!(f, "the transaction does not meet the requirements for the 
             heuristic: {err}"),
             HeuristicError::ReplacementNotImported(err) => write!(f, "missing replacement transaction: {err}"),
+            HeuristicError::PrecisionOverflow(err) => write!(f, "overflow on precision parameter: {err}"),
 
         }
     }

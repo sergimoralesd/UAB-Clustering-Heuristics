@@ -25,7 +25,10 @@ impl Heuristic for RoundedChange {
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
         let _ = self.check_requirements(tx, false, false)?;
 
-        let precision: u64 = 10 ^ self.precision_parameter as u64;
+        let precision: u64 = 10u64
+        .checked_pow(self.precision_parameter as u32)
+        .ok_or_else(|| AppError::Heuristic(HeuristicError::PrecisionOverflow(format!("precision_parameter overflow with"))))?;
+
         let possible_change: Vec<bool> = tx.outputs_values()
         .iter()
         .map(|value| value % precision != 0)
