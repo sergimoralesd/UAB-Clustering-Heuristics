@@ -15,7 +15,7 @@ impl Heuristic for FeeAbsoluteChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false, false);
+        let _ = self.check_requirements(tx, false, false)?;
 
         let actual_absolute_fee: u64 = tx.absolute_fee()?;
     

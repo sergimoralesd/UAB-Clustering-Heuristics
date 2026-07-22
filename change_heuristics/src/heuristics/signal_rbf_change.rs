@@ -15,7 +15,7 @@ impl Heuristic for SignalRBFChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false, false);
+        let _ = self.check_requirements(tx, false, false)?;
 
         let actual_signals_rbf: bool = tx.signals_rbf();
 

@@ -17,7 +17,7 @@ impl Heuristic for UncompressPublicKeyChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false, false);
+        let _ = self.check_requirements(tx, false, false)?;
 
         let actual_has_uncompressed: bool = has_uncompressed_public_keys(tx);
 

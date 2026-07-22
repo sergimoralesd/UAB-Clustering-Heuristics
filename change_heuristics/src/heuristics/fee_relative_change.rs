@@ -15,7 +15,7 @@ impl Heuristic for FeeRelativeChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false, false);
+        let _ = self.check_requirements(tx, false, false)?;
 
         let actual_relative_fee: f32 = tx.relative_fee()?;
     

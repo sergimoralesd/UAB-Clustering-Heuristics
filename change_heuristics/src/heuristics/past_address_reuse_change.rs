@@ -16,7 +16,7 @@ impl Heuristic for PastReusedAddressChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true, false);
+        let _ = self.check_requirements(tx, true, false)?;
 
         let outputs_addresses = tx.outputs_addresses()?;
         let actual_block_height = tx.block_height().unwrap();   

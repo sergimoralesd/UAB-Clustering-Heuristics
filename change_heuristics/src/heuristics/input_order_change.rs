@@ -17,7 +17,7 @@ impl Heuristic for InputOrderChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true, false);
+        let _ = self.check_requirements(tx, true, false)?;
 
         let actual_input_order: u8 = get_input_order(tx)?;
 

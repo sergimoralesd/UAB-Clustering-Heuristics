@@ -17,7 +17,7 @@ impl Heuristic for SegwitConformChange {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, false, false);
+        let _ = self.check_requirements(tx, false, false)?;
 
         let actual_is_segwit_conform: bool = is_segwit_conform(tx)?;
 

@@ -15,7 +15,7 @@ impl Heuristic for LowConfirmationValue {
     }
 
     fn apply(&self, tx: &Tx) -> Result<Vec<bool>, AppError> {
-        let _ = self.check_requirements(tx, true, false);
+        let _ = self.check_requirements(tx, true, false)?;
 
         let actual_block_height: usize = tx.block_height().unwrap();
 
