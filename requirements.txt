@@ -1,4 +1,1 @@
-python-bitcointx
-python-dotenv
 maturin
-pytest
