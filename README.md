@@ -1,14 +1,12 @@
 # UAB Clustering Heuristics — Rust Implementation
 
-A Rust library that implements Bitcoin **change-address heuristics**: rules used to guess which output of a transaction is "change" being sent back to the spender, as opposed to a genuine payment to a third party. This branch (`rust_implementation`) reimplements the project's heuristics in Rust, and exposes them to Python through native bindings so the library can be used from Python analysis pipelines.
-
-> Note: the repository's own `README.md` is currently empty; this file was written from the source, docs, and tests in the `rust_implementation` branch.
+A Rust library that implements Bitcoin **change-address heuristics**: rules used to guess which output of a transaction is "change" being sent back to the spender, as opposed to a genuine payment to a third party.
 
 ## Main points
 
 - **Core `Tx` type** (`src/tx.rs`): wraps a `bitcoin::Transaction` and adds the extra context heuristics need — previous transactions (where inputs came from), future transactions (where outputs were later spent), block height, and RBF replacement transactions. It can be built from a raw hex transaction, a txid (fetched from the network), or a JSON transaction, and exposes helpers like `inputs_addresses()`, `outputs_types()`, `absolute_fee()`, `relative_fee()`, `is_segwit()`, and `signals_rbf()`.
 - **`Heuristic` trait** (`src/heuristics/mod.rs`): a common interface every heuristic implements — `name()`, `input_data_requirements()`, and `apply(&Tx) -> Result<Vec<bool>, AppError>`, returning one boolean per output indicating whether that output could be the change output. Each heuristic declares how much contextual data it needs (`None` up to `HighNonIndexed`), and `check_requirements()` verifies that data was actually imported into the `Tx` before running.
-- **22 heuristics implemented** under `src/heuristics/`, grouped (per `docs/heuristics_overview.md`) into:
+- **24 heuristics implemented** under `src/heuristics/`, grouped (per `docs/heuristics_overview.md`) into:
   - **Address-based**: reused address (past/present/future), address type, consistent address type, one-time address.
   - **Value-based**: smaller output, rounded amount, rounded fiat value, optimal change, malformed CoinJoin.
   - **Wallet-fingerprinting**: backdating, absolute/relative fee, input order, output order, locktime, version, signal RBF / RBF, low-R signatures, multisignature, SegWit conformance, uncompressed public keys, low confirmation value.
@@ -31,10 +29,7 @@ A Rust library that implements Bitcoin **change-address heuristics**: rules used
 The crate builds as both a `cdylib` (Python extension module, name `change_heuristics`) and an `rlib` (usable as a normal Rust dependency).
 
 **Python side** (`requirements.txt`, for building/using the Python package):
-- `python-bitcointx`
-- `python-dotenv`
 - `maturin` — builds the PyO3 extension into an installable Python wheel
-- `pytest`
 
 **Toolchain requirements**: a recent stable Rust toolchain (edition 2024 support), Python 3.8+, and `pip`.
 
