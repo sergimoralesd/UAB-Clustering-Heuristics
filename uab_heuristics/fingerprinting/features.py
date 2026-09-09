@@ -75,27 +75,124 @@ def anti_fee_sniping(tx) -> int:
     return 1 if tx.locktime > 0 else -1
 
 
+def _is_probable_control_block(item_hex: str) -> bool:
+    """Taproot control block shape: 33 + 32m bytes, first byte 0xC0 or 0xC1."""
+    n = len(item_hex) // 2
+    if n < 33 or (n - 33) % 32 != 0:
+        return False
+    try:
+        return (int(item_hex[0:2], 16) & 0xFE) == 0xC0
+    except ValueError:
+        return False
+
+
+def _input_sighashes(tx, i) -> list:
+    """
+    Sighash byte of every signature in input `i`, as ints.
+
+    Handles both signature schemes, which matters because they encode the
+    sighash differently:
+
+      - ECDSA  : DER (starts with 0x30); the sighash is the trailing byte, and
+                 it is always present.
+      - Schnorr: 64 raw bytes means SIGHASH_DEFAULT (0x00) *implicitly* — there
+                 is no trailing byte at all — while 65 bytes carries the sighash
+                 explicitly in the last one.
+
+    The previous version only looked for DER, so every taproot input was read as
+    having no signature and silently reported as standard.
+    """
+    out = []
+    wit = tx.inputs_witness[i]
+
+    if not wit:
+        ss_hex = tx.inputs_scriptSig[i]
+        if ss_hex and ss_hex[2:4] == "30":
+            try:
+                sig_len = int(ss_hex[0:2], 16)
+                sig = ss_hex[2:2 + sig_len * 2]
+                if len(sig) >= 2:
+                    out.append(int(sig[-2:], 16))
+            except ValueError:
+                pass
+        return out
+
+    items = list(wit)
+    # Drop the annex (last item starting with 0x50, only when 2+ items) and the
+    # control block of a script-path spend, so neither is mistaken for a
+    # signature purely on length.
+    if len(items) >= 2 and items[-1][:2].lower() == "50":
+        items.pop()
+    if len(items) >= 2 and _is_probable_control_block(items[-1]):
+        items.pop()
+        if items:
+            items.pop()  # the leaf script itself
+
+    for item in items:
+        n = len(item) // 2
+        if item.startswith("30"):            # ECDSA/DER
+            if len(item) >= 2:
+                out.append(int(item[-2:], 16))
+        elif n == 64:                        # Schnorr, implicit SIGHASH_DEFAULT
+            out.append(0x00)
+        elif n == 65:                        # Schnorr, explicit sighash
+            try:
+                out.append(int(item[-2:], 16))
+            except ValueError:
+                pass
+    return out
+
+
 def nonstandard_sighash(tx) -> bool:
-    """True if any input uses a sighash type other than SIGHASH_ALL (0x01)."""
+    """
+    True if any input signs with something other than "all inputs, all outputs".
+
+    That means SIGHASH_ALL (0x01) for ECDSA and SIGHASH_DEFAULT (0x00) for
+    Schnorr, which are semantically the same commitment. Treating taproot's 0x00
+    as non-standard would turn this signal into a proxy for "is a taproot
+    spend", which `input_types` already reports.
+    """
     for i in range(tx.input_count):
-        sig = None
-        wit = tx.inputs_witness[i]
-        if wit:
-            for item in wit:
-                if len(item) >= 2 and item.startswith("30"):
-                    sig = item
-                    break
-        else:
-            ss_hex = tx.inputs_scriptSig[i]
-            if ss_hex and ss_hex.startswith("30"):
-                try:
-                    sig_len = int(ss_hex[0:2], 16)
-                    sig = ss_hex[2:2 + sig_len * 2]
-                except Exception:
-                    pass
-        if sig and len(sig) >= 2 and sig[-2:].lower() != "01":
-            return True
+        for sh in _input_sighashes(tx, i):
+            if sh not in (0x00, 0x01):
+                return True
     return False
+
+
+def taproot_explicit_sighash(tx):
+    """
+    True if a Schnorr signature spells SIGHASH_ALL out as an explicit 0x01
+    (a 65-byte signature) where it could have used the implicit
+    SIGHASH_DEFAULT (64 bytes). None when the transaction spends no taproot
+    input, so wallets that never touch taproot are not scored on it.
+
+    Both produce the same commitment, so the choice is pure implementation
+    habit — which is what makes it a fingerprint. It also costs a byte per
+    input, so a wallet doing it is measurably paying for the preference.
+    """
+    seen_schnorr = False
+    explicit = False
+    for i in range(tx.input_count):
+        wit = tx.inputs_witness[i]
+        if not wit:
+            continue
+        items = list(wit)
+        if len(items) >= 2 and items[-1][:2].lower() == "50":
+            items.pop()
+        if len(items) >= 2 and _is_probable_control_block(items[-1]):
+            items.pop()
+            if items:
+                items.pop()
+        for item in items:
+            n = len(item) // 2
+            if item.startswith("30"):
+                continue
+            if n == 64:
+                seen_schnorr = True
+            elif n == 65:
+                seen_schnorr = True
+                explicit = True
+    return explicit if seen_schnorr else None
 
 
 def unusual_outputs(tx) -> bool:
@@ -258,7 +355,7 @@ def input_order_full(tx) -> list[str]:
 FEATURES_NO_PREV = [
     "version", "is_segwit", "locktime", "anti_fee_sniping",
     "input_count", "output_count",
-    "signals_rbf", "low_r_only", "nonstandard_sighash",
+    "signals_rbf", "low_r_only", "nonstandard_sighash", "taproot_explicit_sighash",
     "output_order", "output_types", "output_structure",
     "input_order_bip69", "unusual_outputs", "dust_on_outputs",
 ]
@@ -301,6 +398,9 @@ def extract_features(tx, change_idx: int = -1, has_prev: bool = False) -> dict:
 
     try: s["nonstandard_sighash"] = nonstandard_sighash(tx)
     except Exception: s["nonstandard_sighash"] = None
+
+    try: s["taproot_explicit_sighash"] = taproot_explicit_sighash(tx)
+    except Exception: s["taproot_explicit_sighash"] = None
 
     try: s["output_order"] = get_output_order(tx)
     except Exception: s["output_order"] = None
