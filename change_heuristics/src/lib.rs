@@ -7,4 +7,6 @@ pub use heuristics::Heuristic;
 pub use types::AppError;
 pub use types::InputDataRequirements;
 
+
+#[cfg(feature = "python")]
 pub mod python_package;
