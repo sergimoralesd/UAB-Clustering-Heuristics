@@ -152,63 +152,52 @@ impl Tx {
     }
 
     fn order_prev_txs(previous_txs: Vec<Tx>, previous_txids: Vec<Txid>) -> Result<Vec<Box<Tx>>, TxError> {
-        let prev_txs_dict: HashMap<Txid, Box<Tx>> = previous_txs
-        .iter()
-        .map(|prev_tx| (prev_tx.txid(), Box::new(prev_tx.clone())))
-        .collect();
-
-        let mut prev_txs: Vec<Box<Tx>> = Vec::new();
-
-        for prev_txid in previous_txids.iter() {
-            match prev_txs_dict.get(prev_txid) {
-                Some(prev_tx) => prev_txs.push(prev_tx.clone()),
-                None => return Err(TxError::InvalidPrevTx(
-                    format!("tx expected {} but it could not be found", prev_txid)
-                ))
-            };
+        let mut dict: HashMap<Txid, Box<Tx>> = HashMap::with_capacity(previous_txs.len());
+        for tx in previous_txs {
+            dict.insert(tx.txid(), Box::new(tx));
         }
-
-        Ok(prev_txs)
+        // clone only when the same prev tx is spent by more than one input
+        let mut left: HashMap<&Txid, usize> = HashMap::new();
+        for id in &previous_txids {
+            *left.entry(id).or_insert(0) += 1;
+        }
+        let mut out = Vec::with_capacity(previous_txids.len());
+        for id in &previous_txids {
+            let c = left.get_mut(id).unwrap();
+            *c -= 1;
+            let tx = if *c == 0 { dict.remove(id) } else { dict.get(id).cloned() };
+            match tx {
+                Some(t) => out.push(t),
+                None => return Err(TxError::InvalidPrevTx(
+                    format!("tx expected {} but it could not be found", id))),
+            }
+        }
+        Ok(out)
     }
 
     fn order_fut_txs(fut_txs: Vec<Tx>, target_txid: Txid) -> Result<Vec<Box<Tx>>, TxError> {
-        let mut future_txs_dict:HashMap<usize, Tx> = HashMap::new();
-        
-        for future_tx in fut_txs.iter() {
-            let future_prevouts: Vec<usize> = future_tx.prevouts();
-            let future_prevtxid: Vec<Txid> = future_tx.previous_txids();
-
-            let found = future_prevtxid
-            .iter()
-            .enumerate()
-            .find(|(_, txid)| *txid == &target_txid);
-
-            match found {
-                Some((index, _)) => {
-                    // found the input that spends the target tx
-                    future_txs_dict.insert(future_prevouts[index], future_tx.clone());
-                },
-                None => {
-                    // none of the inputs spend the target tx → error
-                    return Err(TxError::InvalidFutureTx(
-                        format!("tx expected a future tx that spends the target one but it could not be found")
-                    ));
-                }
-            }
-        }
-
-        let mut future_txs: Vec<Box<Tx>>= Vec::new();
-        for (index, _) in fut_txs.iter().enumerate() {
-            match future_txs_dict.get(&index) {
-                Some(future_tx) => future_txs.push(Box::new(future_tx.clone())),
-                None => return Err(TxError::InvalidFutureTx(
-                    format!("could not be found the future tx that spends the target one")
-                ))
+        let n = fut_txs.len();
+        let mut slots: Vec<Option<Box<Tx>>> = (0..n).map(|_| None).collect();
+        for future_tx in fut_txs {
+            let vouts = future_tx.prevouts();
+            let ids = future_tx.previous_txids();
+            let Some(i) = ids.iter().position(|t| *t == target_txid) else {
+                return Err(TxError::InvalidFutureTx(
+                    "tx expected a future tx that spends the target one but it could not be found".to_string()));
             };
+            let vout = vouts[i];
+            if vout >= n {
+                return Err(TxError::InvalidFutureTx(
+                    "could not be found the future tx that spends the target one".to_string()));
+            }
+            slots[vout] = Some(Box::new(future_tx));
         }
-
-        Ok(future_txs)
+        slots.into_iter()
+            .map(|s| s.ok_or_else(|| TxError::InvalidFutureTx(
+                "could not be found the future tx that spends the target one".to_string())))
+            .collect()
     }
+
     //Constructors
     pub fn from_raw(raw_tx: &str, network: Network) -> Result<Self, TxError> {
         let tx = Self::build_tx_from_hex(raw_tx)?;
@@ -375,8 +364,11 @@ impl Tx {
 
         if let Some(prev_txs) = &self.previous_txs {
             for (index, prev_tx) in prev_txs.iter().enumerate() {
-                let prev_output_amounts = prev_tx.outputs_values();
-                let amount = prev_output_amounts[prev_vouts[index]];
+                let vout = prev_vouts[index];
+                let amount = prev_tx.target.output.get(vout)
+                    .ok_or_else(|| TxError::InvalidPrevTx(
+                        format!("previous tx has no output {vout}")))?
+                    .value;
                 input_values.push(amount);
             }
         }
@@ -425,15 +417,16 @@ impl Tx {
 
         if let Some(prev_txs) = &self.previous_txs {
             for (index, prev_tx) in prev_txs.iter().enumerate() {
-                let outputs_scriptpubkeys:Vec<Script> = prev_tx.outputs_scriptpubkeys();
-                
-                let output_scriptpubkey = &outputs_scriptpubkeys[prevouts[index]];
-                
-                match Self::get_address_from_script(&output_scriptpubkey, self.network) {
+                let vout = prevouts[index];
+                let output_scriptpubkey = &prev_tx.target.output.get(vout)
+                    .ok_or_else(|| TxError::InvalidPrevTx(
+                        format!("previous tx has no output {vout}")))?
+                    .script_pubkey;
+
+                match Self::get_address_from_script(output_scriptpubkey, self.network) {
                     Err(err) => return Err(err),
-                    Ok(address) => input_addresses.push(address) 
+                    Ok(address) => input_addresses.push(address),
                 };
-                
             }
         }
 
