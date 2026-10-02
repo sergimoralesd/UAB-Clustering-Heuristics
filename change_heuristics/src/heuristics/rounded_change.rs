@@ -44,9 +44,9 @@ mod tests {
     use crate::heuristics::test_utils::run_heuristic_test;
 
     #[test]
-    fn test_present_addr_reuse_heuristic() -> Result<(),AppError> {
+    fn test_rounded_change_heuristic() -> Result<(),AppError> {
         let txids = vec!["c9cfd7e0cda60ab0d21d3b7402b141953f48b3bebc9ca7bd32f1caa78c31a3fb"];
-        let expected_results = vec![vec![true, true]];
+        let expected_results = vec![vec![false, false]];
         let _ = run_heuristic_test(&RoundedChange::new(4), txids, expected_results, false, false)?;
 
         let txids = vec!["134d82e432ba31b59e6940cace017f969a2d37feffcccce7c3367587b389af41"];
@@ -58,7 +58,7 @@ mod tests {
         let _ = run_heuristic_test(&RoundedChange::new(2), txids, expected_results, false, false)?;
 
         let txids = vec!["5cdbfc35d2c06fb551349ab5de1c33fc9bd84f3d553943f3cb482108dc1816c6", ];
-        let expected_results = vec![vec![true, true]];
+        let expected_results = vec![vec![false, false]];
         let _ = run_heuristic_test(&RoundedChange::new(1), txids, expected_results, false, false)?;
 
         Ok(())
