@@ -21,9 +21,10 @@ impl Heuristic for PresentReusedAddressChange {
 
         let input_addresses: Vec<Address> = tx.inputs_addresses()?;
 
-        let possible_change: Vec<bool> = tx.outputs_addresses()?
+        // An OP_RETURN output is never the change.
+        let possible_change: Vec<bool> = tx.outputs_addresses_except_op_return()?
         .iter()
-        .map(|addr| input_addresses.contains(addr))
+        .map(|addr| addr.as_ref().map_or(false, |a| input_addresses.contains(a)))
         .collect();
 
         Ok(possible_change)

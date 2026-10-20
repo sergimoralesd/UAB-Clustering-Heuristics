@@ -21,9 +21,10 @@ impl Heuristic for AddressTypeChange {
 
         let input_types: Vec<AddressType> = tx.inputs_types()?;
 
-        let possible_change: Vec<bool> = tx.outputs_types()?
+        // An OP_RETURN output is never the change.
+        let possible_change: Vec<bool> = tx.outputs_types_except_op_return()?
         .iter()
-        .map(|out_type| input_types.contains(out_type))
+        .map(|out_type| out_type.map_or(false, |t| input_types.contains(&t)))
         .collect();
 
         Ok(possible_change)

@@ -446,6 +446,41 @@ impl Tx {
 
         Ok(output_types)
     }
+    /// Whether each output is an OP_RETURN (data carrier): it pays no one and
+    /// has no address, so it can never be the change.
+    pub fn outputs_are_op_return(&self) -> Vec<bool> {
+        self.target.output
+        .iter()
+        .map(|output| output.script_pubkey.is_op_return())
+        .collect()
+    }
+
+    /// Like `outputs_addresses`, with `None` for OP_RETURN outputs instead of
+    /// failing on them. Any other script without an address is still an error.
+    pub fn outputs_addresses_except_op_return(&self) -> Result<Vec<Option<Address>>, TxError> {
+        self.target.output
+        .iter()
+        .map(|output| {
+            if output.script_pubkey.is_op_return() {
+                Ok(None)
+            } else {
+                Self::get_address_from_script(&output.script_pubkey, self.network).map(Some)
+            }
+        })
+        .collect()
+    }
+
+    /// Like `outputs_types`, with `None` for OP_RETURN outputs.
+    pub fn outputs_types_except_op_return(&self) -> Result<Vec<Option<AddressType>>, TxError> {
+        self.outputs_addresses_except_op_return()?
+        .into_iter()
+        .map(|address| match address {
+            None => Ok(None),
+            Some(address) => Self::get_addresses_types(&vec![address]).map(|types| Some(types[0])),
+        })
+        .collect()
+    }
+
     pub fn inputs_types(&self) -> Result<Vec<AddressType>, TxError> {
         let input_addresses:Vec<Address> = self.inputs_addresses()?; 
 

@@ -178,3 +178,6 @@ mod version_change;
 
 #[cfg(test)]
 pub(crate) mod test_utils;
+
+#[cfg(test)]
+mod op_return_tests;

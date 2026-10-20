@@ -27,21 +27,23 @@ impl Heuristic for OptimalChange {
             )));
         }
 
-        // assert tx.output_count == 2
-        if tx.output_count() != 2 {
+        // Exactly 2 outputs that carry value: an OP_RETURN output pays no one,
+        // so a payment, its change and a data output still qualify.
+        let op_return = tx.outputs_are_op_return();
+        let value_outputs: Vec<usize> = (0..outputs_values.len()).filter(|&i| !op_return[i]).collect();
+        if value_outputs.len() != 2 {
             return Err(AppError::Heuristic(HeuristicError::NotApplicable(
-                format!("tx {} must contain exactly 2 outputs", tx.txid())
+                format!("tx {} must contain exactly 2 outputs that are not OP_RETURN", tx.txid())
             )));
         }
 
-        let potential_change_value = outputs_values.iter().min().unwrap();
+        let potential_change_value = value_outputs.iter().map(|&i| outputs_values[i]).min().unwrap();
         let mut possible_change: Vec<bool> = vec![false; outputs_values.len()];
 
-        let matching_indices: Vec<usize> = outputs_values
+        let matching_indices: Vec<usize> = value_outputs
         .iter()
-        .enumerate()
-        .filter(|(_, v)| **v == *potential_change_value)
-        .map(|(i, _)| i)
+        .copied()
+        .filter(|&i| outputs_values[i] == potential_change_value)
         .collect();
 
         if matching_indices.len() > 1 {
@@ -49,7 +51,7 @@ impl Heuristic for OptimalChange {
         }
 
         for &input_value in inputs_values.iter() {
-            if *potential_change_value > input_value {
+            if potential_change_value > input_value {
                 return Ok(vec![false; outputs_values.len()]);
             }
         }
